@@ -1,0 +1,12 @@
+/node_modules
+
+#Build output
+dist/
+
+# Environment variables
+.env
+
+# compiled js files
+*.map
+*.d.ts
+*.js
