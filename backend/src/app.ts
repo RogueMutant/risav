@@ -1,19 +1,20 @@
 require("dotenv").config();
 import express, { Application, Request, Response } from "express";
-import notFoundError from "./errors/notFound";
-const {connectDb} = require("./db/connect");
-
+import notFoundError from "./middleware/notFound";
+import { connectDb } from "./db/connect";
+import userAuth from "./routes/auth";
 
 const app: Application = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
-app.use(express.static("uploads"));
-app.use(notFoundError)
 
+app.use('/auth', userAuth)
 
-app.get("/", (req:Request, res:Response) => {
-    res.send("Hello World");
+app.use(notFoundError);
+
+app.get("/", (req: Request, res: Response)=>{
+    res.send("hello world")
 })
 
 const start = async (): Promise<void> => {
@@ -23,8 +24,8 @@ const start = async (): Promise<void> => {
             console.log(`Server is running on port ${process.env.PORT}`);
         });
     } catch (error) {
-        console.error(error);
+        console.error("Error starting server", error);
     }
-}
+};
 
-start()
+start();

@@ -29,7 +29,7 @@ const userSchema: Schema = new mongoose.Schema<IUser>({
         enum: ["super_admin", "admin", "user"],
         default: "user"
     },
-    isActivate:{
+    isActive:{
         type: Boolean,
         default: false
     },
@@ -49,5 +49,10 @@ userSchema.methods.createJwt = function(){
         {expiresIn: process.env.JWT_LIFETIME as string}
     )
 }
+
+userSchema.methods.comparePassword = async function (candidatePassword: string): Promise<boolean> {
+    const compared = await bcrypt.compare(candidatePassword, this.password);
+    return compared;
+  };  
 
 export default model<IUser>("User", userSchema)
