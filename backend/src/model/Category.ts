@@ -1,16 +1,16 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { ICategory } from "../types/custom";
 
-const categorySchema: mongoose.Schema<ICategory> = new mongoose.Schema<ICategory>(
-    {
-        name: { type: String, required: true, unique: true },
-        createdBy: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "User",
-            required: "Provide user"
-        }
+const categorySchema: Schema = new mongoose.Schema<ICategory>(
+  {
+    name: { type: String, required: true, unique: true },
+    createdBy: {
+      type: mongoose.Types.ObjectId,
+      ref: "User",
+      required: "Provide user",
     },
-    { timestamps: true }
+  },
+  { timestamps: true }
 );
 
-export default mongoose.model<ICategory>('Category', categorySchema);
+export default mongoose.model<ICategory>("Category", categorySchema);

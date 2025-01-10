@@ -1,87 +1,154 @@
-import express, { Request, Response } from 'express';
-import Category from '../model/Category';
-import Resource from '../model/Resource';
-import { IResource } from '../types/custom';
+import express, { Request, Response } from "express";
+import mongoose from "mongoose";
+import Category from "../model/Category";
+import Resource from "../model/Resource";
+import { CustomRequest, IResource } from "../types/custom";
 
-const router = express.Router();
+const getAllResources = async (
+  req: CustomRequest,
+  res: Response
+): Promise<void> => {
+  const createdBy = req.user?.userId;
+
+  const resources = await Resource.find({ createdBy: createdBy }).populate(
+    "category",
+    "name"
+  ); // Populate only the category name
+  res.status(200).json(resources);
+};
+
+const getResource = async (
+  req: CustomRequest,
+  res: Response
+): Promise<void> => {
+  const { id } = req.params;
+  // Validate the resource ID format
+  if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+    res.status(400).json({ message: "Invalid resource ID" });
+    return;
+  }
+
+  const resource = await Resource.findById(id).populate("category", "name");
+
+  if (!resource) {
+    res.status(404).json({ message: "Resource not found" });
+    return;
+  }
+
+  res
+    .status(200)
+    .json({ message: "Here is the resource", status: "Success", resource });
+};
 
 // Create a new resource
-const createResource = async (req: Request, res: Response) => {
-    try {
-        const { name, category, description, status, imageUrl, location } = req.body;
+const createResource = async (req: Request, res: Response): Promise<void> => {
+  const { name, category, description, status, imageUrl, location } = req.body;
 
-        // Validate category
-        const validCategory = await Category.findById(category);
-        if (!validCategory) {
-            return res.status(400).json({ message: 'Invalid category' });
-        }
+  // Validate category
+  const validCategory = await Category.findById(category);
+  if (!validCategory) {
+    res.status(400).json({ message: "Invalid category" });
+    return;
+  }
 
-        const resource: IResource = new Resource({
-            name,
-            category,
-            description,
-            status,
-            imageUrl,
-            location
-        });
+  const resource: IResource = new Resource({
+    name,
+    category,
+    description,
+    status,
+    imageUrl,
+    location,
+  });
 
-        await resource.save();
+  await resource.save();
+  res.status(201).json({ message: "Resource created successfully", resource });
+};
 
-        res.status(201).json({ message: 'Resource created successfully', resource });
-    } catch (error) {
-        res.status(500).json({ message: error instanceof Error ? error.message : 'An error occurred' });
+const updateResource = async (
+  req: CustomRequest,
+  res: Response
+): Promise<void> => {
+  const { id } = req.params;
+  const { name, category, description, status, imageUrl, location } = req.body;
+
+  const userId = req.user?.userId;
+  if (!userId) {
+    res.status(403).json({ message: "User not authenticated" });
+    return;
+  }
+
+  const resource = await Resource.findById(id);
+  if (!resource) {
+    res.status(404).json({ message: "Resource not found" });
+    return;
+  }
+
+  if (resource.createdBy.toString() !== userId) {
+    res
+      .status(403)
+      .json({ message: "You are not authorized to update this resource" });
+    return;
+  }
+
+  if (category) {
+    const validCategory = await Category.findById(category);
+    if (!validCategory) {
+      res.status(400).json({ message: "Invalid category" });
+      return;
     }
-}
+  }
 
-// Update an existing resource
-const updateResource =  async (req: Request, res: Response) => {
-    try {
-        const { id } = req.params;
-        const { name, category, description, status, imageUrl, location } = req.body;
+  const updatedResource = await Resource.findByIdAndUpdate(
+    id,
+    { name, category, description, status, imageUrl, location },
+    { new: true, runValidators: true }
+  );
 
-        // Validate category if it's being updated
-        if (category) {
-            const validCategory = await Category.findById(category);
-            if (!validCategory) {
-                return res.status(400).json({ message: 'Invalid category' });
-            }
-        }
+  if (!updatedResource) {
+    res.status(404).json({ message: "Resource not found" });
+    return;
+  }
 
-        const updatedResource = await Resource.findByIdAndUpdate(
-            id,
-            { name, category, description, status, imageUrl, location },
-            { new: true }
-        );
+  res
+    .status(200)
+    .json({
+      message: "Resource updated successfully",
+      resource: updatedResource,
+    });
+};
 
-        if (!updatedResource) {
-            return res.status(404).json({ message: 'Resource not found' });
-        }
+const deleteResource = async (
+  req: CustomRequest,
+  res: Response
+): Promise<void> => {
+  const { id } = req.params;
+  const userId = req.user?.userId;
 
-        res.status(200).json({ message: 'Resource updated successfully', resource: updatedResource });
-    } catch (error) {
-        res.status(500).json({ message: error instanceof Error ? error.message : 'An error occurred' });
-    }
-}
+  if (!userId) {
+    res.status(403).json({ message: "User not authenticated" });
+    return;
+  }
 
-// Delete a resource
-const deleteResource = async (req: Request, res: Response) => {
-    try {
-        const { id } = req.params;
+  const deletedResource = await Resource.findOneAndDelete({
+    _id: id,
+    createdBy: userId,
+  });
 
-        const deletedResource = await Resource.findByIdAndDelete(id);
-
-        if (!deletedResource) {
-            return res.status(404).json({ message: 'Resource not found' });
-        }
-
-        res.status(200).json({ message: 'Resource deleted successfully' });
-    } catch (error) {
-        res.status(500).json({ message: error instanceof Error ? error.message : 'An error occurred' });
-    }
-}
+  if (!deletedResource) {
+    res
+      .status(404)
+      .json({ message: "Resource not found or not authorized to delete" });
+    return;
+  }
+  res
+    .status(200)
+    .json({ message: "Resource deleted successfully", status: "success" });
+};
 
 export {
-    createResource,
-    updateResource,
-    deleteResource
-}
+  getResource,
+  getAllResources,
+  createResource,
+  updateResource,
+  deleteResource,
+};
