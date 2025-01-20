@@ -1,6 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 
-@mixin icon-size {
+@mixin icon-style {
   .icon {
     height: 20px;
     width: 20px;
@@ -87,6 +87,84 @@ $font-fam: Montserrat;
   }
 }
 
+@mixin dropdown {
+  .dropdown {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 50px;
+    width: inherit;
+    padding: 0;
+    div {
+      width: 85%;
+      .icon {
+        float: left;
+      }
+      p {
+        margin: 0;
+        width: 80%;
+      }
+    }
+    .dropdown-btn {
+      display: flex;
+      justify-content: space-between;
+      margin-left: -8px;
+    }
+    .dropdown-list {
+      transform: translateX(30px);
+      width: 100%;
+      height: 0;
+      overflow: hidden;
+      transition: height 300ms linear;
+      li {
+        height: 2em;
+      }
+    }
+  }
+}
+
+@mixin table {
+  .table-container {
+    box-sizing: border-box;
+    overflow-x: auto;
+    scrollbar-track-color: transparent;
+
+    h2 {
+      margin-bottom: 1em;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      tr {
+        height: 50px;
+        border-bottom: 3px solid #282833;
+        th {
+          color: $th-color;
+          font-size: $header-font-size;
+          font-weight: 500;
+          min-width: 3em;
+          padding: 0.5em;
+        }
+        td {
+          @include progressBar();
+          text-wrap: nowrap;
+          padding: 0.5em;
+          .sales-percentage {
+            width: 6em;
+            height: 3em;
+            background-color: #fab75933;
+            border-radius: 6px;
+            border: 1px solid $color-orange;
+            place-content: center;
+            text-align: center;
+            color: #fab659;
+          }
+        }
+      }
+    }
+  }
+}
+
 body {
   background-color: $bg-color;
   font-family: $font-fam, sans-serif;
@@ -102,7 +180,7 @@ body {
 
   //top nav
   .top-nav {
-    @include icon-size();
+    @include icon-style();
     width: 100%;
     min-height: 80px;
     position: sticky;
@@ -155,6 +233,9 @@ body {
     backdrop-filter: blur(5px);
     transform: translateX(-300px);
     transition: width 200ms linear;
+    .icon {
+      font-size: 1.4em;
+    }
     .side-nav {
       position: absolute;
       height: inherit;
@@ -172,10 +253,11 @@ body {
         margin-bottom: 1.5em;
       }
       .ul-list-container {
-        width: 12em;
         height: 100%;
-        margin-left: 1em;
+        margin-left: 0.2em;
+        width: 100%;
         .ul-content {
+          @include dropdown();
           @include li-style();
           li:hover {
             background-color: #1c1d27;
@@ -209,7 +291,7 @@ body {
         align-items: flex-start;
         justify-content: space-evenly;
         border-radius: 8px;
-        @include icon-size();
+        @include icon-style();
 
         h3 {
           color: $color-white;
@@ -222,47 +304,9 @@ body {
 
     .top-reservations-container {
       @include section-style();
+      @include table();
       color: $color-white;
       text-align: left;
-      .table-container {
-        box-sizing: border-box;
-        overflow-x: auto;
-        scrollbar-track-color: transparent;
-
-        h2 {
-          margin-bottom: 1em;
-        }
-        table {
-          width: 100%;
-          border-collapse: collapse;
-          tr {
-            height: 50px;
-            border-bottom: 3px solid #282833;
-            th {
-              color: $th-color;
-              font-size: $header-font-size;
-              font-weight: 500;
-              min-width: 3em;
-              padding: 0.5em;
-            }
-            td {
-              @include progressBar();
-              text-wrap: nowrap;
-              padding: 0.5em;
-              .sales-percentage {
-                width: 6em;
-                height: 3em;
-                background-color: #fab75933;
-                border-radius: 6px;
-                border: 1px solid $color-orange;
-                place-content: center;
-                text-align: center;
-                color: #fab659;
-              }
-            }
-          }
-        }
-      }
     }
 
     .trending-section {
@@ -422,6 +466,127 @@ body {
     span {
       margin-bottom: 0.8em;
       color: $color-white;
+    }
+  }
+}
+
+// Resrevation info page
+.resevation-info-container {
+  @include table();
+  @include icon-style();
+  width: 100%;
+  height: 100vh;
+  h2 {
+    color: $color-orange;
+    margin-bottom: 0.5em;
+  }
+  .reserv-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1em;
+    text-align: left;
+    width: 100%;
+    background-color: $th-color;
+    box-sizing: border-box;
+    margin-bottom: 0.8em;
+    p {
+      font-weight: 600;
+    }
+    .icon {
+      height: 30px;
+      width: 30px;
+      padding: 0.5em;
+      cursor: pointer;
+      border-radius: 50%;
+      &:hover {
+        background-color: rgba(49, 92, 94, 0.175);
+        transition: all 300ms ease-in;
+      }
+    }
+  }
+
+  .search-container {
+    width: 100%;
+    height: 60px;
+    padding: 0.5em;
+    margin-bottom: 0.8em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    .filter {
+      cursor: pointer;
+      transform: translateX(-20px);
+      height: 40px;
+    }
+    .inner-search {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .icon {
+        transform: translateX(350px);
+        cursor: pointer;
+        height: 30px;
+        width: 30px;
+        padding: 0.5em;
+        border-radius: 6px;
+        background-color: $color-orange;
+      }
+      width: 80%;
+      input {
+        background-color: #22222b;
+        height: 3em;
+        width: 90%;
+        border-radius: 6px;
+        border: none;
+        outline: none;
+        padding: 0.8em;
+        box-sizing: border-box;
+        font-size: $p-font-size;
+        color: $color-white;
+        &:hover {
+          background-color: #2a2b33;
+          transition: all 300ms linear;
+        }
+      }
+    }
+  }
+
+  .reservation-table-container {
+    .table-container {
+      thead th {
+        font-size: 0.9em;
+      }
+      tr {
+        text-align: left;
+        border-bottom: 2px solid #282833;
+        height: 60px;
+        box-sizing: border-box;
+        img {
+          height: 40px;
+          width: 40px;
+          margin-right: 1.5em;
+        }
+
+        td {
+          color: $th-color;
+          padding: 7.2px;
+          p {
+            font-size: 0.8em;
+          }
+        }
+        .image-td {
+          display: flex;
+          font-size: 1em;
+          align-items: center;
+          justify-content: flex-start;
+          height: inherit;
+          &:nth-child(3) {
+            font-size: 0.7em;
+          }
+        }
+      }
     }
   }
 }

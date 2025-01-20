@@ -2,34 +2,29 @@ import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import "../styles/index.css";
+declare var axios: any;
+
+interface Person {
+  email: string;
+  password: string;
+}
 
 export const Login = () => {
-  const [user, setUser] = useState({ email: "", password: "" });
-  interface User {
-    email: string;
-    password: string;
-  }
+  const [person, setPerson] = useState<Person>({ email: "", password: "" });
+  const [users, setUsers] = useState<Person[]>([]);
 
-  interface ChangeEvent {
-    target: {
-      value: string;
-    };
-  }
-
-  const handleChange = (e: ChangeEvent) => {
-    const email = e.target.value;
-    const password = e.target.value;
-
-    setUser({ email, password });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setPerson((prevPerson) => ({ ...prevPerson, [name]: value }));
   };
-  interface SubmitEvent {
-    preventDefault: () => void;
-  }
 
-  const handleSubmit = (e: SubmitEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    console.log(user.email, user.password);
+    const newUser = { email: person.email, password: person.password };
+    console.log(newUser);
+    const updateUsers = { ...person, ...newUser };
+    setUsers((prevUsers) => [...prevUsers, updateUsers]);
+    setPerson({ email: "", password: "" });
   };
   return (
     <article className="form-container">
@@ -42,10 +37,10 @@ export const Login = () => {
         <div className="form-control">
           <label htmlFor="email">Email</label>
           <input
-            type="text"
+            type="email"
             name="email"
             id="email"
-            //value={user.email}
+            value={person.email}
             onChange={handleChange}
           />
         </div>
@@ -56,7 +51,7 @@ export const Login = () => {
               type="password"
               name="password"
               id="password"
-              //value={user.password}
+              value={person.password}
               onChange={handleChange}
             />
             <BsEye className="eye open-eye" />

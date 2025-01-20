@@ -1,37 +1,44 @@
-import React, { useState } from "react";
+import React, { useActionState, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import "../styles/index.css";
 
+interface Person {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+interface SubmitEvent {
+  preventDefault: () => void;
+}
 export const SignUp = () => {
-  const [user, setUser] = useState({ name: "", email: "", password: "" });
-  interface User {
-    name: string;
-    email: string;
-    password: string;
-  }
+  const [person, setPerson] = useState<Person>({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [user, setUser] = useState<Person[]>([]);
 
-  interface ChangeEvent {
-    target: {
-      value: string;
-    };
-  }
-
-  const handleChange = (e: ChangeEvent) => {
-    const name = e.target.value;
-    const email = e.target.value;
-    const password = e.target.value;
-
-    setUser({ name, email, password });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setPerson((prevPerson) => ({ ...prevPerson, [name]: value }));
   };
-  interface SubmitEvent {
-    preventDefault: () => void;
-  }
 
   const handleSubmit = (e: SubmitEvent) => {
     e.preventDefault();
-
-    console.log(user.email, user.password);
+    if (person.name && person.email && person.password) {
+      const newPerson = {
+        name: person.name,
+        email: person.email,
+        password: person.password,
+        confirmPassword: person.confirmPassword,
+      };
+      const updatedPerson = { ...person, ...newPerson };
+      setUser((prevUser) => [...prevUser, updatedPerson]);
+      setPerson({ name: "", email: "", password: "", confirmPassword: "" });
+    }
   };
   return (
     <article className="form-container">
@@ -47,8 +54,9 @@ export const SignUp = () => {
             type="text"
             name="name"
             id="name"
-            //value={user.name}
+            value={person.name}
             onChange={handleChange}
+            required
           />
         </div>
         <div className="form-control">
@@ -57,8 +65,9 @@ export const SignUp = () => {
             type="text"
             name="email"
             id="email"
-            //value={user.email}
+            value={person.email}
             onChange={handleChange}
+            required
           />
         </div>
         <div className="form-control">
@@ -68,8 +77,9 @@ export const SignUp = () => {
               type="password"
               name="password"
               id="password"
-              //value={user.password}
+              value={person.password}
               onChange={handleChange}
+              required
             />
             <BsEye className="eye open-eye" />
             <BsEyeSlash className="eye eyeslash" />
@@ -80,9 +90,9 @@ export const SignUp = () => {
           <div className="password-input">
             <input
               type="password"
-              name="password"
-              id="password"
-              //value={user.password}
+              name="confirmPassword"
+              id="confirmPassword"
+              value={person.confirmPassword}
               onChange={handleChange}
             />
             <BsEye className="eye open-eye" />

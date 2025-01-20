@@ -18,6 +18,7 @@ import {
 } from "react-icons/bs";
 import "../styles/index.css";
 import toggleNav from "../components/buttons";
+declare var axios: any;
 
 export const Dashboard = () => {
   const handleAsideClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -47,6 +48,7 @@ export const Dashboard = () => {
           />
           <BsChevronDown
             className="icon"
+            style={{ cursor: "pointer" }}
             onClick={() => toggleNav("dropdown-container", "dropdown-display")}
           />
           <div className="dropdown-container">
@@ -80,14 +82,43 @@ export const Dashboard = () => {
               <li>
                 <FaUser className="icon" /> <p>Profile</p>
               </li>
-              <li>
-                <FaCartPlus className="icon" /> <p>Reservations</p>
+
+              <li className="dropdown">
+                <div className="dropdown-btn">
+                  <div>
+                    <FaCartPlus className="icon" /> <p>Reservations</p>
+                  </div>
+                  <BsChevronRight className="icon-right" />
+                </div>
+                <ul className="dropdown-list">
+                  <li>All Reservations</li>
+                </ul>
               </li>
-              <li>
-                <FaFile className="icon" /> <p>Categories</p>
+
+              <li className="dropdown">
+                <div className="dropdown-btn">
+                  <div>
+                    <FaFile className="icon" />
+                    <p>Categories</p>
+                  </div>
+                  <BsChevronRight className="icon-right" />
+                </div>
+                <ul className="dropdown-list">
+                  <li>Lab Equipment</li>
+                  <li>Event Halls</li>
+                </ul>
               </li>
-              <li>
-                <BsGraphUp className="icon" /> <p>Sales Report</p>
+
+              <li className="dropdown">
+                <div className="dropdown-btn">
+                  <div>
+                    <BsGraphUp className="icon" /> <p>Sales Report</p>
+                  </div>
+                  <BsChevronRight className="icon-right" />
+                </div>
+                <ul className="dropdown-list">
+                  <li>Reservations</li>
+                </ul>
               </li>
               <li>
                 <BsPeopleFill className="icon" /> <p>Users</p>
