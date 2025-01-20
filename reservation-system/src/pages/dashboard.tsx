@@ -1,96 +1,184 @@
 import React, { useEffect, useState } from "react";
-import Fa from "react-icons/fa";
-import Bs from "react-icons/bs";
+import { FaHome, FaUser, FaFile, FaCartPlus, FaTasks } from "react-icons/fa";
+import {
+  BsGraphUp,
+  BsPeopleFill,
+  BsGridFill,
+  BsSearch,
+  BsPerson,
+  BsBellFill,
+  BsFillBellFill,
+  BsChevronDown,
+  BsChevronLeft,
+  BsChevronRight,
+  BsBoxArrowRight,
+  BsBarChartFill,
+  BsBoxArrowInLeft,
+  BsPersonAdd,
+} from "react-icons/bs";
 import "../styles/index.css";
+import toggleNav from "../components/buttons";
 
 export const Dashboard = () => {
+  const handleAsideClick = (event: React.MouseEvent<HTMLElement>) => {
+    if (event.target === event.currentTarget) {
+      toggleNav("aside-nav", "slide-out");
+    }
+  };
+
   return (
-    <div className="main-container">
-      <aside className="aside-nav">
-        <nav className="side-nav">
+    <div className="dashboard-container">
+      <nav className="top-nav">
+        <div className="left">
+          <BsGridFill
+            className="icon"
+            style={{ cursor: "pointer" }}
+            onClick={() => toggleNav("aside-nav", "slide-out")}
+          />
+          <BsSearch className="icon" style={{ cursor: "pointer" }} />
+          <input type="text" name="" id="" />
+        </div>
+        <div className="right">
+          <BsBellFill className="icon" style={{ cursor: "pointer" }} />
+          <img
+            style={{ marginRight: "0.9em" }}
+            src={`${process.env.PUBLIC_URL}/images/account/Profile.png`}
+            alt="user"
+          />
+          <BsChevronDown
+            className="icon"
+            onClick={() => toggleNav("dropdown-container", "dropdown-display")}
+          />
+          <div className="dropdown-container">
+            <ul className="dropdown-content">
+              <li>
+                <BsPerson className="icon" /> <p>View Profile</p>
+              </li>
+              <li>
+                <BsFillBellFill className="icon" /> <p>Notifications</p>
+              </li>
+              <li>
+                <BsBoxArrowRight style={{ color: "red" }} className="icon" />
+                <p style={{ color: "red" }}>Logout</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <aside className="aside-nav" onClick={handleAsideClick}>
+        <nav className="side-nav slide-out">
           <div className="side-nav-header">
-            <img src="" alt="" />
+            {/* <img src="" alt="" /> */}
             <h2>RISAV</h2>
           </div>
           <div className="ul-list-container">
             <ul className="ul-content">
               <li>
-                <Fa.FaHome /> <p>Dashboard</p>
+                <FaHome className="icon" /> <p>Dashboard</p>
               </li>
               <li>
-                <Fa.FaUser /> <p>Profile</p>
+                <FaUser className="icon" /> <p>Profile</p>
               </li>
               <li>
-                <Fa.FaCartPlus /> <p>Reservations</p>
+                <FaCartPlus className="icon" /> <p>Reservations</p>
               </li>
               <li>
-                <Fa.FaFile /> <p>Categories</p>
+                <FaFile className="icon" /> <p>Categories</p>
               </li>
               <li>
-                <Bs.BsGraphUp /> <p>Sales Report</p>
+                <BsGraphUp className="icon" /> <p>Sales Report</p>
               </li>
               <li>
-                <Bs.BsPeopleFill /> <p>Users</p>
+                <BsPeopleFill className="icon" /> <p>Users</p>
+              </li>
+              <li>
+                <BsBoxArrowInLeft className="icon" /> <p>Login</p>
+              </li>
+              <li>
+                <BsPersonAdd className="icon" /> <p>Sign up</p>
               </li>
             </ul>
           </div>
         </nav>
       </aside>
       <div className="section-div-container">
-        <section>
-          <nav className="top-nav">
-            <Bs.BsMenuAppFill />
-            <Bs.BsSearch />
-            <input type="text" name="" id="" />
-            <Bs.BsBellFill />
-            <button>
-              <img src="" alt="" />
-            </button>
-            <button>
-              <Bs.BsChevronDown />
-            </button>
-            <div className="dropdown-container">
-              <ul className="dropdown-content">
-                <li>
-                  <Bs.BsPerson /> <p>View Profile</p>
-                </li>
-                <li>
-                  <Bs.BsFillBellFill /> <p>Notifications</p>
-                </li>
-                <li>
-                  <Bs.BsBoxArrowDownRight /> <p>Logout</p>
-                </li>
-              </ul>
-            </div>
-          </nav>
-        </section>
         <section className="total-sales-container">
-          {/* <h2></h2>
-          <p></p>
+          <h2>Reservation's Summary</h2>
           <div className="inner-sales-cont">
-            <Bs.BsBarChartFill />
-            <h3></h3>
-            <p></p>
-            <p></p>
+            <BsBarChartFill style={{ color: "#fab659" }} className="icon" />
+            <h3>$5k</h3>
+            <p>Income From Reservations</p>
           </div>
           <div className="inner-sales-cont">
-            <Fa.FaTasks />
-            <h3></h3>
-            <p></p>
-            <p></p>
+            <FaTasks style={{ color: "#a0dfd8" }} className="icon" />
+            <h3>500</h3>
+            <p>Total Applications</p>
           </div>
           <div className="inner-sales-cont">
-            <Fa.FaCartPlus />
-            <h3></h3>
-            <p></p>
-            <p></p>
-          </div> */}
+            <FaCartPlus style={{ color: "#e4c8ed" }} className="icon" />
+            <h3>9</h3>
+            <p>Total Reservations</p>
+          </div>
         </section>
-        <section>
-          <div></div>
+        <section className="top-reservations-container">
+          <div className="table-container">
+            <h2>Top Reservations</h2>
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Popularity</th>
+                  <th>Sales</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>01</td>
+                  <td>Kitchen Convention</td>
+                  <td>
+                    <div className="progress-bar"></div>
+                  </td>
+                  <td>
+                    <div className="sales-percentage">
+                      <p>78%</p>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>02</td>
+                  <td>Sports Track</td>
+                  <td>
+                    <div className="progress-bar"></div>
+                  </td>
+                  <td>
+                    <div className="sales-percentage">
+                      <p>62%</p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </section>
-        <section>
-          <div></div>
+        <section className="trending-section">
+          <div className="trending-container">
+            <div className="header">
+              <h2>Trending Now</h2>
+              <div className="next-prev-cont">
+                <BsChevronLeft style={{ marginRight: "1.5em" }} />
+                <BsChevronRight />
+              </div>
+            </div>
+            <div className="image-container">
+              {/* image dey here */}
+              <h3>Kitchen Convention</h3>
+              <p>Popularity</p>
+              <div className="progress-bar"></div>
+              <div className="user-icon"></div>
+            </div>
+          </div>
         </section>
         <section>
           <div></div>

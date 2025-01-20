@@ -1,40 +1,416 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 * {
   margin: 0;
   padding: 0;
 }
+* ::-webkit-scrollbar {
+  width: 16px;
+}
+* ::-webkit-scrollbar-track {
+  background-color: #171821;
+}
+* ::-webkit-scrollbar-thumb {
+  background-color: #21222d;
+  border-radius: 3px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
 
 body {
-  background-color: rgb(23, 21, 21);
+  background-color: #171821;
+  font-family: Montserrat, sans-serif;
 }
 
-.main-container {
-  height: 100vh;
+.dashboard-container {
+  height: -moz-fit-content;
+  height: fit-content;
   width: 100%;
-  padding: 0.5em;
   display: flex;
   flex-direction: column;
+  padding: 1em;
+  box-sizing: border-box;
 }
-.main-container .aside-nav {
+.dashboard-container .top-nav {
+  width: 100%;
+  min-height: 80px;
+  position: sticky;
+  top: 0;
+  background-color: #171821;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.dashboard-container .top-nav .icon {
+  height: 20px;
+  width: 20px;
+  color: white;
+  margin-right: 1.5em;
+}
+.dashboard-container .top-nav .left input {
+  visibility: hidden;
+}
+.dashboard-container .top-nav .right .dropdown-container {
+  display: none;
+  position: absolute;
+  transform: translate(-120px, 20px);
+  height: 200px;
+  width: 13em;
+  background-color: #21222d;
+  border-radius: 6px;
+  box-shadow: 5px 5px 5px #171821;
+}
+.dashboard-container .top-nav .right .dropdown-container .dropdown-content {
+  list-style-type: none;
+}
+.dashboard-container .top-nav .right .dropdown-container .dropdown-content li {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  list-style-type: none;
+  margin-bottom: 0.4em;
+  padding-left: 0.9em;
+  color: #4d4e55;
+  text-align: center;
+  font-size: 1em;
+  font-weight: 500;
+  height: 50px;
+  width: inherit;
+  border-radius: 4px;
+}
+.dashboard-container .top-nav .right .dropdown-container .dropdown-content li p {
+  margin-left: 0.7em;
+  font-weight: 600;
+}
+.dashboard-container .top-nav .right .dropdown-container .dropdown-content li:hover {
+  cursor: pointer;
+}
+.dashboard-container .top-nav .right .dropdown-container .dropdown-content li {
+  color: #87888c;
+  margin-bottom: 0em;
+}
+.dashboard-container .top-nav .right .dropdown-container .dropdown-content li p {
+  margin-left: 0;
+}
+.dashboard-container .top-nav .right .dropdown-container .dropdown-content li:hover {
+  background-color: rgba(61, 59, 59, 0.423);
+}
+.dashboard-container .top-nav .right .dropdown-display {
+  display: block;
+}
+.dashboard-container .aside-nav {
+  width: 0%;
   height: 100%;
+  position: fixed;
+  z-index: 999;
+  -webkit-backdrop-filter: blur(5px);
+          backdrop-filter: blur(5px);
+  transform: translateX(-300px);
+  transition: width 200ms linear;
+}
+.dashboard-container .aside-nav .side-nav {
+  position: absolute;
+  height: inherit;
   width: 50%;
-  padding: 0.5rem;
-  background-color: rgb(23, 21, 21);
+  transition: width 500ms linear;
+  background-color: #171821;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.dashboard-container .aside-nav .side-nav .side-nav-header {
+  margin-bottom: 0.5em;
+  color: white;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 1.5em;
+}
+.dashboard-container .aside-nav .side-nav .ul-list-container {
+  width: 12em;
+  height: 100%;
+  margin-left: 1em;
+}
+.dashboard-container .aside-nav .side-nav .ul-list-container .ul-content li {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  list-style-type: none;
+  margin-bottom: 0.4em;
+  padding-left: 0.9em;
+  color: #4d4e55;
+  text-align: center;
+  font-size: 1em;
+  font-weight: 500;
+  height: 50px;
+  width: inherit;
+  border-radius: 4px;
+}
+.dashboard-container .aside-nav .side-nav .ul-list-container .ul-content li p {
+  margin-left: 0.7em;
+  font-weight: 600;
+}
+.dashboard-container .aside-nav .side-nav .ul-list-container .ul-content li:hover {
+  cursor: pointer;
+}
+.dashboard-container .aside-nav .side-nav .ul-list-container .ul-content li:hover {
+  background-color: #1c1d27;
+}
+.dashboard-container .section-div-container {
+  display: grid;
+  row-gap: 30px;
+  height: 100%;
+}
+.dashboard-container .section-div-container .total-sales-container {
+  height: auto;
+  width: 85%;
+  padding: 1em;
+  box-sizing: border-box;
+  background-color: #21222d;
+  border-radius: 8px;
+  text-align: left;
+}
+.dashboard-container .section-div-container .total-sales-container h2 {
+  margin-bottom: 30px;
+  color: white;
+}
+.dashboard-container .section-div-container .total-sales-container .inner-sales-cont {
+  height: 180px;
+  width: 95%;
+  padding-left: 10px;
+  margin-bottom: 1em;
+  background-color: #171821;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-evenly;
+  border-radius: 8px;
+}
+.dashboard-container .section-div-container .total-sales-container .inner-sales-cont .icon {
+  height: 20px;
+  width: 20px;
+  color: white;
+  margin-right: 1.5em;
+}
+.dashboard-container .section-div-container .total-sales-container .inner-sales-cont h3 {
+  color: white;
+}
+.dashboard-container .section-div-container .total-sales-container .inner-sales-cont p {
+  color: rgb(222, 220, 220);
+}
+.dashboard-container .section-div-container .top-reservations-container {
+  height: auto;
+  width: 85%;
+  padding: 1em;
+  box-sizing: border-box;
+  background-color: #21222d;
+  border-radius: 8px;
+  color: white;
+  text-align: left;
+}
+.dashboard-container .section-div-container .top-reservations-container .table-container {
+  box-sizing: border-box;
+  overflow-x: auto;
+  scrollbar-track-color: transparent;
+}
+.dashboard-container .section-div-container .top-reservations-container .table-container h2 {
+  margin-bottom: 1em;
+}
+.dashboard-container .section-div-container .top-reservations-container .table-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.dashboard-container .section-div-container .top-reservations-container .table-container table tr {
+  height: 50px;
+  border-bottom: 3px solid #282833;
+}
+.dashboard-container .section-div-container .top-reservations-container .table-container table tr th {
+  color: #69868c;
+  font-size: 1.3em;
+  font-weight: 500;
+  min-width: 3em;
+  padding: 0.5em;
+}
+.dashboard-container .section-div-container .top-reservations-container .table-container table tr td {
+  text-wrap: nowrap;
+  padding: 0.5em;
+}
+.dashboard-container .section-div-container .top-reservations-container .table-container table tr td .progress-bar {
+  width: 100%;
+  height: 5px;
+  background-color: #e4c8ed;
+  border-radius: 6px;
+}
+.dashboard-container .section-div-container .top-reservations-container .table-container table tr td .sales-percentage {
+  width: 6em;
+  height: 3em;
+  background-color: rgba(250, 183, 89, 0.2);
+  border-radius: 6px;
+  border: 1px solid #fab659;
+  place-content: center;
+  text-align: center;
+  color: #fab659;
+}
+.dashboard-container .section-div-container .trending-section {
+  height: auto;
+  width: 85%;
+  padding: 1em;
+  box-sizing: border-box;
+  background-color: #21222d;
+  border-radius: 8px;
+}
+.dashboard-container .section-div-container .trending-section .trending-container .header {
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.dashboard-container .section-div-container .trending-section .trending-container .image-container {
+  height: 12em;
+  width: 100%;
+  text-align: left;
+  color: white;
+}
+.dashboard-container .section-div-container .trending-section .trending-container .image-container .progress-bar {
+  width: 100%;
+  height: 5px;
+  background-color: #e4c8ed;
+  border-radius: 6px;
+}
+.dashboard-container .section-div-container .trending-section .trending-container .image-container h3 {
+  margin-bottom: 10px;
+}
+.dashboard-container .section-div-container .trending-section .trending-container .image-container p {
+  color: #69868c;
+  margin-bottom: 1em;
+}
+.dashboard-container .slide-out {
+  transform: translateX(0);
+  width: 100%;
+}
+
+.form-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  position: absolute;
-  z-index: 999;
-}
-.main-container .aside-nav .ul-list-container {
+  padding: 0em;
+  height: 100vh;
   width: 100%;
-  height: 100%;
 }
-.main-container .aside-nav .ul-list-container .ul-content li {
-  list-style-type: none;
-  margin-bottom: 0.4em;
-  background-color: rgba(157, 242, 242, 0.992);
+.form-container h1 {
+  margin: 1em 0em;
+  color: #fab659;
+}
+.form-container .login-form {
+  height: -moz-fit-content;
+  height: fit-content;
+  width: 90%;
+  padding: 1.5em;
+  max-width: 30em;
+  background-color: #21222d;
+  border-radius: 8px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.form-container .login-form h2 {
+  color: white;
+  margin-bottom: 0.5em;
+}
+.form-container .login-form p {
+  color: #87888c;
+  font-size: 1.1em;
+  font-weight: 500;
+  margin-bottom: 1em;
+}
+.form-container .login-form a {
+  color: #a0dfd8;
+  text-decoration: none;
+}
+.form-container .login-form .form-control {
+  text-align: left;
+  margin-bottom: 1.5em;
+}
+.form-container .login-form .form-control label {
+  font-size: 1em;
+  color: white;
+}
+.form-container .login-form .form-control input {
+  background-color: #1b1b22;
+  height: 3.2em;
+  width: 100%;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+  padding: 0.8em;
+  box-sizing: border-box;
+  margin: 0.5em 0em 0;
+  font-size: 1em;
+  color: white;
+}
+.form-container .login-form .form-control input:hover {
+  background-color: #171821;
+  transition: all 300ms linear;
+}
+.form-container .login-form .form-control button {
+  width: 100%;
+  height: 2.5em;
   text-align: center;
-  font-weight: 600;
-  padding: 0.2em;
+  font-size: 1.3em;
+  color: #171821;
+  background-color: #a0dfd8;
+  border-radius: 6px;
+  margin-top: 0.9em;
+}
+.form-container .login-form .form-control button:hover {
+  background-color: rgba(115, 202, 190, 0.8784313725);
+  transition: all 300ms linear;
+}
+.form-container .login-form .form-control .check {
+  width: 10%;
+  margin-bottom: 1em;
+  vertical-align: sub;
+}
+.form-container .login-form .form-control .password-input {
+  width: 100%;
+  height: inherit;
+}
+.form-container .login-form .form-control .password-input input {
+  width: 100%;
+}
+.form-container .login-form .form-control .password-input .eye {
+  color: white;
+  height: 1.4em;
+  width: 1.4em;
+  margin-left: -40px;
+  vertical-align: middle;
+}
+.form-container .login-form .form-control .password-input .eyeslash {
+  margin-left: -20px;
+  opacity: 0.7;
+}
+.form-container .login-form .form-control .password-input .open-eye {
+  visibility: hidden;
+}
+.form-container .login-form .form-control .oauth {
+  border: 1px solid #a0dfd8;
+  background-color: #21222d;
+}
+.form-container .login-form .form-control .oauth span {
+  margin: 0;
+  color: #a0dfd8;
+}
+.form-container .login-form .form-control .oauth:hover {
+  background-color: rgba(115, 202, 190, 0.2705882353);
+  transition: all 300ms linear;
+}
+.form-container .login-form .hr {
+  border-top: 1px solid rgba(135, 136, 140, 0.3529411765);
+  width: 100%;
+  margin: 0.4em 0em;
+}
+.form-container .login-form span {
+  margin-bottom: 0.8em;
+  color: white;
 }/*# sourceMappingURL=index.css.map */
