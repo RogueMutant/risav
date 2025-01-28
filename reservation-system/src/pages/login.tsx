@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import "../styles/index.css";
+import { useFetch } from "../components/useFetch";
+// import { togglePassword } from "../helper";
+import { useNavigate } from "react-router-dom";
 declare var axios: any;
 
 interface Person {
@@ -9,10 +12,22 @@ interface Person {
   password: string;
 }
 
+const url = "http://localhost:9000/auth/login";
+
 export const Login = () => {
   const [person, setPerson] = useState<Person>({ email: "", password: "" });
-  const [users, setUsers] = useState<Person[]>([]);
+  const [shouldFetch, setShouldFetch] = useState(false);
+  const { loading, data, error, fetchData } = useFetch(
+    url,
+    shouldFetch,
+    "post"
+  );
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const navigate = useNavigate();
 
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setPerson((prevPerson) => ({ ...prevPerson, [name]: value }));
@@ -20,12 +35,28 @@ export const Login = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const newUser = { email: person.email, password: person.password };
-    console.log(newUser);
-    const updateUsers = { ...person, ...newUser };
-    setUsers((prevUsers) => [...prevUsers, updateUsers]);
-    setPerson({ email: "", password: "" });
+    setShouldFetch(true);
   };
+
+  const redirectToDashboard = useCallback(() => {
+    navigate("/dashboard");
+  }, [navigate]);
+
+  useEffect(() => {
+    if (shouldFetch) {
+      fetchData(person);
+      setShouldFetch(false);
+    }
+    if (data) {
+      console.log(data);
+      setPerson({ email: "", password: "" });
+      redirectToDashboard();
+    }
+  }, [shouldFetch, fetchData, person, data, redirectToDashboard]);
+
+  if (error) {
+    console.error("Login error:", error);
+  }
   return (
     <article className="form-container">
       <h1>RISAV</h1>
@@ -48,14 +79,15 @@ export const Login = () => {
           <label htmlFor="password">Password</label>
           <div className="password-input">
             <input
-              type="password"
+              type={passwordVisible ? "text" : "password"}
               name="password"
               id="password"
               value={person.password}
               onChange={handleChange}
             />
-            <BsEye className="eye open-eye" />
-            <BsEyeSlash className="eye eyeslash" />
+            <span onClick={togglePasswordVisibility} className="eye">
+              {passwordVisible ? <BsEyeSlash /> : <BsEye />}
+            </span>
           </div>
         </div>
         <div className="form-control">
@@ -67,7 +99,9 @@ export const Login = () => {
             className="check"
           />
           <label htmlFor="checkbox">Keep me signed in</label>
-          <button type="submit">Log In</button>
+          <button type="submit" disabled={loading}>
+            {loading ? "Loading" : "Log In"}
+          </button>
         </div>
         <div className="hr"></div>
         <span>Or sign in using:</span>

@@ -54,7 +54,7 @@ export const Dashboard = () => {
           <div className="dropdown-container">
             <ul className="dropdown-content">
               <li>
-                <BsPerson className="icon" /> <p>View Profile</p>
+                <BsPerson className="icon" /> <p>Manage Profile</p>
               </li>
               <li>
                 <BsFillBellFill className="icon" /> <p>Notifications</p>

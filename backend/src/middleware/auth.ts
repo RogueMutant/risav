@@ -2,6 +2,7 @@ import "dotenv/config";
 import jwt from "jsonwebtoken";
 import { CustomRequest } from "../types/custom";
 import { NextFunction, Response } from "express";
+//const { UnauthorizedError } = require("../errors/index");
 
 interface jwtPayload {
   name: string;
@@ -31,6 +32,7 @@ const auth = async (
     req.user = { ...decoded };
     next();
   } catch (error) {
+    //throw new UnauthorizedError();
     res
       .status(401)
       .json({ message: "Invalid token provided", status: "Unauthorized" });

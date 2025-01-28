@@ -1,5 +1,6 @@
 require("dotenv").config();
 import express, { Application, Request, Response } from "express";
+
 import notFoundError from "./middleware/notFound";
 import { connectDb } from "./db/connect";
 import userAuth from "./routes/auth";
@@ -7,12 +8,23 @@ import { auth } from "./middleware/auth";
 import resourceRoute from "./routes/resource";
 import categoriesRoute from "./routes/category";
 import reservationRoute from "./routes/reservation";
+import cors from "cors";
 
 const app: Application = express();
+
+const corsOptions = {
+  origin: "http://localhost:3000",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true,
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
+//routes
 app.use("/auth", userAuth);
 app.use("/api/resource", auth, resourceRoute);
 app.use("/api/categories", auth, categoriesRoute);

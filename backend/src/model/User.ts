@@ -30,6 +30,9 @@ const userSchema: Schema = new mongoose.Schema<IUser>(
       enum: ["super_admin", "admin", "user"],
       default: "user",
     },
+    phoneNumber: {
+      type: Number,
+    },
     isActive: {
       type: Boolean,
       default: false,

@@ -8,25 +8,33 @@ const createUser = async (req: CustomRequest, res: Response): Promise<void> => {
   const role = existingUser.length === 0 ? "super_admin" : "user";
 
   const { name, email, password } = req.body;
-  if (name && email) {
-    const user = await User.create({
-      name,
-      email,
-      password,
-      role,
-    });
-    const token = user.createJwt();
-    res.status(200).json({
-      message: "Succesfully created a user",
-      status: "success",
-      userDetails: user,
-      token,
-    });
-    return;
+  console.log(req.body);
+  try {
+    if (name && email) {
+      const user = await User.create({
+        name,
+        email,
+        password,
+        role,
+      });
+
+      const token = user.createJwt();
+      res.status(200).json({
+        message: "Succesfully created a user",
+        status: "success",
+        userDetails: user,
+        token,
+      });
+      return;
+    }
+  } catch (error) {
+    console.log(error, `this is the body ${req.body}`);
   }
-  res
-    .status(404)
-    .json({ message: "failed to create a user", status: "Failed" });
+  res.status(404).json({
+    message: "failed to create a user",
+    status: "Failed",
+    body: req.body,
+  });
 };
 
 const login = async (req: CustomRequest, res: Response): Promise<void> => {
@@ -54,6 +62,12 @@ const login = async (req: CustomRequest, res: Response): Promise<void> => {
     return;
   }
   res.status(200).json({ message: "welcome back", status: "success", token });
+};
+
+const updateProfile = async (req: CustomRequest, res: Response) => {
+  const updatedUser = await User.findByIdAndUpdate(req.user?.userId, {
+    ...req.body,
+  });
 };
 
 const setFallBackAdmin = async (
@@ -170,4 +184,11 @@ const roleUpdate = async (req: CustomRequest, res: Response): Promise<void> => {
   });
 };
 
-export { createUser, login, setFallBackAdmin, emergencyCode, roleUpdate };
+export {
+  createUser,
+  login,
+  updateProfile,
+  setFallBackAdmin,
+  emergencyCode,
+  roleUpdate,
+};
