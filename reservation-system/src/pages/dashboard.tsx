@@ -21,6 +21,31 @@ import toggleNav from "../components/buttons";
 declare var axios: any;
 
 export const Dashboard = () => {
+  const [dropdownsOpen, setDropdownsOpen] = useState<{
+    reservations: boolean;
+    categories: boolean;
+    salesReport: boolean;
+  }>({
+    reservations: false,
+    categories: false,
+    salesReport: false,
+  });
+
+  const toggleDropdown = (dropdownName: keyof typeof dropdownsOpen) => {
+    setDropdownsOpen((prevState) => {
+      const newState = { ...prevState };
+      for (const key in prevState) {
+        if (prevState.hasOwnProperty(key)) {
+          newState[key as keyof typeof prevState] =
+            key === dropdownName
+              ? !prevState[key as keyof typeof prevState]
+              : false;
+        }
+      }
+      return newState;
+    });
+  };
+
   const handleAsideClick = (event: React.MouseEvent<HTMLElement>) => {
     if (event.target === event.currentTarget) {
       toggleNav("aside-nav", "slide-out");
@@ -71,7 +96,6 @@ export const Dashboard = () => {
       <aside className="aside-nav" onClick={handleAsideClick}>
         <nav className="side-nav slide-out">
           <div className="side-nav-header">
-            {/* <img src="" alt="" /> */}
             <h2>RISAV</h2>
           </div>
           <div className="ul-list-container">
@@ -84,41 +108,83 @@ export const Dashboard = () => {
               </li>
 
               <li className="dropdown">
-                <div className="dropdown-btn">
+                <div
+                  className="dropdown-btn"
+                  onClick={() => toggleDropdown("reservations")}
+                >
                   <div>
                     <FaCartPlus className="icon" /> <p>Reservations</p>
                   </div>
                   <BsChevronRight className="icon-right" />
                 </div>
-                <ul className="dropdown-list">
-                  <li>All Reservations</li>
-                </ul>
+                {dropdownsOpen.reservations && (
+                  <ul className="dropdown-list">
+                    <li
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        console.log("All Reservations clicked");
+                      }}
+                    >
+                      All Reservations
+                    </li>
+                  </ul>
+                )}
               </li>
 
               <li className="dropdown">
-                <div className="dropdown-btn">
+                <div
+                  className="dropdown-btn"
+                  onClick={() => toggleDropdown("categories")}
+                >
                   <div>
                     <FaFile className="icon" />
                     <p>Categories</p>
                   </div>
                   <BsChevronRight className="icon-right" />
                 </div>
-                <ul className="dropdown-list">
-                  <li>Lab Equipment</li>
-                  <li>Event Halls</li>
-                </ul>
+                {dropdownsOpen.categories && (
+                  <ul className="dropdown-list">
+                    <li
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        console.log("Lab Equipment clicked");
+                      }}
+                    >
+                      Lab Equipment
+                    </li>
+                    <li
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        console.log("+ Create New Category clicked");
+                      }}
+                    >
+                      + Create New Category
+                    </li>
+                  </ul>
+                )}
               </li>
 
               <li className="dropdown">
-                <div className="dropdown-btn">
+                <div
+                  className="dropdown-btn"
+                  onClick={() => toggleDropdown("salesReport")}
+                >
                   <div>
                     <BsGraphUp className="icon" /> <p>Sales Report</p>
                   </div>
                   <BsChevronRight className="icon-right" />
                 </div>
-                <ul className="dropdown-list">
-                  <li>Reservations</li>
-                </ul>
+                {dropdownsOpen.salesReport && (
+                  <ul className="dropdown-list">
+                    <li
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                    >
+                      All Reservations
+                    </li>
+                  </ul>
+                )}
               </li>
               <li>
                 <BsPeopleFill className="icon" /> <p>Users</p>
