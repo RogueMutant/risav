@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
-import { useFetch } from "../components/useFetch";
+import { useFetch } from "../hooks/useFetch";
 import "../styles/index.css";
 import { useNavigate } from "react-router-dom";
 

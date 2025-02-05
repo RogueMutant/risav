@@ -7,18 +7,24 @@ import { Reservation } from "./pages/reservation";
 import { Profile } from "./pages/settings";
 import { NotFound } from "./pages/notfound";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { ResourceList } from "./components/resourcelist";
+import { CategoryPage } from "./pages/categories";
+import { ResourceProvider } from "./components/resourceContext";
 
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signUp" element={<SignUp />} />
-        <Route path="/settings" element={<Profile />} />
-        <Route path="/reservation" element={<Reservation />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <ResourceProvider>
+        <Routes>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signUp" element={<SignUp />} />
+          <Route path="/settings" element={<Profile />} />
+          <Route path="/reservation" element={<Reservation />} />
+          <Route path="/category/:categoryName" element={<CategoryPage />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </ResourceProvider>
     </Router>
   );
 }

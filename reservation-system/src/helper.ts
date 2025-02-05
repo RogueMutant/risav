@@ -1,4 +1,12 @@
-// export const togglePassword = (class1: string, class2: string) => {
-//   document.querySelector(`.${class1}`)?.classList.remove(class2);
-//   console.log("clicked");
-// };
+import React from "react";
+import { useNavigate } from "react-router-dom";
+
+export const useRedirect = () => {
+  const navigate = useNavigate();
+
+  const redirect = (path: string) => {
+    navigate(path);
+  };
+
+  return { redirect };
+};

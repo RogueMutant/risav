@@ -1,0 +1,132 @@
+.form-container {
+  max-width: 600px;
+  width: 100%;
+  display: flex;
+  position: absolute;
+  top: 0;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #6c757d;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  min-height: 80vh;
+  box-sizing: border-box;
+}
+
+.close-icon {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: black;
+  height: 30px;
+  width: 30px;
+  border-radius: 6px;
+  font-size: 1.5rem;
+  color: #f8f9fa;
+  cursor: pointer;
+}
+
+.create-resource-form {
+  margin-top: 2rem;
+  background-color: #6c757d;
+  /* ... other styles */
+}
+.create-resource-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #6c757d;
+}
+.create-resource-form input,
+.create-resource-form textarea {
+  box-sizing: border-box;
+}
+.create-resource-form input[type=text],
+.create-resource-form textarea {
+  color: #f8f9fa;
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+.create-resource-form input[type=text]:focus,
+.create-resource-form textarea:focus {
+  border-color: #007bff;
+  outline: none;
+}
+.create-resource-form input[type=file] {
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border: 1px dashed #ced4da;
+  border-radius: 0.5rem;
+  background-color: #f8f9fa;
+  cursor: pointer;
+}
+.create-resource-form input[type=file]:hover {
+  border-color: #007bff;
+}
+.create-resource-form textarea {
+  resize: vertical;
+  min-height: 150px;
+}
+.create-resource-form button {
+  height: 45px;
+  padding: 0.75rem 1.5rem;
+  margin-right: 0.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.create-resource-form button[type=submit] {
+  background-color: #007bff;
+  color: white;
+}
+.create-resource-form button[type=submit]:hover {
+  background-color: #0062cc;
+}
+.create-resource-form button[type=button] {
+  background-color: #6c757d;
+  color: white;
+}
+.create-resource-form button[type=button]:hover {
+  background-color: #545b62;
+}
+.create-resource-form .image-preview {
+  position: relative; /* Needed for positioning the button */
+  margin-bottom: 1rem;
+}
+.create-resource-form .image-preview img {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #ced4da;
+  border-radius: 0.5rem;
+  display: block; /* Prevents image from affecting layout */
+}
+.create-resource-form .image-preview .remove-image {
+  position: absolute;
+  top: 10px; /* Adjust as needed */
+  right: 10px; /* Adjust as needed */
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 0.8rem; /* Smaller font size */
+  opacity: 1; /* Initially hidden */
+  transition: opacity 0.3s ease; /* Smooth transition */
+}
+.create-resource-form .image-preview .remove-image:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}/*# sourceMappingURL=createResourceForm.css.map */

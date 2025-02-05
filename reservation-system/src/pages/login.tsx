@@ -2,10 +2,8 @@ import React, { useCallback, useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import "../styles/index.css";
-import { useFetch } from "../components/useFetch";
-// import { togglePassword } from "../helper";
+import { useFetch } from "../hooks/useFetch";
 import { useNavigate } from "react-router-dom";
-declare var axios: any;
 
 interface Person {
   email: string;

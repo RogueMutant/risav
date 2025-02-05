@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import axios, { AxiosRequestConfig } from "axios";
 
 interface UseFetchState<T> {
@@ -8,7 +8,7 @@ interface UseFetchState<T> {
 }
 
 interface UseFetchReturn<T> extends UseFetchState<T> {
-  fetchData: (body?: any) => Promise<void>;
+  fetchData: (body?: any) => Promise<T | null>;
 }
 
 export const useFetch = <T,>(
@@ -21,9 +21,9 @@ export const useFetch = <T,>(
   const [error, setError] = useState<string | null>(null);
 
   const fetchData = useCallback(
-    async (body?: any) => {
-      if (!shouldFetch) return;
+    async (body?: any): Promise<T | null> => {
       setLoading(true);
+      setError(null);
 
       try {
         const config: AxiosRequestConfig = {
@@ -37,22 +37,18 @@ export const useFetch = <T,>(
 
         const response = await axios.request<T>(config);
         setData(response.data);
+        return response.data;
       } catch (err: any) {
         setError(
           err.response?.data?.message || err.message || "An error occurred"
         );
+        return null;
       } finally {
         setLoading(false);
       }
     },
-    [url, reqMethod, shouldFetch]
+    [url, reqMethod]
   );
-
-  useEffect(() => {
-    if (shouldFetch) {
-      fetchData();
-    }
-  }, [fetchData, shouldFetch]);
 
   return { loading, data, error, fetchData };
 };

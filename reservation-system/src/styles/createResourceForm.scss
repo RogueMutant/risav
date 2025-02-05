@@ -1,0 +1,153 @@
+$primary-color: #007bff;
+$secondary-color: #6c757d;
+$background-color: #f8f9fa;
+$border-color: #ced4da;
+$hover-color: darken($primary-color, 10%);
+$spacing-unit: 1rem;
+$border-radius: 0.5rem;
+
+.form-container {
+  max-width: 600px;
+  width: 100%;
+  display: flex;
+  position: absolute;
+  top: 0;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin: 0 auto;
+  padding: $spacing-unit * 2;
+  background-color: $secondary-color;
+  border-radius: $border-radius;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  min-height: 80vh;
+  box-sizing: border-box;
+}
+
+.close-icon {
+  position: absolute;
+  top: $spacing-unit;
+  right: $spacing-unit;
+  background-color: black;
+  height: 30px;
+  width: 30px;
+  border-radius: 6px;
+  font-size: 1.5rem;
+  color: $background-color;
+  cursor: pointer;
+}
+
+.create-resource-form {
+  margin-top: $spacing-unit * 2;
+  background-color: $secondary-color;
+  label {
+    display: block;
+    margin-bottom: $spacing-unit * 0.5;
+    font-weight: bold;
+    color: $secondary-color;
+  }
+
+  input,
+  textarea {
+    box-sizing: border-box;
+  }
+
+  input[type="text"],
+  textarea {
+    color: $background-color;
+    width: 100%;
+    padding: $spacing-unit * 0.75;
+    margin-bottom: $spacing-unit;
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+
+    &:focus {
+      border-color: $primary-color;
+      outline: none;
+    }
+  }
+
+  input[type="file"] {
+    width: 100%;
+    margin-bottom: $spacing-unit;
+    padding: $spacing-unit * 0.5;
+    border: 1px dashed $border-color;
+    border-radius: $border-radius;
+    background-color: $background-color;
+    cursor: pointer;
+
+    &:hover {
+      border-color: $primary-color;
+    }
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 150px;
+  }
+
+  button {
+    height: 45px;
+    padding: $spacing-unit * 0.75 $spacing-unit * 1.5;
+    margin-right: $spacing-unit * 0.5;
+    border: none;
+    border-radius: $border-radius;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &[type="submit"] {
+      background-color: $primary-color;
+      color: white;
+
+      &:hover {
+        background-color: $hover-color;
+      }
+    }
+
+    &[type="button"] {
+      background-color: $secondary-color;
+      color: white;
+
+      &:hover {
+        background-color: darken($secondary-color, 10%);
+      }
+    }
+  }
+
+  /* ... other styles */
+  .image-preview {
+    position: relative; /* Needed for positioning the button */
+    margin-bottom: $spacing-unit;
+    img {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid $border-color;
+      border-radius: $border-radius;
+      display: block; /* Prevents image from affecting layout */
+    }
+
+    .remove-image {
+      position: absolute;
+      top: 10px; /* Adjust as needed */
+      right: 10px; /* Adjust as needed */
+      background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: $border-radius;
+      cursor: pointer;
+      font-size: 0.8rem; /* Smaller font size */
+      opacity: 1; /* Initially hidden */
+      transition: opacity 0.3s ease; /* Smooth transition */
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.7);
+      }
+    }
+  }
+}

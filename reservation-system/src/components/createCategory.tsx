@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "../styles/index.css";
 
 interface categoryProps {
   onCreated: (categoryName: string) => void;
@@ -17,7 +18,7 @@ export const CreateCategory: React.FC<categoryProps> = ({
   };
   return (
     <div>
-      <form onSubmit={handleSubmit} className="create-category-form">
+      <form onSubmit={handleSubmit} className="create-category-form ">
         <label htmlFor="category-name">Category Name:</label>
         <input
           type="text"

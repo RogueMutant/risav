@@ -1,3 +1,4 @@
+@import "./variables";
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 
 @mixin icon-style {
@@ -30,28 +31,6 @@
 html {
   scroll-behavior: smooth;
 }
-
-$bg-color: #171821;
-$faded-black: #21222d;
-$color-aqua: #a0dfd8;
-$color-orange: #fab659;
-$color-pink: #e4c8ed;
-$color-white: white;
-$color-blue: #73cabe;
-$th-color: #69868c;
-$header-font-size: 1.3em;
-$p-font-size: 1em;
-
-$font-fam: Montserrat;
-
-// _variables.scss (for easier theming)
-$primary-color: #bb86fc; // A vibrant purple
-$secondary-color: #03dac6; // A teal accent
-$background-color: #121212; // Dark background
-$surface-color: #1e1e1e; // Slightly lighter surface for cards/panels
-$on-background-color: #e0e0e0; // Light text on dark background
-$on-surface-color: #ffffff; // White text on surface
-$error-color: #cf6679; // A reddish error color
 
 // _mixins.scss (for reusable styles)
 @mixin elevation($level: 2) {
@@ -142,7 +121,6 @@ $error-color: #cf6679; // A reddish error color
       height: fit-content;
 
       margin-top: 0.4em;
-      // overflow: hidden;
       transition: height 300ms linear;
       li {
         height: 2em;
@@ -275,6 +253,7 @@ body {
     }
     .side-nav {
       position: absolute;
+      z-index: 999;
       height: inherit;
       width: 50%;
       padding: 0.5em;
@@ -745,12 +724,10 @@ $box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 @mixin form-element {
   width: 100%;
   padding: 1rem;
-  border: 1px solid $border-color;
   @include rounded-corners(4px);
   box-sizing: border-box;
   font-size: 1rem;
-  background-color: $surface-color;
-  color: $on-surface-color;
+  background-color: $faded-black;
 
   &:focus {
     border-color: $primary-color;
@@ -763,10 +740,16 @@ $box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 0 auto;
   padding: 2rem;
   background-color: $background-color;
-  min-height: 100vh; // Ensure full viewport height
-  font-family: sans-serif; // Use a clean, modern font
+
+  min-height: 300px;
+  height: fit-content;
+  width: 90%;
+  box-sizing: border-box;
+  font-family: sans-serif;
+  border-radius: 6px;
 
   h2 {
     color: $primary-color;
@@ -774,17 +757,17 @@ $box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   form {
-    background-color: $surface-color;
+    background-color: $dropdown-surface-color;
     padding: 2rem;
     @include rounded-corners;
-    box-shadow: $box-shadow;
+    box-shadow: $drop-box-shadow;
     width: 90%; // Responsive width
     max-width: 600px;
 
     label {
       display: block;
       margin-bottom: 0.5rem;
-      color: $on-surface-color;
+      color: $drop-on-surface-color;
       font-weight: 500;
     }
 
@@ -806,7 +789,7 @@ $box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
     button[type="submit"] {
       background-color: $primary-color;
-      color: $surface-color;
+      color: $dropdown-surface-color;
       padding: 1rem 1.5rem;
       border: none;
       @include rounded-corners;
@@ -821,6 +804,223 @@ $box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       &:disabled {
         background-color: #cccccc;
         cursor: not-allowed;
+      }
+    }
+  }
+}
+
+.create-category-form {
+  @include form-element();
+  position: relative;
+  z-index: 999;
+  width: 90%;
+  margin: 0 auto;
+  transform: translateY(60%);
+  transition: transform 0.3s ease;
+  background-color: $faded-black;
+  border: 1px solid $th-color;
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #4d4e55;
+    font-weight: 600;
+  }
+  input[type="text"] {
+    @include form-element;
+    border: 1px solid $th-color;
+    margin-bottom: 1rem;
+    color: $border-color;
+  }
+  button {
+    background-color: $primary-color;
+    color: $border-color;
+    padding: 0.7rem;
+    border: none;
+    @include rounded-corners;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 1rem;
+    margin-right: 0.4em;
+
+    &:hover {
+      background-color: darken($primary-color, 10%);
+    }
+
+    &:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// Resource Div
+$card-width-large: calc(33.33% - 20px);
+$card-width-medium: calc(50% - 20px);
+$card-width-small: 100%;
+$border-color: #ddd;
+$box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+$box-shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.15);
+$delete-button-color: #f44336;
+$delete-button-color-hover: #d32f2f;
+
+.resource-list-container {
+  padding: 20px;
+
+  .category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .resource-card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+
+    .resource-card {
+      width: $card-width-large;
+      border: 1px solid $border-color;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: $box-shadow;
+      transition: transform 0.2s;
+      background-color: #fff;
+
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: $box-shadow-hover;
+      }
+
+      .resource-card-content {
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+
+        .resource-image {
+          width: 100%;
+          height: 200px;
+          object-fit: cover;
+          border-top-left-radius: 8px;
+          border-top-right-radius: 8px;
+          margin-bottom: 10px;
+        }
+
+        .resource-text {
+          flex-grow: 1;
+        }
+
+        .resource-delete-button {
+          margin-top: 10px;
+          padding: 8px 16px;
+          background-color: $delete-button-color;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: background-color 0.2s;
+
+          &:hover {
+            background-color: $delete-button-color-hover;
+          }
+        }
+      }
+    }
+  }
+
+  .no-resources-message {
+    text-align: center;
+    color: #888;
+    margin-top: 20px;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .resource-list-container .resource-card-container .resource-card {
+    width: $card-width-medium;
+  }
+}
+
+// category page
+.category-page {
+  max-width: 1200px;
+  width: 100%;
+  box-sizing: border-box;
+
+  .category-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 5%;
+    background-color: $white;
+    border-radius: 8px;
+    box-shadow: $box-shadow-sm;
+    box-sizing: border-box;
+    .category-title {
+      font-size: 1em;
+      color: $dark-text;
+    }
+
+    .add-resource-button {
+      background-color: $category-primary-color;
+      color: $white;
+      border: none;
+      padding: 10px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.6rem;
+      font-weight: bold;
+      transition: background-color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      &:hover {
+        background-color: darken($primary-color, 10%);
+      }
+
+      svg {
+        font-size: 1.2rem;
+      }
+    }
+  }
+
+  .create-resource-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+
+    .create-resource-form {
+      background-color: $white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: $box-shadow;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .category-page {
+    padding: 10px;
+
+    .category-header {
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: 15px;
+
+      h2 {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
       }
     }
   }

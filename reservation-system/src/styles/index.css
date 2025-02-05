@@ -118,6 +118,7 @@ body {
 }
 .dashboard-container .aside-nav .side-nav {
   position: absolute;
+  z-index: 999;
   height: inherit;
   width: 50%;
   padding: 0.5em;
@@ -710,10 +711,16 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 0 auto;
   padding: 2rem;
   background-color: #f5f5f5;
-  min-height: 100vh;
+  min-height: 300px;
+  height: -moz-fit-content;
+  height: fit-content;
+  width: 90%;
+  box-sizing: border-box;
   font-family: sans-serif;
+  border-radius: 6px;
 }
 .form-container h2 {
   color: #673ab7;
@@ -738,12 +745,10 @@ body {
 .form-container form select {
   width: 100%;
   padding: 1rem;
-  border: 1px solid #cccccc;
   border-radius: 4px;
   box-sizing: border-box;
   font-size: 1rem;
-  background-color: #ffffff;
-  color: #333333;
+  background-color: #21222d;
   margin-bottom: 1rem;
 }
 .form-container form input[type=text]:focus,
@@ -776,4 +781,210 @@ body {
 .form-container form button[type=submit]:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
+}
+
+.create-category-form {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 1rem;
+  background-color: #21222d;
+  position: relative;
+  z-index: 999;
+  width: 90%;
+  margin: 0 auto;
+  transform: translateY(60%);
+  transition: transform 0.3s ease;
+  background-color: #21222d;
+  border: 1px solid #69868c;
+}
+.create-category-form:focus {
+  border-color: #673ab7;
+  outline: none;
+  box-shadow: 0 0 5px rgba(103, 58, 183, 0.2);
+}
+.create-category-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #4d4e55;
+  font-weight: 600;
+}
+.create-category-form input[type=text] {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 1rem;
+  background-color: #21222d;
+  border: 1px solid #69868c;
+  margin-bottom: 1rem;
+  color: #cccccc;
+}
+.create-category-form input[type=text]:focus {
+  border-color: #673ab7;
+  outline: none;
+  box-shadow: 0 0 5px rgba(103, 58, 183, 0.2);
+}
+.create-category-form button {
+  background-color: #673ab7;
+  color: #cccccc;
+  padding: 0.7rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 1rem;
+  margin-right: 0.4em;
+}
+.create-category-form button:hover {
+  background-color: #512e90;
+}
+.create-category-form button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.resource-list-container {
+  padding: 20px;
+}
+.resource-list-container .category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.resource-list-container .resource-card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.resource-list-container .resource-card-container .resource-card {
+  width: calc(33.33% - 20px);
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+  background-color: #fff;
+}
+.resource-list-container .resource-card-container .resource-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+.resource-list-container .resource-card-container .resource-card .resource-card-content {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+.resource-list-container .resource-card-container .resource-card .resource-card-content .resource-image {
+  width: 100%;
+  height: 200px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  margin-bottom: 10px;
+}
+.resource-list-container .resource-card-container .resource-card .resource-card-content .resource-text {
+  flex-grow: 1;
+}
+.resource-list-container .resource-card-container .resource-card .resource-card-content .resource-delete-button {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.resource-list-container .resource-card-container .resource-card .resource-card-content .resource-delete-button:hover {
+  background-color: #d32f2f;
+}
+.resource-list-container .no-resources-message {
+  text-align: center;
+  color: #888;
+  margin-top: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .resource-list-container .resource-card-container .resource-card {
+    width: calc(50% - 20px);
+  }
+}
+.category-page {
+  max-width: 1200px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.category-page .category-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 5%;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+.category-page .category-header .category-title {
+  font-size: 1em;
+  color: #333;
+}
+.category-page .category-header .add-resource-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.6rem;
+  font-weight: bold;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.category-page .category-header .add-resource-button:hover {
+  background-color: #512e90;
+}
+.category-page .category-header .add-resource-button svg {
+  font-size: 1.2rem;
+}
+.category-page .create-resource-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.category-page .create-resource-overlay .create-resource-form {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .category-page {
+    padding: 10px;
+  }
+  .category-page .category-header {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 15px;
+  }
+  .category-page .category-header h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
 }/*# sourceMappingURL=index.css.map */

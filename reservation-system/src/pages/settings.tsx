@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useFetch } from "../components/useFetch";
+import { useFetch } from "../hooks/useFetch";
 import "../styles/index.css";
 
 const backendUrl = "http://localhost:9000/auth/register";

@@ -18,6 +18,13 @@ import {
 } from "react-icons/bs";
 import "../styles/index.css";
 import toggleNav from "../components/buttons";
+import { CreateCategory } from "../components/createCategory";
+import { ResourceList } from "../components/resourcelist";
+import { CreateResource } from "../components/createResource";
+import { useRedirect } from "../helper";
+import { Resource } from "../types/custom";
+import { redirect, Link } from "react-router-dom";
+
 declare var axios: any;
 
 export const Dashboard = () => {
@@ -30,7 +37,18 @@ export const Dashboard = () => {
     categories: false,
     salesReport: false,
   });
+  const [categories, setCategories] = useState<string[]>([]);
 
+  const [showCreateCategory, setShowCreateCategory] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  const [showResourceList, setShowResourceList] = useState(false);
+
+  const [filteredResources, setFilteredResources] = useState<Resource[]>([]);
+  const [allResources, setAllResources] = useState<Resource[]>([]);
+  const [showCreateResource, setShowCreateResource] = useState(false);
+
+  // function to toggle the dropdowns
   const toggleDropdown = (dropdownName: keyof typeof dropdownsOpen) => {
     setDropdownsOpen((prevState) => {
       const newState = { ...prevState };
@@ -46,11 +64,44 @@ export const Dashboard = () => {
     });
   };
 
+  // function to handle the click event on the aside nav
   const handleAsideClick = (event: React.MouseEvent<HTMLElement>) => {
     if (event.target === event.currentTarget) {
       toggleNav("aside-nav", "slide-out");
     }
   };
+
+  const handleCreateCategory = (categoryName: string) => {
+    console.log("Category Name: ", categoryName);
+    setCategories((prevState) => [...prevState, categoryName]);
+    setShowCreateCategory(false);
+  };
+
+  const handleCreateResourceClick = () => {
+    setShowCreateResource(true);
+  };
+
+  const handleCreateResource = (resourceData: any) => {
+    console.log("Resource Data: ", resourceData);
+    setShowCreateResource(false);
+  };
+
+  useEffect(() => {
+    if (selectedCategory) {
+      // Filter resources based on selectedCategory
+      const filtered = allResources.filter(
+        (resource) => resource.category === selectedCategory
+      );
+      setFilteredResources(filtered);
+      setShowResourceList(true);
+    } else {
+      setFilteredResources(allResources);
+      setShowResourceList(true);
+      console.log(selectedCategory, setShowResourceList.valueOf());
+    }
+  }, [selectedCategory, allResources]);
+
+  const { redirect } = useRedirect();
 
   return (
     <div className="dashboard-container">
@@ -79,7 +130,8 @@ export const Dashboard = () => {
           <div className="dropdown-container">
             <ul className="dropdown-content">
               <li>
-                <BsPerson className="icon" /> <p>Manage Profile</p>
+                <BsPerson className="icon" />{" "}
+                <Link to="/settings">Manage Profile</Link>
               </li>
               <li>
                 <BsFillBellFill className="icon" /> <p>Notifications</p>
@@ -107,6 +159,7 @@ export const Dashboard = () => {
                 <FaUser className="icon" /> <p>Profile</p>
               </li>
 
+              {/*  Reservations dropdown */}
               <li className="dropdown">
                 <div
                   className="dropdown-btn"
@@ -131,6 +184,7 @@ export const Dashboard = () => {
                 )}
               </li>
 
+              {/*  Categories dropdown */}
               <li className="dropdown">
                 <div
                   className="dropdown-btn"
@@ -144,17 +198,26 @@ export const Dashboard = () => {
                 </div>
                 {dropdownsOpen.categories && (
                   <ul className="dropdown-list">
+                    {categories.map((categoryName, index) => {
+                      return (
+                        <li
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedCategory(categoryName);
+                            setShowResourceList(true);
+                          }}
+                          key={index}
+                        >
+                          <Link to={`/category/${categoryName}`}>
+                            {categoryName}
+                          </Link>
+                        </li>
+                      );
+                    })}
                     <li
                       onClick={(e) => {
                         e.stopPropagation();
-                        console.log("Lab Equipment clicked");
-                      }}
-                    >
-                      Lab Equipment
-                    </li>
-                    <li
-                      onClick={(e) => {
-                        e.stopPropagation();
+                        setShowCreateCategory(true);
                         console.log("+ Create New Category clicked");
                       }}
                     >
@@ -164,6 +227,7 @@ export const Dashboard = () => {
                 )}
               </li>
 
+              {/*  Sales Report dropdown */}
               <li className="dropdown">
                 <div
                   className="dropdown-btn"
@@ -181,7 +245,7 @@ export const Dashboard = () => {
                         e.stopPropagation();
                       }}
                     >
-                      All Reservations
+                      Rervations Report
                     </li>
                   </ul>
                 )}
@@ -198,7 +262,15 @@ export const Dashboard = () => {
             </ul>
           </div>
         </nav>
+
+        {showCreateCategory && (
+          <CreateCategory
+            onCreated={handleCreateCategory}
+            onCancel={() => setShowCreateCategory(false)}
+          />
+        )}
       </aside>
+
       <div className="section-div-container">
         <section className="total-sales-container">
           <h2>Reservation's Summary</h2>

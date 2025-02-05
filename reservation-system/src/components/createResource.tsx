@@ -1,22 +1,28 @@
 import React, { useState } from "react";
+import { Resource } from "../types/custom";
+import { useParams } from "react-router-dom";
+import { BsX } from "react-icons/bs";
+import { useResources } from "../components/resourceContext"; // Import the context hook
+import "../styles/createResourceForm.css";
 
 interface CreateResourceProps {
   categories: string[];
-  onCreate: (resourceData: any) => void;
   onCancel: () => void;
 }
 
 export const CreateResource: React.FC<CreateResourceProps> = ({
   categories,
-  onCreate,
   onCancel,
 }) => {
-  const [resourceData, setResourceData] = useState({
+  const { categoryName } = useParams<{ categoryName: string }>();
+  const { createResource } = useResources(); // Use the context hook
+  const [resourceData, setResourceData] = useState<Resource>({
     name: "",
     description: "",
-    category: "",
-    image: null,
+    category: categoryName || "",
+    image: null as File | null,
   });
+  const [previewURL, setPreviewURL] = useState<string | null>(null);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -27,45 +33,119 @@ export const CreateResource: React.FC<CreateResourceProps> = ({
     setResourceData({ ...resourceData, [name]: value });
   };
 
-  //   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //     setResourceData({ ...resourceData, image: e.target.files?.[0] });
-  //   };
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files ? e.target.files[0] : null;
+    setResourceData({
+      ...resourceData,
+      image: file,
+    });
 
-  const handleSubmit = (e: React.FormEvent) => {
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewURL(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setPreviewURL(null);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setResourceData({ ...resourceData, image: null });
+    setPreviewURL(null);
+    const fileInput = document.getElementById("image") as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = "";
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onCreate(resourceData);
-    setResourceData({ name: "", description: "", category: "", image: null });
+
+    try {
+      // Call the createResource function from the context
+      createResource(resourceData);
+      console.log("Resource created:", resourceData);
+
+      // Reset the form
+      setResourceData({
+        name: "",
+        description: "",
+        category: categoryName || "",
+        image: null,
+      });
+      setPreviewURL(null);
+
+      const form = e.target as HTMLFormElement;
+      form.reset();
+
+      const fileInput = document.getElementById("image") as HTMLInputElement;
+      if (fileInput) {
+        fileInput.value = "";
+      }
+
+      // Close the form (optional, if you want to close it after submission)
+      onCancel();
+    } catch (err) {
+      console.error("Error creating resource:", err);
+    }
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      encType="multipart/form-data"
-      className="create-resource-form"
-    >
-      <select
-        name="category"
-        value={resourceData.category}
-        onChange={handleChange}
-        required
+    <div className="form-container">
+      <form
+        onSubmit={handleSubmit}
+        encType="multipart/form-data"
+        className="create-resource-form"
       >
-        <option value="">Select a Category</option>
-        {categories.map((category) => (
-          <option key={category} value={category}>
-            {category}
-          </option>
-        ))}
-      </select>
-      <input
-        type="file"
-        name="image"
-        // onChange={handleImageChange}
-        accept="image/*"
-      />
-      <button type="submit">Create Resource</button>
-      <button type="button" onClick={onCancel}>
-        Cancel
-      </button>
-    </form>
+        <BsX className="close-icon" onClick={onCancel} />
+        <label htmlFor="name">Resource Name</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          onChange={handleChange}
+          placeholder="Enter resource name"
+        />
+
+        <label htmlFor="image">Upload Image</label>
+        <input
+          type="file"
+          id="image"
+          name="image"
+          onChange={handleImageChange}
+          accept="image/*"
+        />
+
+        {previewURL && (
+          <div className="image-preview">
+            <img src={previewURL} alt="Preview" />
+            <button
+              type="button"
+              onClick={handleRemoveImage}
+              className="remove-image"
+            >
+              Remove Image
+            </button>
+          </div>
+        )}
+
+        <label htmlFor="description">Description</label>
+        <textarea
+          id="description"
+          name="description"
+          onChange={handleChange}
+          placeholder="Enter a description"
+        />
+
+        <div className="form-actions">
+          <button type="submit">Create Resource</button>
+          <button type="button" onClick={onCancel}>
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };
