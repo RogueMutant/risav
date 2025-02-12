@@ -10,6 +10,20 @@
   }
 }
 
+@mixin imageRender {
+  @if img {
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  } @else {
+    img {
+      display: none;
+    }
+  }
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -93,6 +107,7 @@ html {
 
 @mixin dropdown {
   .dropdown {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -101,10 +116,12 @@ html {
     height: auto;
     width: 90%;
     padding: 0;
+    transition: height 300ms linear;
     .dropdown-btn {
       display: flex;
       justify-content: space-between;
       width: 100%;
+      text-align: left;
       div {
         display: flex;
         justify-content: space-between;
@@ -121,7 +138,6 @@ html {
       height: fit-content;
 
       margin-top: 0.4em;
-      transition: height 300ms linear;
       li {
         height: 2em;
         width: calc(100% - 30px);
@@ -129,6 +145,9 @@ html {
           color: $color-white;
         }
       }
+    }
+    &.open {
+      transition: height 300ms linear;
     }
   }
 }
@@ -200,8 +219,17 @@ body {
     justify-content: space-between;
     align-items: center;
     .left {
+      align-items: center;
       input {
-        visibility: hidden;
+        width: 0;
+        padding: 0.5em;
+        font-size: 1em;
+        border-radius: 6px;
+        outline: none;
+        border: none;
+      }
+      .open {
+        width: 60%;
       }
     }
     .right {
@@ -282,6 +310,9 @@ body {
           @include li-style();
           li:hover {
             color: $color-white;
+          }
+          .settings {
+            transform: translateY(150px);
           }
         }
       }
@@ -514,6 +545,18 @@ body {
     background-color: $th-color;
     box-sizing: border-box;
     margin-bottom: 0.8em;
+    span {
+      padding: 0.5em;
+      border: 2px solid $faded-black;
+      border-radius: 3px;
+      cursor: pointer;
+      svg {
+        vertical-align: middle;
+      }
+      &:hover {
+        background-color: darken($th-color, 5%);
+      }
+    }
     p {
       font-weight: 600;
     }
@@ -530,55 +573,13 @@ body {
     }
   }
 
-  .search-container {
-    width: 100%;
-    height: 60px;
-    padding: 0.5em;
-    margin-bottom: 0.8em;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-sizing: border-box;
-    .filter {
-      cursor: pointer;
-      transform: translateX(-20px);
-      height: 40px;
-    }
-    .inner-search {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      .icon {
-        transform: translateX(350px);
-        cursor: pointer;
-        height: 30px;
-        width: 30px;
-        padding: 0.5em;
-        border-radius: 6px;
-        background-color: $color-orange;
-      }
-      width: 80%;
-      input {
-        background-color: #22222b;
-        height: 3em;
-        width: 90%;
-        border-radius: 6px;
-        border: none;
-        outline: none;
-        padding: 0.8em;
-        box-sizing: border-box;
-        font-size: $p-font-size;
-        color: $color-white;
-        &:hover {
-          background-color: #2a2b33;
-          transition: all 300ms linear;
-        }
-      }
-    }
-  }
-
   .reservation-table-container {
+    width: 100%;
+    height: 80vh;
+    border: 1px solid $th-color;
     .table-container {
+      width: 100%;
+      padding-left: 0.5em;
       thead th {
         font-size: 0.9em;
       }
@@ -614,20 +615,22 @@ body {
     }
   }
 }
+@media (min-width: 575px) {
+  .reservation-table-container {
+    max-width: 90%;
+    margin: 0 auto;
+  }
+}
 
-// profile.scss (or your component's SCSS file)
-// @import './variables';
-// @import './mixins';
-
+// profile.
 .profile-container {
   background-color: $background-color;
   color: $on-background-color;
-  font-family: "Roboto", sans-serif; // Modern font
   display: flex;
   flex-direction: column;
-  align-items: center; // Center horizontally
+  align-items: center;
   padding: 2rem;
-  min-height: 100vh; // Ensure full viewport height
+  min-height: 100vh;
 
   h1 {
     color: $primary-color;
@@ -640,56 +643,127 @@ body {
     padding: 2rem;
     @include rounded-corners;
     @include elevation(2);
-    width: 90%; // Responsive width
+    width: 90%;
     max-width: 600px;
     margin-bottom: 2rem;
-    div {
-      margin-bottom: 1em;
+    p {
+      margin-bottom: 0.5em;
     }
+
+    .edit-form {
+      input {
+        width: 100%;
+        padding: 0.8rem;
+        margin: 1em 0;
+        border: 1px solid #424242;
+        background-color: $background-color;
+        color: $on-surface-color;
+        @include rounded-corners;
+        box-sizing: border-box;
+        &:focus {
+          border-color: $primary-color;
+          outline: none;
+        }
+      }
+    }
+    .profile-picture {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 2rem;
+
+      .profile-picture-circle {
+        position: relative;
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 3px solid $primary-color;
+        cursor: pointer;
+        display: flex; // Use flexbox for centering
+        align-items: center;
+        justify-content: center; // Center content vertically and horizontally
+
+        .user-icon {
+          width: 70%;
+          height: 70%;
+        }
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .camera-icon {
+          position: absolute;
+          top: 50%; // Center vertically
+          left: 50%; // Center horizontally
+          transform: translate(-50%, -50%); // Adjust for centering
+          z-index: 1;
+          background-color: rgba(0, 0, 0, 0.5);
+          color: white;
+          padding: 5px;
+          border-radius: 50%;
+          font-size: 1.2rem;
+          cursor: pointer;
+        }
+      }
+
+      button {
+        margin-top: 10px;
+      }
+    }
+
     h2 {
       margin-bottom: 1rem;
       color: $primary-color;
       border-bottom: 1px solid $primary-color;
       padding-bottom: 0.5rem;
     }
+    form {
+      .input-group {
+        margin-bottom: 1.5rem;
 
-    .form-group {
-      margin-bottom: 1.5rem;
+        label {
+          display: block;
+          margin-bottom: 0.5rem;
+          color: $on-surface-color;
+        }
+        input {
+          // Added password input style
+          width: 100%;
+          padding: 0.8rem;
+          border: 1px solid #424242;
+          background-color: $background-color;
+          color: $on-surface-color;
+          @include rounded-corners;
+          box-sizing: border-box;
+          &:focus {
+            border-color: $primary-color;
+            outline: none;
+          }
+        }
+        .error-message {
+          color: $error-color;
+          margin-top: 0.5rem;
+          font-size: 0.9rem;
+        }
 
-      label {
-        display: block; // Labels above inputs
-        margin-bottom: 0.5rem;
-        color: $on-surface-color;
-      }
-
-      input,
-      select {
-        width: 100%;
-        padding: 0.8rem;
-        border: 1px solid #424242; // Darker border
-        background-color: $background-color;
-        color: $on-surface-color;
-        @include rounded-corners;
-        box-sizing: border-box; // Include padding in width
-        &:focus {
-          border-color: $primary-color;
-          outline: none;
+        .success-message {
+          color: rgb(37, 197, 37); // Define a success color variable
+          margin-top: 0.5rem;
+          font-size: 0.9rem;
         }
       }
-
-      .error-message {
-        color: $error-color;
-        margin-top: 0.5rem;
-        font-size: 0.9rem;
-      }
     }
-
     button {
       background-color: $primary-color;
       color: $on-surface-color;
       padding: 0.8rem 1.5rem;
       border: none;
-      @include rounded-corners;
+      border-radius: 6px;
+      margin-top: 10px;
       cursor: pointer;
       transition: background-color 0.3s ease;
 
@@ -701,11 +775,15 @@ body {
         cursor: not-allowed;
       }
     }
+
+    // Removed redundant div styles
+    div {
+      margin-bottom: 1em; // Keep this for other divs if needed
+    }
   }
 }
 
 // Categories && Reservertions dropdown
-// _variables.scss (for theming)
 
 $primary-color: #673ab7; // Deep purple
 $secondary-color: #ff9800; // Orange accent
@@ -865,66 +943,76 @@ $delete-button-color: #f44336;
 $delete-button-color-hover: #d32f2f;
 
 .resource-list-container {
-  padding: 20px;
-
-  .category-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap; // Enable wrapping
+  gap: 20px;
+  padding: 10px; // Add padding to the container
 
   .resource-card-container {
     display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+    border-radius: 8px;
+    box-shadow: $box-shadow;
+    transition: background-color 0.2s;
+    flex: 1 0; // Key for horizontal arrangement and wrapping
+    // flex-basis: calc(33.33% - 20px); // Alternative to flex-basis
+    // width: calc(33.33% - 20px); // Alternative to flex-basis
 
-    .resource-card {
-      width: $card-width-large;
-      border: 1px solid $border-color;
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: $box-shadow;
-      transition: transform 0.2s;
-      background-color: #fff;
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.281);
+    }
 
-      &:hover {
-        transform: translateY(-5px);
-        box-shadow: $box-shadow-hover;
+    .resource-image {
+      width: 100%; // Image takes full width of card
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px 8px 0 0; // Round only top corners
+      flex-shrink: 0;
+    }
+
+    .resource-card-content {
+      padding: 15px; // Add padding inside the card content
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1; // Allow text to grow and fill remaining space
+      min-height: 0; // Fixes potential height issues
+      width: 300px;
+    }
+
+    .resource-text {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      margin-top: 10px;
+
+      h3 {
+        margin-bottom: 5px;
+        color: $category-primary-color;
       }
-
-      .resource-card-content {
-        display: flex;
-        flex-direction: column;
-        padding: 20px;
-
-        .resource-image {
-          width: 100%;
-          height: 200px;
-          object-fit: cover;
-          border-top-left-radius: 8px;
-          border-top-right-radius: 8px;
-          margin-bottom: 10px;
-        }
-
-        .resource-text {
-          flex-grow: 1;
-        }
-
-        .resource-delete-button {
-          margin-top: 10px;
-          padding: 8px 16px;
-          background-color: $delete-button-color;
-          color: white;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-          transition: background-color 0.2s;
-
+      .week-container {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin: 5px 0;
+        .day-tile {
+          padding: 8px 10px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          cursor: not-allowed;
+          width: fit-content;
+          transition: all 0.2s, color 0.2s; // Smooth transitions
           &:hover {
-            background-color: $delete-button-color-hover;
+            background-color: darken($category-primary-color, 5%);
+            transform: scale(1.1);
           }
         }
+      }
+      p {
+        flex-wrap: wrap;
+        margin-bottom: 5px;
+        color: $background-color;
       }
     }
   }
@@ -937,9 +1025,9 @@ $delete-button-color-hover: #d32f2f;
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
-  .resource-list-container .resource-card-container .resource-card {
-    width: $card-width-medium;
+@media (min-width: 768px) {
+  .resource-card-container {
+    width: 33.33%;
   }
 }
 
@@ -947,22 +1035,24 @@ $delete-button-color-hover: #d32f2f;
 .category-page {
   max-width: 1200px;
   width: 100%;
+  padding: 1em;
   box-sizing: border-box;
+  scroll-behavior: auto;
 
   .category-header {
-    display: grid;
-    grid-template-columns: 1fr auto;
+    display: flex;
     align-items: center;
-    width: 100%;
+    justify-content: space-between;
     margin-bottom: 20px;
-    padding: 5%;
-    background-color: $white;
+    padding: 0.7em;
+    background-color: $border-color;
     border-radius: 8px;
     box-shadow: $box-shadow-sm;
     box-sizing: border-box;
     .category-title {
-      font-size: 1em;
+      font-size: 1.1em;
       color: $dark-text;
+      font-weight: 500;
     }
 
     .add-resource-button {
@@ -1009,18 +1099,14 @@ $delete-button-color-hover: #d32f2f;
   }
 }
 
-@media (max-width: 768px) {
+@media (min-width: 768px) {
   .category-page {
     padding: 10px;
-
+    max-height: 85px;
     .category-header {
-      flex-direction: column;
-      align-items: flex-start;
-      margin-bottom: 15px;
-
-      h2 {
-        font-size: 1.5rem;
-        margin-bottom: 10px;
+      .category-title {
+        font-size: 1rem;
+        font-weight: 700;
       }
     }
   }

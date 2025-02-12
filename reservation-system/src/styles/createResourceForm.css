@@ -1,53 +1,39 @@
 .form-container {
   max-width: 600px;
-  width: 100%;
-  display: flex;
-  position: absolute;
-  top: 0;
+  width: 90%;
+  max-height: 90vh;
+  height: auto;
+  overflow-y: auto;
+  position: fixed;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
   flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  margin: 0 auto;
-  padding: 2rem;
+  justify-content: flex-start;
+  align-items: center;
   background-color: #6c757d;
   border-radius: 0.5rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  position: absolute;
-  min-height: 80vh;
+  padding: 2rem;
+}
+.form-container .create-resource-form {
+  width: 100%;
   box-sizing: border-box;
+  /* Calendar Styling */
 }
-
-.close-icon {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background-color: black;
-  height: 30px;
-  width: 30px;
-  border-radius: 6px;
-  font-size: 1.5rem;
-  color: #f8f9fa;
-  cursor: pointer;
-}
-
-.create-resource-form {
-  margin-top: 2rem;
-  background-color: #6c757d;
-  /* ... other styles */
-}
-.create-resource-form label {
+.form-container .create-resource-form label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: bold;
   color: #6c757d;
 }
-.create-resource-form input,
-.create-resource-form textarea {
+.form-container .create-resource-form input,
+.form-container .create-resource-form textarea {
   box-sizing: border-box;
 }
-.create-resource-form input[type=text],
-.create-resource-form textarea {
-  color: #f8f9fa;
+.form-container .create-resource-form input[type=text],
+.form-container .create-resource-form textarea,
+.form-container .create-resource-form input[type=number] {
   width: 100%;
   padding: 0.75rem;
   margin-bottom: 1rem;
@@ -56,12 +42,13 @@
   font-size: 1rem;
   transition: border-color 0.3s ease;
 }
-.create-resource-form input[type=text]:focus,
-.create-resource-form textarea:focus {
+.form-container .create-resource-form input[type=text]:focus,
+.form-container .create-resource-form textarea:focus,
+.form-container .create-resource-form input[type=number]:focus {
   border-color: #007bff;
   outline: none;
 }
-.create-resource-form input[type=file] {
+.form-container .create-resource-form input[type=file] {
   width: 100%;
   margin-bottom: 1rem;
   padding: 0.5rem;
@@ -70,17 +57,79 @@
   background-color: #f8f9fa;
   cursor: pointer;
 }
-.create-resource-form input[type=file]:hover {
+.form-container .create-resource-form input[type=file]:hover {
   border-color: #007bff;
 }
-.create-resource-form textarea {
-  resize: vertical;
-  min-height: 150px;
+.form-container .create-resource-form .days-of-week-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
 }
-.create-resource-form button {
+.form-container .create-resource-form .days-of-week-container .day-tile {
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+.form-container .create-resource-form .days-of-week-container .day-tile.selected {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+.form-container .create-resource-form .days-of-week-container .day-tile:hover {
+  background-color: #f0f0f0;
+  color: #21222d;
+}
+.form-container .create-resource-form .time-picker-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100px;
+  max-width: 250px;
+  background: #f8f9fa;
+  padding: 15px;
+  margin: 15px 0;
+  border-radius: 10px;
+}
+.form-container .create-resource-form .time-picker-container label {
+  color: #6c757d;
+  font-size: 14px;
+  font-weight: 500;
+}
+.form-container .create-resource-form .time-picker-container .time-input {
+  width: 100px;
+  padding: 8px;
+  border: 1px solid #444;
+  background: #1e1e1e;
+  color: #ffffff;
+  border-radius: 5px;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease-in-out;
+}
+.form-container .create-resource-form .time-picker-container .time-input:focus {
+  border-color: #007bff;
+  box-shadow: 0px 0px 8px rgba(0, 123, 255, 0.5);
+}
+.form-container .create-resource-form .time-picker-container .time-input::after {
+  content: "Am";
+}
+.form-container .create-resource-form .time-picker-container .time-input:last-child::after {
+  content: "Pm";
+}
+.form-container .create-resource-form .form-actions {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.form-container .create-resource-form .form-actions button {
+  flex: 1;
   height: 45px;
-  padding: 0.75rem 1.5rem;
-  margin-right: 0.5rem;
+  padding: 0.75rem;
   border: none;
   border-radius: 0.5rem;
   font-size: 1rem;
@@ -88,45 +137,129 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
-.create-resource-form button[type=submit] {
+.form-container .create-resource-form .form-actions button[type=submit] {
   background-color: #007bff;
   color: white;
 }
-.create-resource-form button[type=submit]:hover {
+.form-container .create-resource-form .form-actions button[type=submit]:hover {
   background-color: #0062cc;
 }
-.create-resource-form button[type=button] {
+.form-container .create-resource-form .form-actions button[type=button] {
   background-color: #6c757d;
   color: white;
 }
-.create-resource-form button[type=button]:hover {
+.form-container .create-resource-form .form-actions button[type=button]:hover {
   background-color: #545b62;
 }
-.create-resource-form .image-preview {
-  position: relative; /* Needed for positioning the button */
+.form-container .create-resource-form .image-preview {
+  position: relative;
   margin-bottom: 1rem;
 }
-.create-resource-form .image-preview img {
+.form-container .create-resource-form .image-preview img {
   max-width: 100%;
-  height: auto;
   border: 1px solid #ced4da;
   border-radius: 0.5rem;
-  display: block; /* Prevents image from affecting layout */
 }
-.create-resource-form .image-preview .remove-image {
+.form-container .create-resource-form .image-preview .remove-image {
   position: absolute;
-  top: 10px; /* Adjust as needed */
-  right: 10px; /* Adjust as needed */
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  top: 10px;
+  right: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
   color: white;
   border: none;
   padding: 5px 10px;
   border-radius: 0.5rem;
   cursor: pointer;
-  font-size: 0.8rem; /* Smaller font size */
-  opacity: 1; /* Initially hidden */
-  transition: opacity 0.3s ease; /* Smooth transition */
+  font-size: 0.8rem;
+  transition: background-color 0.3s ease;
 }
-.create-resource-form .image-preview .remove-image:hover {
+.form-container .create-resource-form .image-preview .remove-image:hover {
   background-color: rgba(0, 0, 0, 0.7);
+}
+.form-container .create-resource-form .custom-calendar {
+  width: 100%;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+}
+.form-container .create-resource-form .custom-calendar .react-calendar__navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.form-container .create-resource-form .custom-calendar .react-calendar__navigation button {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  font-weight: bold;
+  color: #6c757d;
+}
+.form-container .create-resource-form .custom-calendar .react-calendar__navigation button:hover {
+  color: #007bff;
+}
+.form-container .create-resource-form .custom-calendar .react-calendar__month-view__weekdays abbr {
+  font-weight: bold;
+  text-decoration: none;
+}
+.form-container .create-resource-form .custom-calendar .react-calendar__month-view__days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+.form-container .create-resource-form .custom-calendar .react-calendar__month-view__days button {
+  border: none;
+  background: none;
+  padding: 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.form-container .create-resource-form .custom-calendar .react-calendar__month-view__days button:hover {
+  background-color: #f0f0f0;
+}
+.form-container .create-resource-form .custom-calendar .react-calendar__month-view__days button.react-calendar__tile--active {
+  background-color: #007bff;
+  color: white;
+}
+.form-container .close-icon {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background-color: black;
+  height: 30px;
+  width: 30px;
+  border-radius: 6px;
+  font-size: 1.5rem;
+  color: #f8f9fa;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .form-container {
+    width: 95%;
+    padding: 1rem;
+  }
+  .create-resource-form button {
+    flex: 1;
+    height: 40px;
+  }
+  .create-resource-form input[type=text],
+  .create-resource-form textarea,
+  .create-resource-form input[type=number],
+  .create-resource-form input[type=file] {
+    padding: 0.5rem;
+  }
+  .create-resource-form .time-range {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+@media (max-height: 700px) {
+  .form-container {
+    max-height: 80vh;
+    overflow-y: auto;
+  }
 }/*# sourceMappingURL=createResourceForm.css.map */

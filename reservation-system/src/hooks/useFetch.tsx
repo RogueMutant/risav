@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios, { AxiosRequestConfig } from "axios";
 
 interface UseFetchState<T> {
@@ -8,27 +8,36 @@ interface UseFetchState<T> {
 }
 
 interface UseFetchReturn<T> extends UseFetchState<T> {
-  fetchData: (body?: any) => Promise<T | null>;
+  fetchData: (
+    body?: any,
+    method?: "get" | "post" | "put" | "delete"
+  ) => Promise<T | null>;
 }
 
+const BASE_URL = "http://localhost:9000"; // Ensure this matches your backend
+
 export const useFetch = <T,>(
-  url: string,
-  shouldFetch: boolean,
-  reqMethod: "get" | "post" | "put" | "delete"
+  url: string, // url should be relative, e.g., "/auth/login"
+  shouldFetch: boolean = false,
+  defaultMethod: "get" | "post" | "put" | "delete" = "get"
 ): UseFetchReturn<T> => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<T | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const fetchData = useCallback(
-    async (body?: any): Promise<T | null> => {
+    async (
+      body?: any,
+      method: "get" | "post" | "put" | "delete" = defaultMethod
+    ): Promise<T | null> => {
       setLoading(true);
       setError(null);
 
       try {
         const config: AxiosRequestConfig = {
-          method: reqMethod,
-          url: url,
+          method: method,
+          url: `${BASE_URL}${url}`, // ✅ Ensure correct backend URL
+          withCredentials: true,
         };
 
         if (body) {
@@ -47,8 +56,14 @@ export const useFetch = <T,>(
         setLoading(false);
       }
     },
-    [url, reqMethod]
+    [url]
   );
+
+  useEffect(() => {
+    if (shouldFetch) {
+      fetchData();
+    }
+  }, [fetchData, shouldFetch]);
 
   return { loading, data, error, fetchData };
 };

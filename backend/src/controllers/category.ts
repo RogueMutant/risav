@@ -12,12 +12,10 @@ const createCategory = async (
   console.log(req.user?.role);
 
   if (req.user?.role !== "super_admin" && req.user?.role !== "admin") {
-    res
-      .status(403)
-      .json({
-        message: "You do not have have the authority",
-        status: "unauthorized",
-      });
+    res.status(403).json({
+      message: "You do not have have the authority",
+      status: "unauthorized",
+    });
     return;
   }
 
@@ -42,6 +40,7 @@ const getAllCategories = async (
   const categories = await Category.find();
   if (categories) {
     res.status(200).json(categories);
+    return;
   }
   res
     .status(500)
@@ -61,16 +60,15 @@ const deleteCategory = async (
       res
         .status(400)
         .json({ message: "Category is in use and cannot be deleted" });
+      return;
     }
 
     await Category.findByIdAndDelete(id);
     res.status(200).json({ message: "Category deleted" });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        message: error instanceof Error ? error.message : "An error occurred",
-      });
+    res.status(500).json({
+      message: error instanceof Error ? error.message : "An error occurred",
+    });
   }
 };
 

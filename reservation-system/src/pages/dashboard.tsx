@@ -5,7 +5,6 @@ import {
   BsPeopleFill,
   BsGridFill,
   BsSearch,
-  BsPerson,
   BsBellFill,
   BsFillBellFill,
   BsChevronDown,
@@ -13,53 +12,49 @@ import {
   BsChevronRight,
   BsBoxArrowRight,
   BsBarChartFill,
-  BsBoxArrowInLeft,
+  BsGearFill,
   BsPersonAdd,
+  BsPersonFill,
 } from "react-icons/bs";
 import "../styles/index.css";
 import toggleNav from "../components/buttons";
 import { CreateCategory } from "../components/createCategory";
-import { ResourceList } from "../components/resourcelist";
-import { CreateResource } from "../components/createResource";
-import { useRedirect } from "../helper";
-import { Resource } from "../types/custom";
-import { redirect, Link } from "react-router-dom";
-
-declare var axios: any;
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../components/authContext";
 
 export const Dashboard = () => {
   const [dropdownsOpen, setDropdownsOpen] = useState<{
     reservations: boolean;
     categories: boolean;
-    salesReport: boolean;
+    Report: boolean;
   }>({
     reservations: false,
     categories: false,
-    salesReport: false,
+    Report: false,
   });
+
   const [categories, setCategories] = useState<string[]>([]);
+  const [searchBtn, setSearchBtn] = useState(false);
 
   const [showCreateCategory, setShowCreateCategory] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  const [showResourceList, setShowResourceList] = useState(false);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
-  const [filteredResources, setFilteredResources] = useState<Resource[]>([]);
-  const [allResources, setAllResources] = useState<Resource[]>([]);
-  const [showCreateResource, setShowCreateResource] = useState(false);
+  const toggleSearchBtn = () => {
+    setSearchBtn(!searchBtn);
+  };
 
   // function to toggle the dropdowns
-  const toggleDropdown = (dropdownName: keyof typeof dropdownsOpen) => {
+  const toggleDropdown = (dropdownName: string) => {
     setDropdownsOpen((prevState) => {
       const newState = { ...prevState };
-      for (const key in prevState) {
-        if (prevState.hasOwnProperty(key)) {
-          newState[key as keyof typeof prevState] =
-            key === dropdownName
-              ? !prevState[key as keyof typeof prevState]
-              : false;
-        }
+      for (const key in newState) {
+        newState[key as keyof typeof prevState] = false;
       }
+      newState[dropdownName as keyof typeof prevState] =
+        !prevState[dropdownName as keyof typeof prevState];
       return newState;
     });
   };
@@ -77,31 +72,10 @@ export const Dashboard = () => {
     setShowCreateCategory(false);
   };
 
-  const handleCreateResourceClick = () => {
-    setShowCreateResource(true);
+  const handleLogOut = async (): Promise<void> => {
+    await logout();
+    navigate("/login");
   };
-
-  const handleCreateResource = (resourceData: any) => {
-    console.log("Resource Data: ", resourceData);
-    setShowCreateResource(false);
-  };
-
-  useEffect(() => {
-    if (selectedCategory) {
-      // Filter resources based on selectedCategory
-      const filtered = allResources.filter(
-        (resource) => resource.category === selectedCategory
-      );
-      setFilteredResources(filtered);
-      setShowResourceList(true);
-    } else {
-      setFilteredResources(allResources);
-      setShowResourceList(true);
-      console.log(selectedCategory, setShowResourceList.valueOf());
-    }
-  }, [selectedCategory, allResources]);
-
-  const { redirect } = useRedirect();
 
   return (
     <div className="dashboard-container">
@@ -112,8 +86,12 @@ export const Dashboard = () => {
             style={{ cursor: "pointer" }}
             onClick={() => toggleNav("aside-nav", "slide-out")}
           />
-          <BsSearch className="icon" style={{ cursor: "pointer" }} />
-          <input type="text" name="" id="" />
+          <BsSearch
+            className="icon"
+            style={{ cursor: "pointer" }}
+            onClick={() => toggleSearchBtn()}
+          />
+          {searchBtn && <input className="open" type="text" name="" id="" />}
         </div>
         <div className="right">
           <BsBellFill className="icon" style={{ cursor: "pointer" }} />
@@ -130,15 +108,25 @@ export const Dashboard = () => {
           <div className="dropdown-container">
             <ul className="dropdown-content">
               <li>
-                <BsPerson className="icon" />{" "}
-                <Link to="/settings">Manage Profile</Link>
+                <BsPersonFill className="icon" />
+                <Link
+                  to="/profile"
+                  style={{
+                    textDecoration: "none",
+                    color: "inherit",
+                  }}
+                >
+                  Manage Profile
+                </Link>
               </li>
               <li>
                 <BsFillBellFill className="icon" /> <p>Notifications</p>
               </li>
               <li>
                 <BsBoxArrowRight style={{ color: "red" }} className="icon" />
-                <p style={{ color: "red" }}>Logout</p>
+                <p style={{ color: "red" }} onClick={handleLogOut}>
+                  Logout
+                </p>
               </li>
             </ul>
           </div>
@@ -155,7 +143,7 @@ export const Dashboard = () => {
               <li>
                 <FaHome className="icon" /> <p>Dashboard</p>
               </li>
-              <li>
+              <li onClick={() => navigate("/profile")}>
                 <FaUser className="icon" /> <p>Profile</p>
               </li>
 
@@ -171,14 +159,28 @@ export const Dashboard = () => {
                   <BsChevronRight className="icon-right" />
                 </div>
                 {dropdownsOpen.reservations && (
-                  <ul className="dropdown-list">
+                  <ul
+                    className={`dropdown-list ${
+                      dropdownsOpen.reservations ? "open" : ""
+                    }`}
+                  >
                     <li
                       onClick={(e) => {
                         e.stopPropagation();
+                        navigate("/reservation/All-Reservations");
                         console.log("All Reservations clicked");
                       }}
                     >
                       All Reservations
+                    </li>
+                    <li
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate("/reservation/current-Reservation");
+                        console.log("Current Reservations clicked");
+                      }}
+                    >
+                      Current Reservations
                     </li>
                   </ul>
                 )}
@@ -197,14 +199,17 @@ export const Dashboard = () => {
                   <BsChevronRight className="icon-right" />
                 </div>
                 {dropdownsOpen.categories && (
-                  <ul className="dropdown-list">
+                  <ul
+                    className={`dropdown-list ${
+                      dropdownsOpen.categories ? "open" : ""
+                    }`}
+                  >
                     {categories.map((categoryName, index) => {
                       return (
                         <li
                           onClick={(e) => {
                             e.stopPropagation();
                             setSelectedCategory(categoryName);
-                            setShowResourceList(true);
                           }}
                           key={index}
                         >
@@ -227,19 +232,23 @@ export const Dashboard = () => {
                 )}
               </li>
 
-              {/*  Sales Report dropdown */}
+              {/* Report dropdown */}
               <li className="dropdown">
                 <div
                   className="dropdown-btn"
-                  onClick={() => toggleDropdown("salesReport")}
+                  onClick={() => toggleDropdown("Report")}
                 >
                   <div>
-                    <BsGraphUp className="icon" /> <p>Sales Report</p>
+                    <BsGraphUp className="icon" /> <p>Report</p>
                   </div>
                   <BsChevronRight className="icon-right" />
                 </div>
-                {dropdownsOpen.salesReport && (
-                  <ul className="dropdown-list">
+                {dropdownsOpen.Report && (
+                  <ul
+                    className={`dropdown-list ${
+                      dropdownsOpen.Report ? "open" : ""
+                    }`}
+                  >
                     <li
                       onClick={(e) => {
                         e.stopPropagation();
@@ -254,10 +263,15 @@ export const Dashboard = () => {
                 <BsPeopleFill className="icon" /> <p>Users</p>
               </li>
               <li>
-                <BsBoxArrowInLeft className="icon" /> <p>Login</p>
+                <BsPersonAdd
+                  className="icon"
+                  onClick={() => navigate("/signup")}
+                />
+                <p>Sign up</p>
               </li>
-              <li>
-                <BsPersonAdd className="icon" /> <p>Sign up</p>
+              <li className="settings" onClick={() => navigate("/settings")}>
+                <BsGearFill className="icon" />
+                <p>Settings</p>
               </li>
             </ul>
           </div>
@@ -356,3 +370,12 @@ export const Dashboard = () => {
     </div>
   );
 };
+
+// const TopNav = () => {
+//   return (
+//     <>
+//          </>
+//   );
+// };
+
+// export default TopNav;

@@ -3,7 +3,6 @@ import Reservation from "../model/Reservation";
 import { Response } from "express";
 import mongoose from "mongoose";
 
-// Get all reservations for the logged-in user
 const getAllMyReservation = async (
   req: CustomRequest,
   res: Response
@@ -36,7 +35,6 @@ const getAllMyReservation = async (
   });
 };
 
-// Get a specific reservation by ID
 const getReservation = async (
   req: CustomRequest,
   res: Response
@@ -75,10 +73,10 @@ const createReservation = async (
   req: CustomRequest,
   res: Response
 ): Promise<void> => {
-  const { startDate, endDate, status, reason } = req.body;
+  const { startDate, endDate, status, reason, resourceId } = req.body;
   const userId = req.user?.userId;
 
-  if (!startDate || !endDate || !reason) {
+  if (!startDate || !endDate) {
     res
       .status(400)
       .json({ message: "Missing required fields", status: "Failed" });
@@ -91,6 +89,10 @@ const createReservation = async (
     endDate,
     status,
     reason,
+    resource: resourceId,
+  });
+  await Reservation.findByIdAndUpdate(resourceId, {
+    $inc: { reservationCount: 1 },
   });
 
   res.status(201).json({
@@ -100,7 +102,6 @@ const createReservation = async (
   });
 };
 
-// Cancel a reservation
 const cancelReservation = async (
   req: CustomRequest,
   res: Response

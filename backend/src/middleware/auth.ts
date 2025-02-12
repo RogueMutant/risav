@@ -15,9 +15,7 @@ const auth = async (
   res: Response,
   next: NextFunction
 ): Promise<void> => {
-  const authHeader = req.headers.authorization;
-  const token = authHeader?.split(" ")[1];
-  // console.log(token, authHeader);
+  const token = req.cookies.userToken;
 
   if (!token) {
     res

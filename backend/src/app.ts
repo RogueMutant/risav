@@ -9,6 +9,7 @@ import resourceRoute from "./routes/resource";
 import categoriesRoute from "./routes/category";
 import reservationRoute from "./routes/reservation";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 const app: Application = express();
 
@@ -21,6 +22,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 

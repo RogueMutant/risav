@@ -40,9 +40,17 @@ const getResource = async (
     .json({ message: "Here is the resource", status: "Success", resource });
 };
 
-// Create a new resource
 const createResource = async (req: Request, res: Response): Promise<void> => {
-  const { name, category, description, status, imageUrl, location } = req.body;
+  const {
+    name,
+    category,
+    description,
+    status,
+    imageUrl,
+    location,
+    itemCount,
+    availableDays,
+  } = req.body;
 
   // Validate category
   const validCategory = await Category.findById(category);
@@ -58,6 +66,8 @@ const createResource = async (req: Request, res: Response): Promise<void> => {
     status,
     imageUrl,
     location,
+    itemCount,
+    availableDays,
   });
 
   await resource.save();
@@ -69,7 +79,16 @@ const updateResource = async (
   res: Response
 ): Promise<void> => {
   const { id } = req.params;
-  const { name, category, description, status, imageUrl, location } = req.body;
+  const {
+    name,
+    category,
+    description,
+    status,
+    imageUrl,
+    location,
+    itemCount,
+    availableDays,
+  } = req.body;
 
   const userId = req.user?.userId;
   if (!userId) {
@@ -100,7 +119,16 @@ const updateResource = async (
 
   const updatedResource = await Resource.findByIdAndUpdate(
     id,
-    { name, category, description, status, imageUrl, location },
+    {
+      name,
+      category,
+      description,
+      status,
+      imageUrl,
+      location,
+      itemCount,
+      availableDays,
+    },
     { new: true, runValidators: true }
   );
 
@@ -109,12 +137,10 @@ const updateResource = async (
     return;
   }
 
-  res
-    .status(200)
-    .json({
-      message: "Resource updated successfully",
-      resource: updatedResource,
-    });
+  res.status(200).json({
+    message: "Resource updated successfully",
+    resource: updatedResource,
+  });
 };
 
 const deleteResource = async (

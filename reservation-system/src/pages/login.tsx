@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import "../styles/index.css";
@@ -10,51 +10,40 @@ interface Person {
   password: string;
 }
 
-const url = "http://localhost:9000/auth/login";
+const url = "/auth/login";
 
 export const Login = () => {
   const [person, setPerson] = useState<Person>({ email: "", password: "" });
-  const [shouldFetch, setShouldFetch] = useState(false);
-  const { loading, data, error, fetchData } = useFetch(
-    url,
-    shouldFetch,
-    "post"
-  );
   const [passwordVisible, setPasswordVisible] = useState(false);
+  const { loading, error, fetchData } = useFetch(url, false, "post");
   const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setPerson((prevPerson) => ({ ...prevPerson, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setShouldFetch(true);
+
+    try {
+      // Call the API to log in
+      const response = await fetchData(person);
+
+      if (response) {
+        console.log("Login successful:", response);
+        setPerson({ email: "", password: "" }); // Reset the form
+        navigate("/dashboard"); // Redirect to the dashboard
+      }
+    } catch (err) {
+      console.error("Login error:", err, error);
+    }
   };
 
-  const redirectToDashboard = useCallback(() => {
-    navigate("/dashboard");
-  }, [navigate]);
-
-  useEffect(() => {
-    if (shouldFetch) {
-      fetchData(person);
-      setShouldFetch(false);
-    }
-    if (data) {
-      console.log(data);
-      setPerson({ email: "", password: "" });
-      redirectToDashboard();
-    }
-  }, [shouldFetch, fetchData, person, data, redirectToDashboard]);
-
-  if (error) {
-    console.error("Login error:", error);
-  }
   return (
     <article className="form-container">
       <h1>RISAV</h1>
@@ -102,7 +91,7 @@ export const Login = () => {
           </button>
         </div>
         <div className="hr"></div>
-        <span>Or sign in using:</span>
+        <span className="span-sign-in">Or sign in using:</span>
         <div className="form-control">
           <button className="oauth">
             <FcGoogle /> <span>Google</span>

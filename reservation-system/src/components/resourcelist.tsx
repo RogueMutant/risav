@@ -1,7 +1,6 @@
 import React from "react";
 import "../styles/index.css";
 import { Resource } from "../types/custom";
-import { CreateResource } from "./createResource";
 
 interface ResourceListProps {
   category: string | null;
@@ -17,35 +16,43 @@ export const ResourceList: React.FC<ResourceListProps> = ({
   return (
     <div className="resource-list-container">
       {resources.length > 0 ? (
-        <div className="resource-card-container">
-          {resources.map((resource) => (
-            <div key={resource.id} className="resource-card">
-              <div className="resource-card-content">
-                {" "}
-                {/* Added content wrapper */}
-                {resource.image && (
-                  <img
-                    src={URL.createObjectURL(resource.image)}
-                    alt={resource.name}
-                    className="resource-image" // Added image class
-                  />
-                )}
-                <div className="resource-text">
-                  {" "}
-                  {/* Added text wrapper */}
-                  <h3>{resource.name}</h3>
-                  <p>{resource.description}</p>
+        resources.map((resource, index) => (
+          <div key={index} className="resource-card-container">
+            <div className="resource-card-content">
+              {/* Added content wrapper */}
+              {resource.image && (
+                <img
+                  src={URL.createObjectURL(resource.image)}
+                  alt={resource.name}
+                  className="resource-image" // Added image class
+                />
+              )}
+              <div className="resource-text">
+                {/* Added text wrapper */}
+                <h3>{resource.name}</h3>
+                <p>{resource.description}</p>
+                <div className="week-container">
+                  {resource.availableDays
+                    ? resource.availableDays.map((available, index) => {
+                        return (
+                          <p className="day-tile" key={index}>
+                            {available}
+                          </p>
+                        );
+                      })
+                    : "No date available"}
                 </div>
-                <button
+                <p>{`From ${resource.startTime} to ${resource.endTime}`}</p>
+              </div>
+              {/* <button
                   onClick={() => onDeleteResource}
                   className="resource-delete-button"
                 >
                   Delete
-                </button>
-              </div>
+                </button> */}
             </div>
-          ))}
-        </div>
+          </div>
+        ))
       ) : (
         <div className="no-resources-message">
           <p>

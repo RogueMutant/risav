@@ -20,6 +20,8 @@ const resourceSchema: Schema = new mongoose.Schema<IResource>(
     },
     location: { type: String },
     reservationCount: { type: Number, default: 0 },
+    itemCount: { type: Number, default: 1 },
+    availableDays: { type: Array },
     imageUrl: { type: String },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,

@@ -1,0 +1,102 @@
+@charset "UTF-8";
+.settings-container {
+  padding: 30px;
+  max-width: 900px;
+  margin: 0 auto;
+  font-family: "Arial", sans-serif;
+}
+.settings-container h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+}
+.settings-container form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+.settings-container form .settings-group {
+  border: none;
+  padding: 0;
+  margin-bottom: 0;
+  border-radius: 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: #cccccc;
+  padding: 20px;
+  border-radius: 8px;
+}
+.settings-container form .settings-group h2 {
+  margin-bottom: 15px;
+  color: #555;
+}
+.settings-container form .settings-group .setting-item {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+}
+.settings-container form .settings-group .setting-item label {
+  margin-right: 15px;
+  color: #333;
+  font-weight: 500;
+}
+.settings-container form .settings-group .setting-item input[type=checkbox] {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #21222d;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+  position: relative;
+}
+.settings-container form .settings-group .setting-item input[type=checkbox]:checked {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+.settings-container form .settings-group .setting-item input[type=checkbox]:checked::before {
+  content: "✓";
+  color: white;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 14px;
+}
+.settings-container form .settings-group .setting-item input[type=checkbox]:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+}
+.settings-container form .save-button {
+  background-color: #007bff;
+  color: white;
+  padding: 14px 25px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: background-color 0.2s ease-in-out;
+}
+.settings-container form .save-button:hover {
+  background-color: #0056b3;
+}
+@media (min-width: 768px) {
+  .settings-container form {
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+}
+@media (max-width: 600px) {
+  .settings-container {
+    padding: 20px;
+  }
+  .settings-container .setting-group {
+    padding: 15px;
+  }
+  .settings-container form {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+}/*# sourceMappingURL=settings.css.map */

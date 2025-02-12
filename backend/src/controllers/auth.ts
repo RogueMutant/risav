@@ -1,6 +1,49 @@
 import { Response } from "express";
+import jwt from "jsonwebtoken";
 import User from "../model/User";
 import { IUser, CustomRequest } from "../types/custom";
+
+const getCurrentUser = async (
+  req: CustomRequest,
+  res: Response
+): Promise<void> => {
+  try {
+    const token = req.cookies.userToken; // Get token from cookie
+
+    if (!token) {
+      res.status(401).json({ message: "Not authenticated" });
+      return;
+    }
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
+      userId: string;
+      role: string;
+    };
+    console.log("decoded getcurrent token", decoded);
+
+    const user = await User.findById(decoded.userId).select("-password"); // Exclude password
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+    console.log(user);
+
+    res.status(200).json({ user });
+  } catch (error) {
+    res.status(401).json({ message: "Invalid or expired token" });
+  }
+};
+
+const logoutUser = (req: CustomRequest, res: Response): void => {
+  res.clearCookie("userToken", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+  console.log("Logged out successfully");
+
+  res.status(200).json({ message: "Logged out successfully" });
+};
 
 const createUser = async (req: CustomRequest, res: Response): Promise<void> => {
   const existingUser = await User.find({});
@@ -16,9 +59,15 @@ const createUser = async (req: CustomRequest, res: Response): Promise<void> => {
         email,
         password,
         role,
+        isActive: true,
       });
-
       const token = user.createJwt();
+      res.cookie("userToken", token, {
+        httpOnly: true, // Prevents client-side access (more secure)
+        secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+        sameSite: "strict", // Prevents CSRF attacks
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days expiration
+      });
       res.status(200).json({
         message: "Succesfully created a user",
         status: "success",
@@ -39,29 +88,51 @@ const createUser = async (req: CustomRequest, res: Response): Promise<void> => {
 
 const login = async (req: CustomRequest, res: Response): Promise<void> => {
   const { email, password } = req.body;
-  if (!email && !password) {
-    res
-      .status(400)
-      .json({ message: "Please provide email and password", status: "Failed" });
-    return;
-  }
-  const user = await User.findOne({ email });
-  if (!user) {
+
+  if (!email || !password) {
     res.status(400).json({
-      message: "there is no matching email, please sign up",
+      message: "Please provide email and password",
       status: "Failed",
     });
     return;
   }
-  const isValid = user && (await user.comparePassword(password));
-  const token = user?.createJwt();
-  if (user && !isValid) {
-    res
-      .status(400)
-      .json({ message: "Wrong password provided", status: "Failed" });
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    res.status(400).json({
+      message: "There is no matching email, please sign up",
+      status: "Failed",
+    });
     return;
   }
-  res.status(200).json({ message: "welcome back", status: "success", token });
+
+  const isValid = await user.comparePassword(password);
+  if (!isValid) {
+    res.status(400).json({
+      message: "Wrong password provided",
+      status: "Failed",
+    });
+    return;
+  }
+
+  user.isActive = true;
+  await user.save();
+
+  const token = user.createJwt();
+
+  res.cookie("userToken", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
+
+  res.status(200).json({
+    message: "Welcome back",
+    status: "success",
+    token,
+  });
+  return;
 };
 
 const updateProfile = async (req: CustomRequest, res: Response) => {
@@ -81,16 +152,19 @@ const setFallBackAdmin = async (
     const user: IUser | null = await User.findById(id);
     if (!user) {
       res.status(404).json({ message: "User not found" });
+      return;
     }
 
     if (user && user.role !== "admin") {
       res.status(400).json({ message: "Only admins can be fallback admins" });
+      return;
     }
 
     if (user) {
       user.isFallbackAdmin = isFallbackAdmin;
       await user.save();
       res.status(200).json({ message: `Fallback admin status updated`, user });
+      return;
     }
   } catch (error) {
     res.status(500).json({
@@ -110,17 +184,20 @@ const emergencyCode = async (
     // Validate emergency code
     if (emergencyCode !== process.env.EMERGENCY_CODE) {
       res.status(403).json({ message: "Invalid emergency code" });
+      return;
     }
 
     // Find the user by ID
     const user: IUser | null = await User.findById(userId);
     if (!user) {
       res.status(404).json({ message: "User not found" });
+      return;
     }
 
     // Ensure the user is a fallback admin
     if (!user?.isFallbackAdmin) {
       res.status(403).json({ message: "User is not a fallback admin" });
+      return;
     }
 
     // Find the current super admin and demote them
@@ -157,6 +234,7 @@ const roleUpdate = async (req: CustomRequest, res: Response): Promise<void> => {
       message: "Only the super admin can update roles.",
       status: "Forbidden",
     });
+    return;
   }
 
   // Prevent granting super_admin role to anyone other than fallback admins
@@ -165,6 +243,7 @@ const roleUpdate = async (req: CustomRequest, res: Response): Promise<void> => {
 
     if (!targetUser) {
       res.status(404).json({ message: "User not found", status: "Error" });
+      return;
     }
 
     if (!targetUser?.isFallbackAdmin) {
@@ -172,6 +251,7 @@ const roleUpdate = async (req: CustomRequest, res: Response): Promise<void> => {
         message: "Only fallback admins can be promoted to super admin.",
         status: "Forbidden",
       });
+      return;
     }
   }
 
@@ -185,6 +265,8 @@ const roleUpdate = async (req: CustomRequest, res: Response): Promise<void> => {
 };
 
 export {
+  getCurrentUser,
+  logoutUser,
   createUser,
   login,
   updateProfile,

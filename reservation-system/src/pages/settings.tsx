@@ -1,148 +1,69 @@
-import React, { useState, useEffect } from "react";
-import { useFetch } from "../hooks/useFetch";
-import "../styles/index.css";
+import React, { useState } from "react";
+import "../styles/settings.css";
+import { UserSettings } from "../types/custom";
 
-const backendUrl = "http://localhost:9000/auth/register";
-
-interface ProfileData {
-  name: string;
-  email: string;
-  phoneNumber?: number;
-}
-
-export const Profile = () => {
-  const [profile, setProfile] = useState<ProfileData>({
-    name: "",
-    email: "",
+export const Settings: React.FC = () => {
+  const [settings, setSettings] = useState<UserSettings>({
+    pushNotificationsEnabled: true, // Default enabled
+    emailNotificationsEnabled: false, // Default disabled
   });
-  const [shouldFetch, setShouldFetch] = useState(false);
-  const { data, error, loading, fetchData } = useFetch<any>(
-    backendUrl,
-    shouldFetch,
-    "put"
-  );
-  const [isEditing, setIsEditing] = useState(false); // State for edit mode
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setProfile((prevProfile) => ({ ...prevProfile, [name]: value }));
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, type, value } = event.target as HTMLInputElement;
+    const checked = (event.target as HTMLInputElement).checked;
+    setSettings({
+      ...settings,
+      [name]: type === "checkbox" ? checked : value, // Handle checkboxes
+    } as UserSettings);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setShouldFetch(true);
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    console.log("Saving settings:", settings);
+    alert("Settings saved!");
   };
-
-  const updateUser = () => {
-    const updatedUser = { name: profile.name, email: profile.email };
-    fetchData(updatedUser);
-  };
-
-  useEffect(() => {
-    if (data) {
-      console.log(data);
-      setProfile({ name: "", email: "" });
-      setShouldFetch(false);
-      setIsEditing(false);
-    }
-  }, [data]);
-
-  if (error) {
-    console.error("Error fetching/updating profile:", error);
-    // Display error message to the user
-  }
 
   return (
-    <div className="profile-container">
-      <h1>Manage Profile</h1>
-      <div className="profile-card">
-        <h2>Profile Information</h2>
-        {loading && <div>Loading...</div>}
-        <div>
-          <p>
-            <strong>Name:</strong> {profile.name}
-          </p>
-          <p>
-            <strong>Email:</strong> {profile.email}
-          </p>
-          <p>
-            <strong>Phone No: +234 09021347781</strong> {profile.phoneNumber}
-          </p>
-          {/* Display other profile information */}
-          {/* <button onClick={() => setIsEditing(true)}>Edit Profile</button> */}
-        </div>
-
-        <div>
-          <h2>Change Password</h2>
-          <form>
-            <div className="form-group">
-              <label htmlFor="currentPassword">Current Password</label>
-              <input
-                type="password"
-                id="currentPassword"
-                name="currentPassword"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="newPassword">New Password</label>
-              <input
-                type="password"
-                id="newPassword"
-                name="newPassword"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="confirmNewPassword">Confirm New Password</label>
-              <input
-                type="password"
-                id="confirmNewPassword"
-                name="confirmNewPassword"
-                required
-              />
-            </div>
-            <button type="submit">Change Password</button>
-          </form>
-        </div>
-
-        {/* <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="name">Name</label>
+    <div className="settings-container">
+      <form onSubmit={handleSubmit}>
+        <div className="settings-group">
+          <h2>Push Notifications</h2>
+          <div className="setting-item">
+            <label htmlFor="pushNotificationsEnabled">
+              Enable Push Notifications:
+            </label>
             <input
-              type="text"
-              id="name"
-              name="name"
-              value={profile.name}
+              type="checkbox"
+              id="pushNotificationsEnabled"
+              name="pushNotificationsEnabled"
+              checked={settings.pushNotificationsEnabled}
               onChange={handleChange}
-              required
             />
           </div>
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
+        </div>
+
+        <div className="settings-group">
+          <h2>Email Notifications</h2>
+          <div className="setting-item">
+            <label htmlFor="emailNotificationsEnabled">
+              Enable Email Notifications:
+            </label>
             <input
-              type="email"
-              id="email"
-              name="email"
-              value={profile.email}
+              type="checkbox"
+              id="emailNotificationsEnabled"
+              name="emailNotificationsEnabled"
+              checked={settings.emailNotificationsEnabled}
               onChange={handleChange}
-              required
             />
           </div>
-          <button type="submit" disabled={loading}>
-            {loading ? "Saving..." : "Save Changes"}
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setIsEditing(false);
-              updateUser();
-            }}
-          >
-            Cancel
-          </button>
-        </form> */}
-      </div>
+        </div>
+
+        <button type="submit" className="save-button">
+          Save Changes
+        </button>
+      </form>
     </div>
   );
 };

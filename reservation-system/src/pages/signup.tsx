@@ -4,6 +4,7 @@ import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { useFetch } from "../hooks/useFetch";
 import "../styles/index.css";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../components/authContext";
 
 interface Person {
   name: string;
@@ -14,12 +15,8 @@ interface Person {
 interface SubmitEvent {
   preventDefault: () => void;
 }
-interface User {
-  name: string;
-  email: string;
-  password: string;
-}
-const url = "http://localhost:9000/auth/register";
+
+const url = "/auth/register";
 export const SignUp = () => {
   const [person, setPerson] = useState<Person>({
     name: "",
@@ -28,11 +25,12 @@ export const SignUp = () => {
     confirmPassword: "",
   });
   const [shouldFetch, setShouldFetch] = useState(false);
-  const { data, error, loading, fetchData } = useFetch<any>(
+  const { data, error, loading, fetchData } = useFetch(
     url,
     shouldFetch,
     "post"
   );
+
   const [PasswordVisibility, setPasswordVisibility] = useState({
     password: false,
     confirmPassword: false,
@@ -58,10 +56,6 @@ export const SignUp = () => {
     setPerson((prevPerson) => ({ ...prevPerson, [name]: value }));
   };
 
-  const createUser = () => {
-    fetchData(person);
-  };
-
   const handleSubmit = (e: SubmitEvent) => {
     e.preventDefault();
     if (
@@ -71,7 +65,8 @@ export const SignUp = () => {
       person.password === person.confirmPassword
     ) {
       setShouldFetch(true);
-      createUser();
+
+      fetchData(person, "post");
     } else {
       if (person.password !== person.confirmPassword) {
         alert("Passwords do not match");
