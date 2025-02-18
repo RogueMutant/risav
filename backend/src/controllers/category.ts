@@ -7,30 +7,75 @@ const createCategory = async (
   req: CustomRequest,
   res: Response
 ): Promise<void> => {
-  const { name } = req.body;
-  const createdBy = req.user?.userId;
-  console.log(req.user?.role);
+  try {
+    const { name } = req.body;
+    const createdBy = req.user?.userId;
 
-  if (req.user?.role !== "super_admin" && req.user?.role !== "admin") {
-    res.status(403).json({
-      message: "You do not have have the authority",
-      status: "unauthorized",
+    console.log("Create category request:", {
+      name,
+      createdBy,
+      userRole: req.user?.role,
     });
-    return;
-  }
 
-  const existingCategory = await Category.findOne({ name });
-  if (existingCategory) {
-    res.status(400).json({ message: "Category already exists" });
-    return;
+    // Check user authentication
+    if (!req.user || !createdBy) {
+      res.status(401).json({
+        message: "Not authenticated",
+        status: "unauthorized",
+      });
+      return;
+    }
+
+    // Check user authorization
+    if (req.user.role !== "super_admin" && req.user.role !== "admin") {
+      res.status(403).json({
+        message: "You do not have the authority",
+        status: "unauthorized",
+      });
+      return;
+    }
+
+    // Validate category name
+    if (!name || typeof name !== "string" || !name.trim()) {
+      res.status(400).json({
+        message: "Valid category name is required",
+        status: "Failed",
+      });
+      return;
+    }
+
+    // Check for existing category
+    const existingCategory = await Category.findOne({ name: name.trim() });
+    if (existingCategory) {
+      res.status(400).json({
+        message: "Category already exists",
+        status: "Failed",
+      });
+      return;
+    }
+
+    // Create category
+    const category = new Category({
+      name: name.trim(),
+      createdBy,
+    });
+
+    const savedCategory = await category.save();
+    console.log("Category created successfully:", savedCategory);
+
+    res.status(201).json({
+      message: "Category created",
+      status: "success",
+      category: savedCategory,
+    });
+  } catch (error) {
+    console.error("Error creating category:", error);
+    res.status(500).json({
+      message: "Failed to create category",
+      status: "Failed",
+      error: process.env.NODE_ENV === "development" ? error : undefined,
+    });
   }
-  if (createdBy) {
-    const category: ICategory = new Category({ name, createdBy });
-    await category.save();
-    res.status(201).json({ message: "Category created", category });
-    return;
-  }
-  res.status(404).json({ message: "Bad request", status: "Failed" });
 };
 
 const getAllCategories = async (

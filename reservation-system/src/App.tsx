@@ -12,6 +12,7 @@ import { CategoryPage } from "./pages/categories";
 import { ResourceProvider } from "./components/resourceContext";
 import { AuthProvider } from "./components/authContext";
 import { Settings } from "./pages/settings";
+import { CurrentReservation } from "./pages/currentReservation";
 
 function App() {
   return (

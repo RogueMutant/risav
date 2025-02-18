@@ -19,7 +19,6 @@
 .form-container .create-resource-form {
   width: 100%;
   box-sizing: border-box;
-  /* Calendar Styling */
 }
 .form-container .create-resource-form label {
   display: block;
@@ -151,6 +150,26 @@
 .form-container .create-resource-form .form-actions button[type=button]:hover {
   background-color: #545b62;
 }
+.form-container .create-resource-form .form-actions .create-btn:disabled {
+  background-color: gray;
+  cursor: not-allowed;
+}
+.form-container .create-resource-form .form-actions .spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid white;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 .form-container .create-resource-form .image-preview {
   position: relative;
   margin-bottom: 1rem;
@@ -175,50 +194,6 @@
 }
 .form-container .create-resource-form .image-preview .remove-image:hover {
   background-color: rgba(0, 0, 0, 0.7);
-}
-.form-container .create-resource-form .custom-calendar {
-  width: 100%;
-  margin-bottom: 1rem;
-  border-radius: 6px;
-}
-.form-container .create-resource-form .custom-calendar .react-calendar__navigation {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-}
-.form-container .create-resource-form .custom-calendar .react-calendar__navigation button {
-  background: none;
-  border: none;
-  padding: 0.5rem;
-  cursor: pointer;
-  font-weight: bold;
-  color: #6c757d;
-}
-.form-container .create-resource-form .custom-calendar .react-calendar__navigation button:hover {
-  color: #007bff;
-}
-.form-container .create-resource-form .custom-calendar .react-calendar__month-view__weekdays abbr {
-  font-weight: bold;
-  text-decoration: none;
-}
-.form-container .create-resource-form .custom-calendar .react-calendar__month-view__days {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-}
-.form-container .create-resource-form .custom-calendar .react-calendar__month-view__days button {
-  border: none;
-  background: none;
-  padding: 0.5rem;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-.form-container .create-resource-form .custom-calendar .react-calendar__month-view__days button:hover {
-  background-color: #f0f0f0;
-}
-.form-container .create-resource-form .custom-calendar .react-calendar__month-view__days button.react-calendar__tile--active {
-  background-color: #007bff;
-  color: white;
 }
 .form-container .close-icon {
   position: absolute;

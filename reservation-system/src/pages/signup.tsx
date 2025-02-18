@@ -25,11 +25,12 @@ export const SignUp = () => {
     confirmPassword: "",
   });
   const [shouldFetch, setShouldFetch] = useState(false);
-  const { data, error, loading, fetchData } = useFetch(
-    url,
-    shouldFetch,
-    "post"
-  );
+  const {
+    data,
+    error: signUpError,
+    loading,
+    fetchData,
+  } = useFetch(url, shouldFetch, "post");
 
   const [PasswordVisibility, setPasswordVisibility] = useState({
     password: false,
@@ -56,22 +57,38 @@ export const SignUp = () => {
     setPerson((prevPerson) => ({ ...prevPerson, [name]: value }));
   };
 
-  const handleSubmit = (e: SubmitEvent) => {
+  const handleSubmit = async (e: SubmitEvent) => {
     e.preventDefault();
-    if (
-      person.name &&
-      person.email &&
-      person.password &&
-      person.password === person.confirmPassword
-    ) {
-      setShouldFetch(true);
-
-      fetchData(person, "post");
-    } else {
-      if (person.password !== person.confirmPassword) {
-        alert("Passwords do not match");
-      } else {
-        alert("Please fill in all fields");
+    if (!person.name || !person.email || !person.password) {
+      console.log("Fields cannot be empty");
+      return;
+    }
+    if (person.password !== person.confirmPassword) {
+      console.log("Passwords do not match");
+      return;
+    }
+    try {
+      const response = await fetchData(
+        {
+          name: person.name.trim(),
+          email: person.email.trim(),
+          password: person.password,
+        },
+        "post"
+      );
+      if (response) {
+        console.log("Sign up successful");
+        setPerson({
+          name: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+        });
+      }
+    } catch (error) {
+      console.error("Sign up error:", error);
+      if (signUpError) {
+        console.error("Detailed error:", signUpError);
       }
     }
   };
@@ -85,8 +102,8 @@ export const SignUp = () => {
     }
   }, [data, navigateToDashboard]);
 
-  if (error) {
-    console.error(error);
+  if (signUpError) {
+    console.error(signUpError);
   }
   return (
     <article className="form-container">

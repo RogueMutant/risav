@@ -40,7 +40,10 @@ const getResource = async (
     .json({ message: "Here is the resource", status: "Success", resource });
 };
 
-const createResource = async (req: Request, res: Response): Promise<void> => {
+const createResource = async (
+  req: CustomRequest,
+  res: Response
+): Promise<void> => {
   const {
     name,
     category,
@@ -50,10 +53,19 @@ const createResource = async (req: Request, res: Response): Promise<void> => {
     location,
     itemCount,
     availableDays,
+    availableTime,
   } = req.body;
 
+  // Check user authorization
+  if (req.user?.role !== "super_admin" && req.user?.role !== "admin") {
+    res.status(403).json({
+      message: "You do not have the authority",
+      status: "unauthorized",
+    });
+    return;
+  }
   // Validate category
-  const validCategory = await Category.findById(category);
+  const validCategory = await Category.findOne({ name: category });
   if (!validCategory) {
     res.status(400).json({ message: "Invalid category" });
     return;
@@ -61,16 +73,18 @@ const createResource = async (req: Request, res: Response): Promise<void> => {
 
   const resource: IResource = new Resource({
     name,
-    category,
+    category: validCategory._id,
     description,
     status,
     imageUrl,
     location,
     itemCount,
     availableDays,
+    availableTime,
+    createdBy: req.user?.userId,
   });
-
   await resource.save();
+  console.log("Token form resource", req.cookies.userToken);
   res.status(201).json({ message: "Resource created successfully", resource });
 };
 
@@ -88,6 +102,7 @@ const updateResource = async (
     location,
     itemCount,
     availableDays,
+    availableTime,
   } = req.body;
 
   const userId = req.user?.userId;
@@ -109,25 +124,25 @@ const updateResource = async (
     return;
   }
 
-  if (category) {
-    const validCategory = await Category.findById(category);
-    if (!validCategory) {
-      res.status(400).json({ message: "Invalid category" });
-      return;
-    }
+  const validCategory = await Category.findOne({ name: category });
+  if (!validCategory) {
+    res.status(400).json({ message: "Invalid category" });
+    return;
   }
 
   const updatedResource = await Resource.findByIdAndUpdate(
     id,
     {
       name,
-      category,
+      category: validCategory._id,
       description,
       status,
       imageUrl,
       location,
       itemCount,
       availableDays,
+      availableTime,
+      createdBy: req.user?.userId,
     },
     { new: true, runValidators: true }
   );
@@ -155,6 +170,19 @@ const deleteResource = async (
     return;
   }
 
+  const resource = await Resource.findById(id);
+  if (!resource) {
+    res.status(404).json({ message: "Resource not found" });
+    return;
+  }
+
+  if (resource.reservationCount > 0) {
+    res
+      .status(400)
+      .json({ message: "Cannot delete resource. It has active reservations." });
+    return;
+  }
+
   const deletedResource = await Resource.findOneAndDelete({
     _id: id,
     createdBy: userId,
@@ -166,6 +194,7 @@ const deleteResource = async (
       .json({ message: "Resource not found or not authorized to delete" });
     return;
   }
+
   res
     .status(200)
     .json({ message: "Resource deleted successfully", status: "success" });

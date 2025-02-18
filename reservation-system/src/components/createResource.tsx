@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Resource } from "../types/custom";
 import { useParams } from "react-router-dom";
 import { BsX } from "react-icons/bs";
-import { useResources } from "../components/resourceContext";
+import { useResource } from "../hooks/useResource";
 import "react-calendar/dist/Calendar.css";
 import "../styles/createResourceForm.css";
 
@@ -28,19 +28,18 @@ export const CreateResource: React.FC<CreateResourceProps> = ({
   const { categoryName } = useParams<{ categoryName: string }>();
   const [storeStartTime, setStartTime] = useState<string | null>(null);
   const [storeEndTime, setEndTime] = useState<string | null>(null);
-  const { createResource } = useResources();
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
   const [resourceData, setResourceData] = useState<Resource>({
     name: "",
     description: "",
     category: categoryName || "",
-    image: null as File | null,
+    imageUrl: null as File | null,
     availableDays: [],
-    startTime: "",
-    endTime: "",
+    availableTime: [String, String],
     resourceCount: 1,
   });
   const [previewURL, setPreviewURL] = useState<string | null>(null);
+  const { createResource, isLoading } = useResource();
 
   const handleDaySelect = (day: string) => {
     if (selectedDays.includes(day)) {
@@ -48,54 +47,85 @@ export const CreateResource: React.FC<CreateResourceProps> = ({
     } else {
       setSelectedDays([...selectedDays, day]);
     }
-    setResourceData((prev) => ({ ...prev, availableDays: selectedDays })); // Update resourceData
+    setResourceData((prev) => ({ ...prev, availableDays: selectedDays }));
   };
 
   const handleStart = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setStartTime(value);
-    setResourceData((prev) => ({ ...prev, startTime: value.concat(" AM") }));
+    setResourceData((prev) => ({
+      ...prev,
+      availableTime: [value + "Am", prev.availableTime[1]],
+    }));
   };
 
   const handleEnd = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    if (storeStartTime && value < storeStartTime) {
-      alert("End time must be after start time!");
-      return;
-    }
     setEndTime(value);
-    setResourceData((prev) => ({ ...prev, endTime: value.concat(" PM") }));
+    setResourceData((prev) => ({
+      ...prev,
+      availableTime: [prev.availableTime[0], value + " PM"],
+    }));
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const objectUrl = URL.createObjectURL(file);
+      setPreviewURL(objectUrl);
+      console.log("setting the image", file);
+      setResourceData((prev) => ({
+        ...prev,
+        imageUrl: file,
+      }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!resourceData.startTime || !resourceData.endTime) {
+    if (!selectedDays) {
+      alert("please select at least 1 available day!");
+    }
+    if (!resourceData.availableTime[0] || !resourceData.availableTime[1]) {
       alert("Please set both start and end times.");
       return;
     }
-
+    const updatedResourceData = {
+      ...resourceData,
+      availableDays: selectedDays,
+    };
     try {
-      createResource(resourceData);
-      console.log("Resource created:", resourceData);
+      await createResource(updatedResourceData);
 
       setResourceData({
         name: "",
         description: "",
         category: categoryName || "",
-        image: null,
+        imageUrl: null,
         availableDays: [],
-        startTime: "",
-        endTime: "",
+        availableTime: [],
         resourceCount: 1,
       });
-
-      setPreviewURL(null);
+      setSelectedDays([]);
+      if (previewURL) {
+        URL.revokeObjectURL(previewURL);
+        setPreviewURL(null);
+      }
       onCancel();
     } catch (err) {
       console.error("Error creating resource:", err);
+      alert("Failed to create resource. Please try again.");
     }
   };
+
+  useEffect(() => {
+    return () => {
+      if (previewURL) {
+        console.log("Updated previewURL:", previewURL);
+        URL.revokeObjectURL(previewURL);
+      }
+    };
+  }, [previewURL]);
 
   return (
     <div className="form-container">
@@ -115,6 +145,7 @@ export const CreateResource: React.FC<CreateResourceProps> = ({
             setResourceData({ ...resourceData, name: e.target.value })
           }
           placeholder="Enter resource name"
+          required
         />
 
         <label htmlFor="image">Upload Image</label>
@@ -122,17 +153,7 @@ export const CreateResource: React.FC<CreateResourceProps> = ({
           type="file"
           id="image"
           name="image"
-          onChange={(e) => {
-            const file = e.target.files ? e.target.files[0] : null;
-            setResourceData({ ...resourceData, image: file });
-            if (file) {
-              const reader = new FileReader();
-              reader.onloadend = () => setPreviewURL(reader.result as string);
-              reader.readAsDataURL(file);
-            } else {
-              setPreviewURL(null);
-            }
-          }}
+          onChange={handleImageChange}
           accept="image/*"
         />
 
@@ -208,7 +229,9 @@ export const CreateResource: React.FC<CreateResourceProps> = ({
         />
 
         <div className="form-actions">
-          <button type="submit">Create Resource</button>
+          <button type="submit" disabled={isLoading} className="create-btn">
+            {isLoading ? <span className="spinner"></span> : "Create Resource"}
+          </button>
           <button type="button" onClick={onCancel}>
             Cancel
           </button>

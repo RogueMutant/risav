@@ -10,6 +10,7 @@ import categoriesRoute from "./routes/category";
 import reservationRoute from "./routes/reservation";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+// import { nuke } from "./nuke";
 
 const app: Application = express();
 
@@ -41,6 +42,7 @@ app.get("/", (req: Request, res: Response) => {
 const start = async (): Promise<void> => {
   try {
     await connectDb();
+    // await nuke();
     app.listen(process.env.PORT, () => {
       console.log(`Server is running on port ${process.env.PORT}`);
     });

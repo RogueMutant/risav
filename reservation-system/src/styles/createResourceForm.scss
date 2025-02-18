@@ -173,6 +173,28 @@ $border-radius: 0.5rem;
           }
         }
       }
+      .create-btn:disabled {
+        background-color: gray;
+        cursor: not-allowed;
+      }
+
+      .spinner {
+        width: 16px;
+        height: 16px;
+        border: 2px solid white;
+        border-top: 2px solid transparent;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
     }
 
     .image-preview {
@@ -200,62 +222,6 @@ $border-radius: 0.5rem;
 
         &:hover {
           background-color: rgba(0, 0, 0, 0.7);
-        }
-      }
-    }
-
-    /* Calendar Styling */
-    .custom-calendar {
-      width: 100%;
-      margin-bottom: 1rem;
-      border-radius: 6px;
-
-      .react-calendar__navigation {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 1rem;
-
-        button {
-          background: none;
-          border: none;
-          padding: 0.5rem;
-          cursor: pointer;
-          font-weight: bold;
-          color: $secondary-color;
-
-          &:hover {
-            color: $primary-color;
-          }
-        }
-      }
-
-      .react-calendar__month-view__weekdays {
-        abbr {
-          font-weight: bold;
-          text-decoration: none;
-        }
-      }
-
-      .react-calendar__month-view__days {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-
-        button {
-          border: none;
-          background: none;
-          padding: 0.5rem;
-          border-radius: 4px;
-          cursor: pointer;
-          transition: background-color 0.2s;
-
-          &:hover {
-            background-color: #f0f0f0;
-          }
-
-          &.react-calendar__tile--active {
-            background-color: $primary-color;
-            color: white;
-          }
         }
       }
     }

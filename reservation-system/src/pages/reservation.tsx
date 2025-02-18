@@ -82,7 +82,11 @@ export const Reservation = () => {
           </div>
         </div>
       )}
-      {reservationPage === "Current-Reservations" && <CurrentReservation />}
+      {reservationPage === "Current-Reservation" && <CurrentReservation />}
+      {reservationPage !== "All-Reservations" &&
+        reservationPage !== "Current-Reservation" && (
+          <div>Invalid reservation page</div>
+        )}
     </>
   );
 };

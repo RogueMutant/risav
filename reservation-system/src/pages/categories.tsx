@@ -3,23 +3,22 @@ import { useParams } from "react-router-dom";
 import { ResourceList } from "../components/resourcelist";
 import { CreateResource } from "../components/createResource";
 import { useResources } from "../components/resourceContext";
-import { Resource } from "../types/custom";
 import { BsPlus } from "react-icons/bs";
 
 export const CategoryPage = () => {
   const { categoryName } = useParams<{ categoryName: string }>();
-  const { resources, createResource, loading } = useResources(); // Use the context hook
+  const { resources } = useResources(); // Use the context hook
   const [showCreateResource, setShowCreateResource] = useState(false);
 
-  const filteredResources = resources.filter(
-    (resource) => resource.category === categoryName
-  );
+  const filteredResources = resources.filter((resource) => {
+    if (typeof resource.category === "object" && resource.category?.name) {
+      return resource.category.name === categoryName;
+    }
+    return resource.category === categoryName;
+  });
 
-  // const handleResourceCreate = (resourceData: Resource) => {
-  //   if (categoryName)
-  //     createResource({ ...resourceData, category: categoryName });
-  //   setShowCreateResource(false);
-  // };
+  console.log("Resources from context:", resources);
+  console.log("Filtered Resources:", filteredResources);
 
   return (
     <div className="category-page-container">

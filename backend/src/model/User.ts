@@ -30,8 +30,11 @@ const userSchema: Schema = new mongoose.Schema<IUser>(
       enum: ["super_admin", "admin", "user"],
       default: "user",
     },
+    profileImageUrl: {
+      type: String,
+    },
     phoneNumber: {
-      type: Number,
+      type: String,
     },
     isActive: {
       type: Boolean,
@@ -43,10 +46,18 @@ const userSchema: Schema = new mongoose.Schema<IUser>(
 );
 
 userSchema.pre("save", async function (next) {
-  if (typeof this.password === "string") {
-    this.password = await bcrypt.hash(this.password, 10);
+  if (!this.isModified("password")) {
+    return next();
   }
-  next();
+
+  try {
+    const salt = await bcrypt.genSalt(10);
+    if (typeof this.password === "string")
+      this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (error) {
+    next(error as Error);
+  }
 });
 userSchema.methods.createJwt = function () {
   return Jwt.sign(
@@ -59,8 +70,16 @@ userSchema.methods.createJwt = function () {
 userSchema.methods.comparePassword = async function (
   candidatePassword: string
 ): Promise<boolean> {
-  const compared = await bcrypt.compare(candidatePassword, this.password);
-  return compared;
+  try {
+    // console.log("Comparing passwords");
+    // console.log("Candidate password length:", candidatePassword.length);
+    const isMatch = await bcrypt.compare(candidatePassword, this.password);
+    // console.log("Password match result:", isMatch);
+    return isMatch;
+  } catch (error) {
+    console.error("Error comparing passwords:", error);
+    throw error;
+  }
 };
 
 export default model<IUser>("User", userSchema);

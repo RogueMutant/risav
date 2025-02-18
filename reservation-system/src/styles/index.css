@@ -189,6 +189,8 @@ body {
   width: 100%;
   height: -moz-fit-content;
   height: fit-content;
+  max-height: 200px;
+  overflow-y: auto;
   margin-top: 0.4em;
 }
 .dashboard-container .aside-nav .side-nav .ul-list-container .ul-content .dropdown .dropdown-list li {
@@ -199,6 +201,8 @@ body {
   color: white;
 }
 .dashboard-container .aside-nav .side-nav .ul-list-container .ul-content .dropdown.open {
+  scrollbar-width: thin;
+  scrollbar-color: #171821;
   transition: height 300ms linear;
 }
 .dashboard-container .aside-nav .side-nav .ul-list-container .ul-content li {
@@ -942,6 +946,24 @@ body {
   flex-grow: 1;
   min-height: 0;
   width: 300px;
+}
+.resource-list-container .resource-card-container .resource-card-content .image-skeleton {
+  width: 100%;
+  height: 200px;
+  background-color: #c5c5c5;
+  border-radius: 5px;
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 .resource-list-container .resource-card-container .resource-text {
   flex-grow: 1;

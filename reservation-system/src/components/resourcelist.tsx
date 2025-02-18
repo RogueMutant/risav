@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles/index.css";
 import { Resource } from "../types/custom";
+import { useResources } from "../components/resourceContext";
 
 interface ResourceListProps {
   category: string | null;
@@ -13,22 +14,26 @@ export const ResourceList: React.FC<ResourceListProps> = ({
   resources,
   onDeleteResource,
 }) => {
+  const [imageLoading, setImageLoading] = useState(true);
+
   return (
     <div className="resource-list-container">
       {resources.length > 0 ? (
         resources.map((resource, index) => (
           <div key={index} className="resource-card-container">
             <div className="resource-card-content">
-              {/* Added content wrapper */}
-              {resource.image && (
+              {imageLoading ? (
+                <div className="image-skeleton"></div>
+              ) : (
                 <img
-                  src={URL.createObjectURL(resource.image)}
+                  src={resource.imageUrl as string}
                   alt={resource.name}
-                  className="resource-image" // Added image class
+                  className="resource-image"
+                  onLoad={() => setImageLoading(false)}
+                  onError={() => setImageLoading(false)}
                 />
               )}
               <div className="resource-text">
-                {/* Added text wrapper */}
                 <h3>{resource.name}</h3>
                 <p>{resource.description}</p>
                 <div className="week-container">
@@ -42,7 +47,7 @@ export const ResourceList: React.FC<ResourceListProps> = ({
                       })
                     : "No date available"}
                 </div>
-                <p>{`From ${resource.startTime} to ${resource.endTime}`}</p>
+                <p>{`From ${resource.availableTime[0]} to ${resource.availableTime[1]}`}</p>
               </div>
               {/* <button
                   onClick={() => onDeleteResource}

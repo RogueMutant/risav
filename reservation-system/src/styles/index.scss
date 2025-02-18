@@ -136,6 +136,8 @@ html {
       transform: translateX(30px);
       width: 100%;
       height: fit-content;
+      max-height: 200px;
+      overflow-y: auto;
 
       margin-top: 0.4em;
       li {
@@ -147,6 +149,8 @@ html {
       }
     }
     &.open {
+      scrollbar-width: thin;
+      scrollbar-color: #171821;
       transition: height 300ms linear;
     }
   }
@@ -955,29 +959,47 @@ $delete-button-color-hover: #d32f2f;
     border-radius: 8px;
     box-shadow: $box-shadow;
     transition: background-color 0.2s;
-    flex: 1 0; // Key for horizontal arrangement and wrapping
-    // flex-basis: calc(33.33% - 20px); // Alternative to flex-basis
-    // width: calc(33.33% - 20px); // Alternative to flex-basis
+    flex: 1 0;
 
     &:hover {
       background-color: rgba(255, 255, 255, 0.281);
     }
 
     .resource-image {
-      width: 100%; // Image takes full width of card
+      width: 100%;
       height: 200px;
       object-fit: cover;
-      border-radius: 8px 8px 0 0; // Round only top corners
+      border-radius: 8px 8px 0 0;
       flex-shrink: 0;
     }
 
     .resource-card-content {
-      padding: 15px; // Add padding inside the card content
+      padding: 15px;
       display: flex;
       flex-direction: column;
-      flex-grow: 1; // Allow text to grow and fill remaining space
-      min-height: 0; // Fixes potential height issues
+      flex-grow: 1;
+      min-height: 0;
       width: 300px;
+
+      .image-skeleton {
+        width: 100%;
+        height: 200px;
+        background-color: #c5c5c5;
+        border-radius: 5px;
+        animation: pulse 1.5s infinite;
+      }
+
+      @keyframes pulse {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
     }
 
     .resource-text {

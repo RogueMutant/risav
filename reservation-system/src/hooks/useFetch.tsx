@@ -10,7 +10,7 @@ interface UseFetchState<T> {
 interface UseFetchReturn<T> extends UseFetchState<T> {
   fetchData: (
     body?: any,
-    method?: "get" | "post" | "put" | "delete"
+    method?: "get" | "post" | "patch" | "delete"
   ) => Promise<T | null>;
 }
 
@@ -19,7 +19,7 @@ const BASE_URL = "http://localhost:9000"; // Ensure this matches your backend
 export const useFetch = <T,>(
   url: string, // url should be relative, e.g., "/auth/login"
   shouldFetch: boolean = false,
-  defaultMethod: "get" | "post" | "put" | "delete" = "get"
+  defaultMethod: "get" | "post" | "patch" | "delete" = "get"
 ): UseFetchReturn<T> => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<T | null>(null);
@@ -28,7 +28,7 @@ export const useFetch = <T,>(
   const fetchData = useCallback(
     async (
       body?: any,
-      method: "get" | "post" | "put" | "delete" = defaultMethod
+      method: "get" | "post" | "patch" | "delete" = defaultMethod
     ): Promise<T | null> => {
       setLoading(true);
       setError(null);
@@ -36,18 +36,25 @@ export const useFetch = <T,>(
       try {
         const config: AxiosRequestConfig = {
           method: method,
-          url: `${BASE_URL}${url}`, // ✅ Ensure correct backend URL
+          url: `${BASE_URL}${url}`,
           withCredentials: true,
+          headers: {
+            "Content-Type": "application/json", // Add this
+          },
         };
 
         if (body) {
           config.data = body;
+          console.log("Request body:", body); // Add this for debugging
         }
 
+        console.log("Request config:", config); // Add this for debugging
         const response = await axios.request<T>(config);
+        console.log("Response:", response); // Add this for debugging
         setData(response.data);
         return response.data;
       } catch (err: any) {
+        console.log("Full error:", err); // Add this for debugging
         setError(
           err.response?.data?.message || err.message || "An error occurred"
         );

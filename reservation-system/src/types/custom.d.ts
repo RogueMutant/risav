@@ -4,23 +4,32 @@ declare module "*.svg" {
 }
 
 export interface Resource {
-  id?: string;
+  _id?: string;
   name: string;
   description: string;
-  category: string;
-  image: File | null;
-  availableDays: string[];
-  startTime: string;
-  endTime: string;
+  category: Category | string;
+  imageUrl: File | null | string;
+  availableDays: Array<string>;
+  availableTime: [string, string][string];
   resourceCount: number;
 }
 
+export interface Category {
+  _id: string;
+  name: string;
+  createdBy: string;
+}
+
 export interface User {
-  id: string;
+  _id: string;
   email: string;
   name: string;
   role: "user" | "admin" | "super_admin";
   isActive?: boolean;
+  status: string;
+  message: string;
+  phoneNumber: string;
+  profileImageUrl?: File | null | string;
 }
 
 export interface UserSettings {

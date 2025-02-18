@@ -2,6 +2,9 @@ import { Response } from "express";
 import jwt from "jsonwebtoken";
 import User from "../model/User";
 import { IUser, CustomRequest } from "../types/custom";
+import Category from "../model/Category";
+import Resource from "../model/Resource";
+import bcrypt from "bcryptjs";
 
 const getCurrentUser = async (
   req: CustomRequest,
@@ -9,6 +12,7 @@ const getCurrentUser = async (
 ): Promise<void> => {
   try {
     const token = req.cookies.userToken; // Get token from cookie
+    console.log("token form getCurrent", token);
 
     if (!token) {
       res.status(401).json({ message: "Not authenticated" });
@@ -22,74 +26,115 @@ const getCurrentUser = async (
     console.log("decoded getcurrent token", decoded);
 
     const user = await User.findById(decoded.userId).select("-password"); // Exclude password
+    const categories = await Category.find({});
     if (!user) {
       res.status(404).json({ message: "User not found" });
       return;
     }
-    console.log(user);
+    console.log(user, categories);
 
-    res.status(200).json({ user });
+    res.status(200).json({ user, categories });
   } catch (error) {
     res.status(401).json({ message: "Invalid or expired token" });
   }
 };
 
-const logoutUser = (req: CustomRequest, res: Response): void => {
-  res.clearCookie("userToken", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-  });
-  console.log("Logged out successfully");
+const logoutUser = async (req: CustomRequest, res: Response): Promise<void> => {
+  try {
+    res.clearCookie("userToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
 
-  res.status(200).json({ message: "Logged out successfully" });
+    if (req.user) {
+      const user = await User.findById(req.user.userId);
+      if (user) {
+        user.isActive = false;
+        await user.save();
+      }
+    }
+
+    res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    console.error("Logout error:", error);
+    res.status(500).json({ message: "Error logging out" });
+  }
 };
 
 const createUser = async (req: CustomRequest, res: Response): Promise<void> => {
-  const existingUser = await User.find({});
-
-  const role = existingUser.length === 0 ? "super_admin" : "user";
-
-  const { name, email, password } = req.body;
-  console.log(req.body);
   try {
-    if (name && email) {
-      const user = await User.create({
-        name,
-        email,
-        password,
-        role,
-        isActive: true,
-      });
-      const token = user.createJwt();
-      res.cookie("userToken", token, {
-        httpOnly: true, // Prevents client-side access (more secure)
-        secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-        sameSite: "strict", // Prevents CSRF attacks
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days expiration
-      });
-      res.status(200).json({
-        message: "Succesfully created a user",
-        status: "success",
-        userDetails: user,
-        token,
+    const { name, email, password } = req.body;
+
+    // Validate input
+    if (!name || !email || !password) {
+      res.status(400).json({
+        message: "Please provide all required fields",
+        status: "Failed",
       });
       return;
     }
+
+    // Check if user already exists
+    const existingUserByEmail = await User.findOne({ email });
+    if (existingUserByEmail) {
+      res.status(400).json({
+        message: "Email already in use",
+        status: "Failed",
+      });
+      return;
+    }
+
+    // Determine role
+    const existingUsers = await User.find({});
+    const role = existingUsers.length === 0 ? "super_admin" : "user";
+
+    const user = await User.create({
+      name,
+      email,
+      password,
+      role,
+      isActive: true,
+    });
+
+    const token = user.createJwt();
+    res.clearCookie("userToken");
+    // Set cookie
+    res.cookie("userToken", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.status(201).json({
+      message: "Successfully created user",
+      status: "success",
+      user: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        isActive: user.isActive,
+      },
+      token,
+    });
   } catch (error) {
-    console.log(error, `this is the body ${req.body}`);
+    console.error("Error creating user:", error);
+    res.status(500).json({
+      message: "Failed to create user",
+      status: "Failed",
+      error: process.env.NODE_ENV === "development" ? error : undefined,
+    });
   }
-  res.status(404).json({
-    message: "failed to create a user",
-    status: "Failed",
-    body: req.body,
-  });
 };
 
 const login = async (req: CustomRequest, res: Response): Promise<void> => {
   const { email, password } = req.body;
+  console.log("Login attempt for email:", email);
 
   if (!email || !password) {
+    console.log("Missing email or password");
     res.status(400).json({
       message: "Please provide email and password",
       status: "Failed",
@@ -99,6 +144,7 @@ const login = async (req: CustomRequest, res: Response): Promise<void> => {
 
   const user = await User.findOne({ email });
   if (!user) {
+    console.log("No user found with email:", email);
     res.status(400).json({
       message: "There is no matching email, please sign up",
       status: "Failed",
@@ -106,8 +152,12 @@ const login = async (req: CustomRequest, res: Response): Promise<void> => {
     return;
   }
 
+  console.log("Comparing passwords for user:", user.email);
   const isValid = await user.comparePassword(password);
+  console.log("Password comparison result:", isValid);
+
   if (!isValid) {
+    console.log("Invalid password for user:", user.email);
     res.status(400).json({
       message: "Wrong password provided",
       status: "Failed",
@@ -119,7 +169,7 @@ const login = async (req: CustomRequest, res: Response): Promise<void> => {
   await user.save();
 
   const token = user.createJwt();
-
+  res.clearCookie("userToken");
   res.cookie("userToken", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -130,15 +180,67 @@ const login = async (req: CustomRequest, res: Response): Promise<void> => {
   res.status(200).json({
     message: "Welcome back",
     status: "success",
+    user: {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      isActive: user.isActive,
+    },
     token,
   });
+  console.log("Logged in successfully", user._id);
   return;
 };
 
-const updateProfile = async (req: CustomRequest, res: Response) => {
-  const updatedUser = await User.findByIdAndUpdate(req.user?.userId, {
-    ...req.body,
-  });
+const updateProfile = async (
+  req: CustomRequest,
+  res: Response
+): Promise<void> => {
+  try {
+    const {
+      email,
+      name,
+      phoneNumber,
+      password,
+      profileImageUrl,
+      userId: id,
+    } = req.body;
+
+    if (!id) {
+      res.status(401).json({ error: "Unauthorized" });
+      return;
+    }
+
+    const updateData: Record<string, any> = {};
+
+    if (email) updateData.email = email;
+    if (name) updateData.name = name;
+    if (phoneNumber) updateData.phoneNumber = phoneNumber;
+
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      updateData.password = await bcrypt.hash(password, salt);
+    }
+
+    if (profileImageUrl) {
+      updateData.profileImageUrl = profileImageUrl;
+    }
+    const newId = id.toString();
+
+    const updatedUser = await User.findByIdAndUpdate(newId, updateData, {
+      new: true,
+    }).select("-password");
+
+    if (!updatedUser) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+    console.log("profile update request: ", updateData);
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
 
 const setFallBackAdmin = async (

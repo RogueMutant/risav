@@ -5,7 +5,7 @@ const categorySchema: Schema = new mongoose.Schema<ICategory>(
   {
     name: { type: String, required: true, unique: true },
     createdBy: {
-      type: mongoose.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: "Provide user",
     },

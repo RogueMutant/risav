@@ -8,6 +8,7 @@
     "@schedule-x/events-service": "^2.19.0",
     "@schedule-x/react": "^2.19.0",
     "@schedule-x/theme-default": "^2.19.0",
+    "appwrite": "^14.0.1",
     "axios": "^1.7.9",
     "cra-template-typescript": "1.2.0",
     "preact": "^10.25.4",

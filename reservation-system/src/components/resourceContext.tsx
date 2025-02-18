@@ -1,11 +1,13 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
 import { useFetch } from "../hooks/useFetch";
 import { Resource } from "../types/custom";
 
 interface ResourceContextType {
   resources: Resource[];
-  createResource: (resourceData: Omit<Resource, "id">) => Promise<void>;
+  onCreate: (newResource: Resource) => void;
+  fetchResources: () => Promise<void>;
   loading: boolean;
+  error: Error | null;
 }
 
 const ResourceContext = createContext<ResourceContextType | null>(null);
@@ -14,37 +16,57 @@ interface ResourceProviderProps {
   children: React.ReactNode;
 }
 
-const url = "/api/resources";
+const API_URL = "/api/resource/v1";
 
 export const ResourceProvider: React.FC<ResourceProviderProps> = ({
   children,
 }) => {
   const [resources, setResources] = useState<Resource[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
 
-  const { fetchData } = useFetch<Resource>(url, false, "post");
+  // Use useFetch for GET and POST operations
+  const { fetchData: fetchGetData } = useFetch<Resource[]>(
+    API_URL,
+    false,
+    "get"
+  );
 
-  const createResource = async (
-    resourceData: Omit<Resource, "id">
-  ): Promise<void> => {
+  const fetchResources = async (): Promise<void> => {
     setLoading(true);
+    setError(null);
     try {
-      // Call the API to create the resource
-      // const newResource = await fetchData(resourceData);
-      const newResource = resourceData;
-      // If the API call is successful, update the resources array
-      if (newResource) {
-        setResources((prevResources) => [...prevResources, newResource]);
+      const fetchedResources = await fetchGetData();
+      if (fetchedResources) {
+        setResources(fetchedResources);
       }
     } catch (err) {
-      console.error("Error creating resource", err);
+      setError(
+        err instanceof Error ? err : new Error("Failed to fetch resources")
+      );
     } finally {
       setLoading(false);
     }
   };
 
+  const onCreate = (newResource: Resource): void => {
+    setResources((prevResources) => [...prevResources, newResource]);
+  };
+
+  // Fetch resources on component mount
+  useEffect(() => {
+    fetchResources();
+  }, []);
   return (
-    <ResourceContext.Provider value={{ resources, createResource, loading }}>
+    <ResourceContext.Provider
+      value={{
+        resources,
+        onCreate,
+        fetchResources,
+        loading,
+        error,
+      }}
+    >
       {children}
     </ResourceContext.Provider>
   );

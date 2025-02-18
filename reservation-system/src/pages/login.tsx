@@ -3,20 +3,18 @@ import { FcGoogle } from "react-icons/fc";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import "../styles/index.css";
 import { useFetch } from "../hooks/useFetch";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "../components/authContext";
 
 interface Person {
   email: string;
   password: string;
 }
 
-const url = "/auth/login";
-
 export const Login = () => {
   const [person, setPerson] = useState<Person>({ email: "", password: "" });
   const [passwordVisible, setPasswordVisible] = useState(false);
-  const { loading, error, fetchData } = useFetch(url, false, "post");
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -29,18 +27,18 @@ export const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     try {
-      // Call the API to log in
-      const response = await fetchData(person);
-
-      if (response) {
-        console.log("Login successful:", response);
-        setPerson({ email: "", password: "" }); // Reset the form
-        navigate("/dashboard"); // Redirect to the dashboard
-      }
+      setLoading(true);
+      console.log("Login attempt with:", {
+        email: person.email,
+        password: person.password.length,
+      });
+      await login(person.email, person.password);
+      setPerson({ email: "", password: "" });
     } catch (err) {
-      console.error("Login error:", err, error);
+      console.error("Login error details:", err);
+    } finally {
+      setLoading(false);
     }
   };
 

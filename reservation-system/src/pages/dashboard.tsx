@@ -21,6 +21,9 @@ import toggleNav from "../components/buttons";
 import { CreateCategory } from "../components/createCategory";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../components/authContext";
+import { useFetch } from "../hooks/useFetch";
+
+const url = "/api/categories";
 
 export const Dashboard = () => {
   const [dropdownsOpen, setDropdownsOpen] = useState<{
@@ -32,14 +35,14 @@ export const Dashboard = () => {
     categories: false,
     Report: false,
   });
-
+  const { fetchData, loading, error } = useFetch(url, false, "get");
   const [categories, setCategories] = useState<string[]>([]);
   const [searchBtn, setSearchBtn] = useState(false);
 
   const [showCreateCategory, setShowCreateCategory] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  const { user, logout } = useAuth();
+  const { userCategories, logout } = useAuth();
   const navigate = useNavigate();
 
   const toggleSearchBtn = () => {
@@ -76,7 +79,15 @@ export const Dashboard = () => {
     await logout();
     navigate("/login");
   };
-
+  useEffect(() => {
+    if (userCategories) {
+      const newCategories: string[] = [];
+      userCategories.map((categories) => {
+        return newCategories.push(categories.name);
+      });
+      setCategories(newCategories);
+    }
+  }, [userCategories]);
   return (
     <div className="dashboard-container">
       <nav className="top-nav">
@@ -176,7 +187,7 @@ export const Dashboard = () => {
                     <li
                       onClick={(e) => {
                         e.stopPropagation();
-                        navigate("/reservation/current-Reservation");
+                        navigate("/reservation/Current-Reservation");
                         console.log("Current Reservations clicked");
                       }}
                     >
@@ -204,21 +215,22 @@ export const Dashboard = () => {
                       dropdownsOpen.categories ? "open" : ""
                     }`}
                   >
-                    {categories.map((categoryName, index) => {
-                      return (
-                        <li
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedCategory(categoryName);
-                          }}
-                          key={index}
-                        >
-                          <Link to={`/category/${categoryName}`}>
-                            {categoryName}
-                          </Link>
-                        </li>
-                      );
-                    })}
+                    {loading
+                      ? "Loading..."
+                      : categories.map((categoryName, index) => {
+                          return (
+                            <li
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedCategory(categoryName);
+                                navigate(`/category/${categoryName}`);
+                              }}
+                              key={index}
+                            >
+                              {categoryName}
+                            </li>
+                          );
+                        })}
                     <li
                       onClick={(e) => {
                         e.stopPropagation();
@@ -262,11 +274,8 @@ export const Dashboard = () => {
               <li>
                 <BsPeopleFill className="icon" /> <p>Users</p>
               </li>
-              <li>
-                <BsPersonAdd
-                  className="icon"
-                  onClick={() => navigate("/signup")}
-                />
+              <li onClick={() => navigate("/signUp")}>
+                <BsPersonAdd className="icon" />
                 <p>Sign up</p>
               </li>
               <li className="settings" onClick={() => navigate("/settings")}>
@@ -370,12 +379,3 @@ export const Dashboard = () => {
     </div>
   );
 };
-
-// const TopNav = () => {
-//   return (
-//     <>
-//          </>
-//   );
-// };
-
-// export default TopNav;
