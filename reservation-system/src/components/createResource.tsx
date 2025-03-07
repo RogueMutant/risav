@@ -9,9 +9,11 @@ import "../styles/createResourceForm.css";
 interface CreateResourceProps {
   categories: string[];
   onCancel: () => void;
+  isEditing?: boolean;
+  initialData?: Resource;
 }
 
-const daysOfWeek = [
+export const daysOfWeek = [
   "Sunday",
   "Monday",
   "Tuesday",
@@ -24,22 +26,37 @@ const daysOfWeek = [
 export const CreateResource: React.FC<CreateResourceProps> = ({
   categories,
   onCancel,
+  isEditing = false,
+  initialData,
 }) => {
   const { categoryName } = useParams<{ categoryName: string }>();
   const [storeStartTime, setStartTime] = useState<string | null>(null);
   const [storeEndTime, setEndTime] = useState<string | null>(null);
-  const [selectedDays, setSelectedDays] = useState<string[]>([]);
-  const [resourceData, setResourceData] = useState<Resource>({
-    name: "",
-    description: "",
-    category: categoryName || "",
-    imageUrl: null as File | null,
-    availableDays: [],
-    availableTime: [String, String],
-    resourceCount: 1,
-  });
+  const [selectedDays, setSelectedDays] = useState<string[]>(
+    initialData?.availableDays || []
+  );
+  const [resourceData, setResourceData] = useState<Resource>(
+    isEditing && initialData
+      ? initialData
+      : {
+          name: "",
+          description: "",
+          category: categoryName || "",
+          imageUrl: null as File | null,
+          availableDays: [],
+          availableTime: ["", ""],
+          resourceCount: 1,
+          location: "",
+        }
+  );
   const [previewURL, setPreviewURL] = useState<string | null>(null);
-  const { createResource, isLoading } = useResource();
+  const { createResource, updateResource, isLoading } = useResource();
+
+  useEffect(() => {
+    if (isEditing && initialData?.imageUrl) {
+      setPreviewURL(initialData.imageUrl as string);
+    }
+  }, [isEditing, initialData]);
 
   const handleDaySelect = (day: string) => {
     if (selectedDays.includes(day)) {
@@ -55,7 +72,7 @@ export const CreateResource: React.FC<CreateResourceProps> = ({
     setStartTime(value);
     setResourceData((prev) => ({
       ...prev,
-      availableTime: [value + "Am", prev.availableTime[1]],
+      availableTime: [value + " AM", prev.availableTime[1]],
     }));
   };
 
@@ -73,7 +90,6 @@ export const CreateResource: React.FC<CreateResourceProps> = ({
     if (file) {
       const objectUrl = URL.createObjectURL(file);
       setPreviewURL(objectUrl);
-      console.log("setting the image", file);
       setResourceData((prev) => ({
         ...prev,
         imageUrl: file,
@@ -83,19 +99,29 @@ export const CreateResource: React.FC<CreateResourceProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedDays) {
-      alert("please select at least 1 available day!");
+
+    if (!selectedDays.length) {
+      alert("Please select at least 1 available day!");
+      return;
     }
     if (!resourceData.availableTime[0] || !resourceData.availableTime[1]) {
       alert("Please set both start and end times.");
       return;
     }
+
     const updatedResourceData = {
       ...resourceData,
       availableDays: selectedDays,
     };
+
     try {
-      await createResource(updatedResourceData);
+      if (isEditing && initialData) {
+        await updateResource(initialData._id as string, updatedResourceData);
+        alert("Resource updated successfully!");
+      } else {
+        await createResource(updatedResourceData);
+        alert("Resource created successfully!");
+      }
 
       setResourceData({
         name: "",
@@ -103,8 +129,9 @@ export const CreateResource: React.FC<CreateResourceProps> = ({
         category: categoryName || "",
         imageUrl: null,
         availableDays: [],
-        availableTime: [],
+        availableTime: ["", ""],
         resourceCount: 1,
+        location: "",
       });
       setSelectedDays([]);
       if (previewURL) {
@@ -113,15 +140,18 @@ export const CreateResource: React.FC<CreateResourceProps> = ({
       }
       onCancel();
     } catch (err) {
-      console.error("Error creating resource:", err);
-      alert("Failed to create resource. Please try again.");
+      console.error("Error:", err);
+      alert(
+        `Failed to ${
+          isEditing ? "update" : "create"
+        } resource. Please try again.`
+      );
     }
   };
 
   useEffect(() => {
     return () => {
       if (previewURL) {
-        console.log("Updated previewURL:", previewURL);
         URL.revokeObjectURL(previewURL);
       }
     };
@@ -135,6 +165,7 @@ export const CreateResource: React.FC<CreateResourceProps> = ({
         className="create-resource-form"
       >
         <BsX className="close-icon" onClick={onCancel} />
+        <h2>{isEditing ? "Edit Resource" : "Create Resource"}</h2>
 
         <label htmlFor="name">Resource Name</label>
         <input
@@ -145,6 +176,7 @@ export const CreateResource: React.FC<CreateResourceProps> = ({
             setResourceData({ ...resourceData, name: e.target.value })
           }
           placeholder="Enter resource name"
+          value={resourceData.name}
           required
         />
 
@@ -178,6 +210,18 @@ export const CreateResource: React.FC<CreateResourceProps> = ({
             setResourceData({ ...resourceData, description: e.target.value })
           }
           placeholder="Enter a description"
+          value={resourceData.description}
+        />
+
+        <label htmlFor="location">Location</label>
+        <textarea
+          id="location"
+          name="location"
+          onChange={(e) =>
+            setResourceData({ ...resourceData, location: e.target.value })
+          }
+          placeholder="Enter a location"
+          value={resourceData.location}
         />
 
         <label htmlFor="availableDays">Available Days</label>
@@ -194,6 +238,7 @@ export const CreateResource: React.FC<CreateResourceProps> = ({
             </div>
           ))}
         </div>
+
         <div className="time-picker-container">
           <label htmlFor="startTime">From</label>
           <input
@@ -212,7 +257,7 @@ export const CreateResource: React.FC<CreateResourceProps> = ({
             onChange={handleEnd}
           />
         </div>
-        {/* Resource Count */}
+
         <label htmlFor="resourceCount">Resource Count</label>
         <input
           type="number"
@@ -230,7 +275,13 @@ export const CreateResource: React.FC<CreateResourceProps> = ({
 
         <div className="form-actions">
           <button type="submit" disabled={isLoading} className="create-btn">
-            {isLoading ? <span className="spinner"></span> : "Create Resource"}
+            {isLoading ? (
+              <span className="spinner"></span>
+            ) : isEditing ? (
+              "Update Resource"
+            ) : (
+              "Create Resource"
+            )}
           </button>
           <button type="button" onClick={onCancel}>
             Cancel

@@ -21,12 +21,12 @@ export const useResource = () => {
     "post"
   );
   const { fetchData: updateResourceRequest } = useFetch<Resource>(
-    "/api/resource/v1",
+    "/api/resource/v1/:id",
     false,
     "patch"
   );
   const { fetchData: deleteResourceRequest } = useFetch<{ success: boolean }>(
-    "/api/resource/v1",
+    `/api/resource/v1/:id`,
     false,
     "delete"
   );
@@ -100,10 +100,16 @@ export const useResource = () => {
     }
   };
 
-  const deleteResource = async (id: string) => {
+  const deleteResource = async (id: string, imggeUrl: string) => {
     try {
       setIsLoading(true);
-      const result = await deleteResourceRequest({ _id: id });
+      const FILE_ID = imggeUrl.split("/")[8];
+      const result = await deleteResourceRequest({ id });
+      const response = await storage.deleteFile(BUCKET_ID_RESOURCE, FILE_ID);
+      if (response) {
+        console.log("appwrite res", response);
+      }
+
       if (result?.success) {
         setResources((prev) => prev.filter((resource) => resource._id !== id));
         return true;

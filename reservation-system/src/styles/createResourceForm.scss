@@ -10,16 +10,16 @@ $border-radius: 0.5rem;
 
 .form-container {
   max-width: 600px;
-  width: 90%; // Ensure it adjusts on smaller screens
+  width: 90%;
   max-height: 90vh;
   height: auto;
-  overflow-y: auto; // Allows scrolling on small screens
+  overflow-y: auto;
   position: fixed;
-  top: 10%; // Adjust this to ensure the form is fully visible, rather than exactly centered
+  top: 10%;
   left: 50%;
-  transform: translateX(-50%); // Only translate horizontally
+  transform: translateX(-50%);
   flex-direction: column;
-  justify-content: flex-start; // Align the content to the top
+  justify-content: flex-start;
   align-items: center;
   background-color: $secondary-color;
   border-radius: $border-radius;
@@ -39,6 +39,7 @@ $border-radius: 0.5rem;
     input,
     textarea {
       box-sizing: border-box;
+      color: white;
     }
 
     input[type="text"],
@@ -73,8 +74,8 @@ $border-radius: 0.5rem;
     }
     .days-of-week-container {
       display: flex;
-      flex-wrap: wrap; // Allow tiles to wrap
-      gap: 10px; // Spacing between tiles
+      flex-wrap: wrap;
+      gap: 10px;
       margin-bottom: 20px;
 
       .day-tile {
@@ -82,16 +83,16 @@ $border-radius: 0.5rem;
         border: 1px solid #ccc;
         border-radius: 5px;
         cursor: pointer;
-        transition: background-color 0.2s, color 0.2s; // Smooth transitions
+        transition: background-color 0.2s, color 0.2s;
 
         &.selected {
-          background-color: #007bff; // Example selected color
+          background-color: #007bff;
           color: white;
           border-color: #007bff;
         }
 
         &:hover {
-          background-color: #f0f0f0; // Subtle hover effect
+          background-color: #f0f0f0;
           color: $faded-black;
         }
       }
@@ -244,7 +245,6 @@ $border-radius: 0.5rem;
   }
 }
 
-/* Responsive Styles */
 @media (max-width: 768px) {
   .form-container {
     width: 95%;

@@ -8,11 +8,11 @@ import {
   setFallBackAdmin,
   getCurrentUser,
   updateProfile,
+  getAllUsers,
 } from "../controllers/auth";
-import { auth } from "../middleware/auth";
 
 const userAuth: Router = express.Router();
-
+userAuth.get("/all-users", getAllUsers);
 userAuth.get("/me", getCurrentUser);
 userAuth.route("/register").post(createUser);
 userAuth.route("/login").post(login);

@@ -1,0 +1,157 @@
+.dashboard-content {
+  margin-left: 250px; // Adjust based on sidebar width
+  padding: 2rem;
+  margin-top: 60px; // Adjust based on navbar height
+
+  @media (max-width: 768px) {
+    margin-left: 0; // Remove margin on mobile
+  }
+
+  .welcome-section {
+    background-color: #f5f5f5;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+
+    h1 {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      color: #0a65a2;
+    }
+
+    p {
+      font-size: 0.9rem;
+      color: #666;
+      font-weight: 600;
+    }
+
+    .btn-container {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+
+      button {
+        background-color: #3498db;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 0.8em;
+        color: white;
+        height: 40px;
+        cursor: pointer;
+
+        &:hover {
+          opacity: 0.9;
+        }
+
+        &:first-child {
+          background-color: green;
+        }
+      }
+
+      .wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        width: 100%;
+
+        button {
+          flex: 1 1 auto;
+          background-color: #ffffff;
+          color: black;
+        }
+      }
+    }
+
+    .details {
+      border: 1px solid #ccc;
+    }
+  }
+
+  .reservations-section {
+    background-color: #f5f5f5;
+    padding: 2rem;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 10px;
+
+    .category-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+
+      .category-card {
+        background-color: #ffffff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 1rem;
+        text-align: left;
+        cursor: pointer;
+
+        &:hover {
+          background-color: darken(#ffffff, 5%);
+        }
+
+        &.active {
+          background-color: #3498db;
+          color: white;
+        }
+      }
+    }
+
+    .resource-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+
+      .resource-card {
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+
+        .resource-image {
+          width: 100%;
+          height: 150px;
+          object-fit: cover;
+        }
+
+        .resource-details {
+          padding: 1rem;
+
+          h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+          }
+
+          p {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1rem;
+          }
+
+          .details-button {
+            background-color: #3498db;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+
+            &:hover {
+              background-color: #2980b9;
+            }
+          }
+        }
+      }
+    }
+  }
+}

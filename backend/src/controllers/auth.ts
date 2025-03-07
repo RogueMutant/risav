@@ -6,6 +6,37 @@ import Category from "../model/Category";
 import Resource from "../model/Resource";
 import bcrypt from "bcryptjs";
 
+const getAllUsers = async (
+  req: CustomRequest,
+  res: Response
+): Promise<void> => {
+  try {
+    const token = req.cookies.userToken;
+    console.log("token fromm getAll", token);
+
+    if (!token) {
+      res.status(401).json({ message: "Not authenticated" });
+      return;
+    }
+
+    const all_users = await User.find({}).select("-password");
+    if (!all_users) {
+      res.status(404).json({ message: "No users found", status: "failed" });
+      return;
+    }
+    res.status(200).json({
+      all_users,
+      message: "Gotten all users",
+      count: all_users.length,
+      status: "Success",
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", status: "failed" });
+  }
+};
+
 const getCurrentUser = async (
   req: CustomRequest,
   res: Response
@@ -367,6 +398,7 @@ const roleUpdate = async (req: CustomRequest, res: Response): Promise<void> => {
 };
 
 export {
+  getAllUsers,
   getCurrentUser,
   logoutUser,
   createUser,

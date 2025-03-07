@@ -35,6 +35,8 @@ body {
 .dashboard-container .top-nav {
   width: 100%;
   height: 80px;
+  padding: 0.4em;
+  border-radius: 6px;
   position: sticky;
   top: 0;
   background-color: #171821;
@@ -62,13 +64,31 @@ body {
 .dashboard-container .top-nav .left .open {
   width: 60%;
 }
+.dashboard-container .top-nav .right {
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 0.8em;
+}
+.dashboard-container .top-nav .right .image-wrapper {
+  padding: 0.5em 0.5em;
+}
+.dashboard-container .top-nav .right .image-wrapper span {
+  background-color: white;
+  padding: 0.6em 0.5em;
+  border-radius: 50%;
+  font-weight: bold;
+  min-width: 20px;
+  text-align: center;
+}
 .dashboard-container .top-nav .right .dropdown-container {
   display: none;
   position: absolute;
-  transform: translate(-120px, 20px);
-  height: 160px;
-  width: 13em;
-  place-content: center;
+  transform: translate(-50px, 120px);
+  height: -moz-fit-content;
+  height: fit-content;
+  width: 11em;
   padding: 0.5em;
   background-color: #21222d;
   border-radius: 6px;
@@ -80,33 +100,36 @@ body {
 .dashboard-container .top-nav .right .dropdown-container .dropdown-content li {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
   list-style-type: none;
+  gap: 0.9em;
   margin-bottom: 0.4em;
   color: #4d4e55;
   text-align: center;
   font-size: 1em;
   font-weight: 500;
   height: 50px;
-  width: 90%;
+  width: 100%;
   border-radius: 4px;
 }
 .dashboard-container .top-nav .right .dropdown-container .dropdown-content li p {
-  margin-left: 0.7em;
   font-weight: 600;
 }
 .dashboard-container .top-nav .right .dropdown-container .dropdown-content li:hover {
   cursor: pointer;
 }
+.dashboard-container .top-nav .right .dropdown-container .dropdown-content li svg {
+  height: 20px;
+  width: 20px;
+}
 .dashboard-container .top-nav .right .dropdown-container .dropdown-content li {
   color: #87888c;
   margin-bottom: 0em;
 }
-.dashboard-container .top-nav .right .dropdown-container .dropdown-content li p {
-  margin-left: 0;
-}
 .dashboard-container .top-nav .right .dropdown-container .dropdown-content li:hover {
   background-color: rgba(61, 59, 59, 0.423);
+}
+.dashboard-container .top-nav .right svg {
+  margin: 0;
 }
 .dashboard-container .top-nav .right .dropdown-display {
   display: block;
@@ -208,23 +231,26 @@ body {
 .dashboard-container .aside-nav .side-nav .ul-list-container .ul-content li {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
   list-style-type: none;
+  gap: 0.9em;
   margin-bottom: 0.4em;
   color: #4d4e55;
   text-align: center;
   font-size: 1em;
   font-weight: 500;
   height: 50px;
-  width: 90%;
+  width: 100%;
   border-radius: 4px;
 }
 .dashboard-container .aside-nav .side-nav .ul-list-container .ul-content li p {
-  margin-left: 0.7em;
   font-weight: 600;
 }
 .dashboard-container .aside-nav .side-nav .ul-list-container .ul-content li:hover {
   cursor: pointer;
+}
+.dashboard-container .aside-nav .side-nav .ul-list-container .ul-content li svg {
+  height: 20px;
+  width: 20px;
 }
 .dashboard-container .aside-nav .side-nav .ul-list-container .ul-content li:hover {
   color: white;
@@ -239,7 +265,7 @@ body {
 }
 .dashboard-container .section-div-container .total-sales-container {
   height: auto;
-  width: 85%;
+  width: 100%;
   padding: 1em;
   box-sizing: border-box;
   background-color: #21222d;
@@ -276,7 +302,7 @@ body {
 }
 .dashboard-container .section-div-container .top-reservations-container {
   height: auto;
-  width: 85%;
+  width: 100%;
   padding: 1em;
   box-sizing: border-box;
   background-color: #21222d;
@@ -300,12 +326,19 @@ body {
   height: 50px;
   border-bottom: 3px solid #282833;
 }
+.dashboard-container .section-div-container .top-reservations-container .table-container table tr:first-child {
+  height: 50px;
+}
 .dashboard-container .section-div-container .top-reservations-container .table-container table tr th {
   color: #69868c;
   font-size: 1.3em;
   font-weight: 500;
   min-width: 3em;
-  padding: 0.5em;
+  padding: 0 0.5em;
+}
+.dashboard-container .section-div-container .top-reservations-container .table-container table tr th,
+.dashboard-container .section-div-container .top-reservations-container .table-container table tr td {
+  color: #e0e0e0;
 }
 .dashboard-container .section-div-container .top-reservations-container .table-container table tr td {
   text-wrap: nowrap;
@@ -329,7 +362,7 @@ body {
 }
 .dashboard-container .section-div-container .trending-section {
   height: auto;
-  width: 85%;
+  width: 100%;
   padding: 1em;
   box-sizing: border-box;
   background-color: #21222d;
@@ -365,7 +398,7 @@ body {
   width: 100%;
 }
 
-.form-container {
+.login-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -373,11 +406,11 @@ body {
   height: 100vh;
   width: 100%;
 }
-.form-container h1 {
+.login-container h1 {
   margin: 1em 0em;
   color: #fab659;
 }
-.form-container .login-form {
+.login-container .login-form {
   height: -moz-fit-content;
   height: fit-content;
   width: 90%;
@@ -390,29 +423,32 @@ body {
   flex-direction: column;
   justify-content: space-between;
 }
-.form-container .login-form h2 {
+.login-container .login-form h2 {
   color: white;
   margin-bottom: 0.5em;
 }
-.form-container .login-form p {
+.login-container .login-form p {
   color: #87888c;
   font-size: 1.1em;
   font-weight: 500;
   margin-bottom: 1em;
 }
-.form-container .login-form a {
-  color: #a0dfd8;
-  text-decoration: none;
+.login-container .login-form p span {
+  font-weight: 600;
+  font-size: 1.2em;
 }
-.form-container .login-form .form-control {
+.login-container .login-form p span:hover {
+  cursor: pointer;
+}
+.login-container .login-form .form-control {
   text-align: left;
   margin-bottom: 1.5em;
 }
-.form-container .login-form .form-control label {
+.login-container .login-form .form-control label {
   font-size: 1em;
   color: white;
 }
-.form-container .login-form .form-control input {
+.login-container .login-form .form-control input {
   background-color: #1b1b22;
   height: 3.2em;
   width: 100%;
@@ -425,11 +461,11 @@ body {
   font-size: 1em;
   color: white;
 }
-.form-container .login-form .form-control input:hover {
+.login-container .login-form .form-control input:hover {
   background-color: #171821;
   transition: all 300ms linear;
 }
-.form-container .login-form .form-control button {
+.login-container .login-form .form-control button {
   width: 100%;
   height: 2.5em;
   text-align: center;
@@ -439,26 +475,26 @@ body {
   border-radius: 6px;
   margin-top: 0.9em;
 }
-.form-container .login-form .form-control button:hover {
+.login-container .login-form .form-control button:hover {
   background-color: rgba(115, 202, 190, 0.8784313725);
   transition: all 300ms linear;
 }
-.form-container .login-form .form-control .check {
+.login-container .login-form .form-control .check {
   width: 10%;
   margin-bottom: 1em;
   vertical-align: sub;
 }
-.form-container .login-form .form-control .password-input {
+.login-container .login-form .form-control .password-input {
   position: relative;
   width: 100%;
   height: inherit;
 }
-.form-container .login-form .form-control .password-input input {
+.login-container .login-form .form-control .password-input input {
   width: 100%;
   padding-right: 35px;
   box-sizing: border-box;
 }
-.form-container .login-form .form-control .password-input .eye {
+.login-container .login-form .form-control .password-input .eye {
   position: absolute;
   right: 15px;
   top: 55%;
@@ -467,31 +503,39 @@ body {
   cursor: pointer;
   font-size: 1.2rem;
 }
-.form-container .login-form .form-control .password-input .eye:hover {
+.login-container .login-form .form-control .password-input .eye:hover {
   color: white;
 }
-.form-container .login-form .form-control .oauth {
+.login-container .login-form .form-control .oauth {
   border: 1px solid #a0dfd8;
   background-color: #21222d;
 }
-.form-container .login-form .form-control .oauth span {
+.login-container .login-form .form-control .oauth span {
   margin: 0;
   color: #a0dfd8;
 }
-.form-container .login-form .form-control .oauth:hover {
+.login-container .login-form .form-control .oauth:hover {
   background-color: rgba(115, 202, 190, 0.2705882353);
   transition: all 300ms linear;
 }
-.form-container .login-form .hr {
+.login-container .login-form .hr {
   border-top: 1px solid rgba(135, 136, 140, 0.3529411765);
   width: 100%;
   margin: 0.4em 0em;
 }
-.form-container .login-form span {
+.login-container .login-form span {
   margin-bottom: 0.8em;
   color: white;
 }
 
+@media (max-width: 400px) {
+  .login-container .login-form p {
+    font-size: 1em;
+  }
+  .login-container .login-form p span {
+    font-size: 1em;
+  }
+}
 .resevation-info-container {
   width: 100%;
   height: 100vh;
@@ -512,12 +556,19 @@ body {
   height: 50px;
   border-bottom: 3px solid #282833;
 }
+.resevation-info-container .table-container table tr:first-child {
+  height: 50px;
+}
 .resevation-info-container .table-container table tr th {
   color: #69868c;
   font-size: 1.3em;
   font-weight: 500;
   min-width: 3em;
-  padding: 0.5em;
+  padding: 0 0.5em;
+}
+.resevation-info-container .table-container table tr th,
+.resevation-info-container .table-container table tr td {
+  color: #e0e0e0;
 }
 .resevation-info-container .table-container table tr td {
   text-wrap: nowrap;
@@ -589,42 +640,10 @@ body {
 .resevation-info-container .reservation-table-container {
   width: 100%;
   height: 80vh;
-  border: 1px solid #69868c;
+  border: 1px solid #333333;
 }
 .resevation-info-container .reservation-table-container .table-container {
   width: 100%;
-  padding-left: 0.5em;
-}
-.resevation-info-container .reservation-table-container .table-container thead th {
-  font-size: 0.9em;
-}
-.resevation-info-container .reservation-table-container .table-container tr {
-  text-align: left;
-  border-bottom: 2px solid #282833;
-  height: 60px;
-  box-sizing: border-box;
-}
-.resevation-info-container .reservation-table-container .table-container tr img {
-  height: 40px;
-  width: 40px;
-  margin-right: 1.5em;
-}
-.resevation-info-container .reservation-table-container .table-container tr td {
-  color: #69868c;
-  padding: 7.2px;
-}
-.resevation-info-container .reservation-table-container .table-container tr td p {
-  font-size: 0.8em;
-}
-.resevation-info-container .reservation-table-container .table-container tr .image-td {
-  display: flex;
-  font-size: 1em;
-  align-items: center;
-  justify-content: flex-start;
-  height: inherit;
-}
-.resevation-info-container .reservation-table-container .table-container tr .image-td:nth-child(3) {
-  font-size: 0.7em;
 }
 
 @media (min-width: 575px) {
@@ -781,7 +800,7 @@ body {
   align-items: center;
   margin: 0 auto;
   padding: 2rem;
-  background-color: #f5f5f5;
+  background-color: #121212;
   min-height: 300px;
   height: -moz-fit-content;
   height: fit-content;
@@ -791,7 +810,7 @@ body {
   border-radius: 6px;
 }
 .form-container h2 {
-  color: #673ab7;
+  color: #bb86fc;
   margin-bottom: 1rem;
 }
 .form-container form {
@@ -822,9 +841,9 @@ body {
 .form-container form input[type=text]:focus,
 .form-container form textarea:focus,
 .form-container form select:focus {
-  border-color: #673ab7;
+  border-color: #bb86fc;
   outline: none;
-  box-shadow: 0 0 5px rgba(103, 58, 183, 0.2);
+  box-shadow: 0 0 5px rgba(187, 134, 252, 0.2);
 }
 .form-container form textarea {
   resize: vertical;
@@ -868,9 +887,9 @@ body {
   border: 1px solid #69868c;
 }
 .create-category-form:focus {
-  border-color: #673ab7;
+  border-color: #bb86fc;
   outline: none;
-  box-shadow: 0 0 5px rgba(103, 58, 183, 0.2);
+  box-shadow: 0 0 5px rgba(187, 134, 252, 0.2);
 }
 .create-category-form label {
   display: block;
@@ -890,9 +909,9 @@ body {
   color: #cccccc;
 }
 .create-category-form input[type=text]:focus {
-  border-color: #673ab7;
+  border-color: #bb86fc;
   outline: none;
-  box-shadow: 0 0 5px rgba(103, 58, 183, 0.2);
+  box-shadow: 0 0 5px rgba(187, 134, 252, 0.2);
 }
 .create-category-form button {
   background-color: #673ab7;
@@ -940,12 +959,63 @@ body {
   flex-shrink: 0;
 }
 .resource-list-container .resource-card-container .resource-card-content {
+  position: relative;
   padding: 15px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
   min-height: 0;
   width: 300px;
+}
+.resource-list-container .resource-card-container .resource-card-content .threeDots {
+  color: rgb(0, 0, 0);
+  height: 22px;
+  width: 22px;
+  cursor: pointer;
+}
+.resource-list-container .resource-card-container .resource-card-content .edit {
+  border: none;
+  border-radius: 6px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+.resource-list-container .resource-card-container .resource-card-content .edit-drop {
+  padding: 1em;
+  width: 180px;
+  position: absolute;
+  right: 10px;
+  background-color: black;
+  border-radius: 4px;
+}
+.resource-list-container .resource-card-container .resource-card-content .edit-drop svg {
+  margin-right: 8px;
+}
+.resource-list-container .resource-card-container .resource-card-content .edit-drop button {
+  margin-bottom: 5px;
+  height: 40px;
+  width: 100%;
+  padding-left: 0.8em;
+  border-radius: 4px;
+  border: none;
+  color: black;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: all 0.3;
+  background-color: #a0dfd8;
+}
+.resource-list-container .resource-card-container .resource-card-content .edit-drop button:hover {
+  transform: scale(1.1);
+  font-size: 1em;
+}
+.resource-list-container .resource-card-container .resource-card-content .edit-drop button:nth-child(2) {
+  background-color: rgb(247, 212, 212);
+}
+.resource-list-container .resource-card-container .resource-card-content .open {
+  visibility: visible;
 }
 .resource-list-container .resource-card-container .resource-card-content .image-skeleton {
   width: 100%;
@@ -987,18 +1057,22 @@ body {
   border: 1px solid #ccc;
   border-radius: 5px;
   cursor: not-allowed;
+  font-weight: 500;
+  letter-spacing: 1px;
   width: -moz-fit-content;
   width: fit-content;
-  transition: all 0.2s, color 0.2s;
+  transition: all 0.3s, color 0.2s;
 }
 .resource-list-container .resource-card-container .resource-text .week-container .day-tile:hover {
   background-color: #006fe6;
   transform: scale(1.1);
+  border: none;
+  color: #171821;
 }
 .resource-list-container .resource-card-container .resource-text p {
   flex-wrap: wrap;
   margin-bottom: 5px;
-  color: #f5f5f5;
+  color: #121212;
 }
 .resource-list-container .no-resources-message {
   text-align: center;
@@ -1050,7 +1124,7 @@ body {
   gap: 5px;
 }
 .category-page .category-header .add-resource-button:hover {
-  background-color: #512e90;
+  background-color: #9f54fb;
 }
 .category-page .category-header .add-resource-button svg {
   font-size: 1.2rem;

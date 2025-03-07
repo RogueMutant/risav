@@ -29,6 +29,7 @@
 .form-container .create-resource-form input,
 .form-container .create-resource-form textarea {
   box-sizing: border-box;
+  color: white;
 }
 .form-container .create-resource-form input[type=text],
 .form-container .create-resource-form textarea,
@@ -211,7 +212,6 @@
   justify-content: center;
 }
 
-/* Responsive Styles */
 @media (max-width: 768px) {
   .form-container {
     width: 95%;

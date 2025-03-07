@@ -22,6 +22,7 @@ import { CreateCategory } from "../components/createCategory";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../components/authContext";
 import { useFetch } from "../hooks/useFetch";
+import { nameInitials } from "../helper/helper";
 
 const url = "/api/categories";
 
@@ -42,12 +43,18 @@ export const Dashboard = () => {
   const [showCreateCategory, setShowCreateCategory] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  const { userCategories, logout } = useAuth();
+  const { user, userCategories, logout } = useAuth();
   const navigate = useNavigate();
 
   const toggleSearchBtn = () => {
     setSearchBtn(!searchBtn);
   };
+
+  const userImg = user?.profileImageUrl ?? undefined;
+  let unformattedInitials = user?.name || undefined;
+  console.log(unformattedInitials);
+
+  const formattedInitials = nameInitials(unformattedInitials);
 
   // function to toggle the dropdowns
   const toggleDropdown = (dropdownName: string) => {
@@ -106,11 +113,17 @@ export const Dashboard = () => {
         </div>
         <div className="right">
           <BsBellFill className="icon" style={{ cursor: "pointer" }} />
-          <img
-            style={{ marginRight: "0.9em" }}
-            src={`${process.env.PUBLIC_URL}/images/account/Profile.png`}
-            alt="user"
-          />
+          <div
+            className="image-wrapper"
+            style={{ cursor: "pointer" }}
+            onClick={() => navigate("/profile")}
+          >
+            {userImg ? (
+              <img src={userImg as string} alt="user" />
+            ) : (
+              <span>{formattedInitials || "-"}</span>
+            )}
+          </div>
           <BsChevronDown
             className="icon"
             style={{ cursor: "pointer" }}
@@ -120,18 +133,11 @@ export const Dashboard = () => {
             <ul className="dropdown-content">
               <li>
                 <BsPersonFill className="icon" />
-                <Link
-                  to="/profile"
-                  style={{
-                    textDecoration: "none",
-                    color: "inherit",
-                  }}
-                >
-                  Manage Profile
-                </Link>
+                <p onClick={() => navigate("/profile")}>Manage Profile</p>
               </li>
               <li>
-                <BsFillBellFill className="icon" /> <p>Notifications</p>
+                <BsFillBellFill className="icon" />
+                <p>Notifications</p>
               </li>
               <li>
                 <BsBoxArrowRight style={{ color: "red" }} className="icon" />
@@ -271,7 +277,7 @@ export const Dashboard = () => {
                   </ul>
                 )}
               </li>
-              <li>
+              <li onClick={() => navigate("/all-users")}>
                 <BsPeopleFill className="icon" /> <p>Users</p>
               </li>
               <li onClick={() => navigate("/signUp")}>

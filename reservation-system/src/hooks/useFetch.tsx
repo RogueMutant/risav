@@ -14,7 +14,7 @@ interface UseFetchReturn<T> extends UseFetchState<T> {
   ) => Promise<T | null>;
 }
 
-const BASE_URL = "http://localhost:9000"; // Ensure this matches your backend
+const BASE_URL = "http://localhost:9000";
 
 export const useFetch = <T,>(
   url: string, // url should be relative, e.g., "/auth/login"
@@ -39,22 +39,22 @@ export const useFetch = <T,>(
           url: `${BASE_URL}${url}`,
           withCredentials: true,
           headers: {
-            "Content-Type": "application/json", // Add this
+            "Content-Type": "application/json",
           },
         };
 
         if (body) {
           config.data = body;
-          console.log("Request body:", body); // Add this for debugging
+          console.log("Request body:", body);
         }
 
-        console.log("Request config:", config); // Add this for debugging
+        console.log("Request config:", config);
         const response = await axios.request<T>(config);
-        console.log("Response:", response); // Add this for debugging
+        console.log("Response:", response);
         setData(response.data);
         return response.data;
       } catch (err: any) {
-        console.log("Full error:", err); // Add this for debugging
+        console.log("Full error:", err);
         setError(
           err.response?.data?.message || err.message || "An error occurred"
         );

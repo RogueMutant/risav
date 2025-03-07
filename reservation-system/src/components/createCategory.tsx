@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useFetch } from "../hooks/useFetch";
 import { useAuth } from "./authContext";
 import "../styles/index.css";
+import { firstLetterToUpperCase } from "../helper/helper";
 
 interface categoryProps {
   onCreated: (categoryName: string) => void;
@@ -28,8 +29,9 @@ export const CreateCategory: React.FC<categoryProps> = ({
     }
 
     try {
+      setCategoryName(firstLetterToUpperCase(categoryName));
       const result = await fetchData({
-        name: categoryName.trim(), // Changed to match backend expectation
+        name: categoryName.trim(),
       });
 
       if (result) {
@@ -39,9 +41,9 @@ export const CreateCategory: React.FC<categoryProps> = ({
         setCategoryName("");
       }
     } catch (error) {
-      console.error("Error creating category:", error);
+      console.log("Error creating category:", error);
       if (fetchError) {
-        console.error("Fetch error:", fetchError);
+        console.log("Fetch error:", fetchError);
       }
     }
   };

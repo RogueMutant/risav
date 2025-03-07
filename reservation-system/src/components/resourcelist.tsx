@@ -1,20 +1,33 @@
 import React, { useState } from "react";
 import "../styles/index.css";
 import { Resource } from "../types/custom";
-import { useResources } from "../components/resourceContext";
+import { useResource } from "../hooks/useResource";
+import { CreateResource } from "./createResource";
+import { BsThreeDotsVertical, BsTrash, BsPen } from "react-icons/bs";
 
 interface ResourceListProps {
   category: string | null;
   resources: Resource[];
-  onDeleteResource: (resourceId: string) => void;
 }
 
 export const ResourceList: React.FC<ResourceListProps> = ({
   category,
   resources,
-  onDeleteResource,
 }) => {
+  const [dropdown, setDropdownOpen] = useState<string | null>(null);
   const [imageLoading, setImageLoading] = useState(true);
+  const { deleteResource, isLoading } = useResource();
+  const [showCreateResource, setShowCreateResource] = useState(false);
+  const [resourceToEdit, setResourceToEdit] = useState<Resource | null>(null);
+
+  const toggleDropdown = (name: string) => {
+    setDropdownOpen(dropdown === name ? null : name);
+  };
+
+  const handleEditResource = (resource: Resource) => {
+    setResourceToEdit(resource);
+    setShowCreateResource(true);
+  };
 
   return (
     <div className="resource-list-container">
@@ -49,12 +62,35 @@ export const ResourceList: React.FC<ResourceListProps> = ({
                 </div>
                 <p>{`From ${resource.availableTime[0]} to ${resource.availableTime[1]}`}</p>
               </div>
-              {/* <button
-                  onClick={() => onDeleteResource}
-                  className="resource-delete-button"
-                >
-                  Delete
-                </button> */}
+              <div className="edit" style={{ marginTop: "10px" }}>
+                <BsThreeDotsVertical
+                  className="threeDots"
+                  onClick={() => toggleDropdown(resource.name)}
+                />
+                {dropdown === resource.name && (
+                  <div className="edit-drop">
+                    <button
+                      onClick={() => handleEditResource(resource)}
+                      className="resource-button"
+                    >
+                      <BsPen />
+                      Edit
+                    </button>
+                    <button
+                      className="resource-button"
+                      onClick={() =>
+                        deleteResource(
+                          resource._id as string,
+                          resource.imageUrl as string
+                        )
+                      }
+                    >
+                      <BsTrash style={{ color: "red" }} />
+                      Delete
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         ))
@@ -66,6 +102,19 @@ export const ResourceList: React.FC<ResourceListProps> = ({
               : "No resources found."}
           </p>
         </div>
+      )}
+
+      {/* Edit Modal */}
+      {showCreateResource && (
+        <CreateResource
+          categories={[category || ""]} // Pass the current category
+          onCancel={() => {
+            setShowCreateResource(false);
+            setResourceToEdit(null);
+          }}
+          isEditing={true}
+          initialData={resourceToEdit as Resource}
+        />
       )}
     </div>
   );

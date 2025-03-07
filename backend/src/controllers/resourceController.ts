@@ -162,13 +162,14 @@ const deleteResource = async (
   req: CustomRequest,
   res: Response
 ): Promise<void> => {
-  const { id } = req.params;
+  const { id } = req.body;
   const userId = req.user?.userId;
 
   if (!userId) {
     res.status(403).json({ message: "User not authenticated" });
     return;
   }
+  console.log("resource id:", id);
 
   const resource = await Resource.findById(id);
   if (!resource) {

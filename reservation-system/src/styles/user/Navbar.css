@@ -1,0 +1,156 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #2c3e50;
+  color: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+.navbar .hamburger-icon {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+@media (max-width: 768px) {
+  .navbar .hamburger-icon {
+    display: block;
+  }
+}
+.navbar .toggle-aside-nav {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-right: 1rem;
+}
+.navbar .toggle-aside-nav:hover {
+  opacity: 0.8;
+}
+.navbar .navbar-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.navbar .navbar-search {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  margin: 0 2rem;
+}
+.navbar .navbar-search input {
+  width: 100%;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 4px;
+  margin-right: 0.5rem;
+}
+.navbar .navbar-search button {
+  background-color: #3498db;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+}
+.navbar .navbar-search button:hover {
+  background-color: #2980b9;
+}
+.navbar .navbar-right {
+  display: flex;
+  align-items: center;
+}
+.navbar .navbar-right .navbar-icon {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  margin-right: 1rem;
+  cursor: pointer;
+}
+.navbar .navbar-right .navbar-icon:hover {
+  color: #3498db;
+}
+.navbar .navbar-right .navbar-profile {
+  position: relative;
+  cursor: pointer;
+}
+.navbar .navbar-right .navbar-profile .profile-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+.navbar .navbar-right .navbar-profile .profile-dropdown ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.navbar .navbar-right .navbar-profile .profile-dropdown ul li {
+  padding: 0.5rem 1rem;
+  color: #2c3e50;
+}
+.navbar .navbar-right .navbar-profile .profile-dropdown ul li:hover {
+  background-color: #f0f0f0;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #34495e;
+  color: white;
+  height: 100vh;
+  padding: 1rem;
+  position: fixed;
+  top: 60px;
+  left: 0;
+  z-index: 999;
+  transition: transform 0.3s ease-in-out;
+}
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+}
+.sidebar.open {
+  transform: translateX(0);
+}
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.sidebar ul li {
+  margin: 1rem 0;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.sidebar ul li:hover {
+  background-color: #2c3e50;
+}
+
+.dashboard-content {
+  margin-left: 250px;
+  padding: 2rem;
+  margin-top: 60px;
+  transition: margin-left 0.3s ease-in-out;
+}
+@media (max-width: 768px) {
+  .dashboard-content {
+    margin-left: 0;
+  }
+}
+.dashboard-content.sidebar-hidden {
+  margin-left: 0;
+}/*# sourceMappingURL=Navbar.css.map */

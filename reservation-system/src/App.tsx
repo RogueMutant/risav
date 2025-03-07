@@ -13,6 +13,8 @@ import { ResourceProvider } from "./components/resourceContext";
 import { AuthProvider } from "./components/authContext";
 import { Settings } from "./pages/settings";
 import { CurrentReservation } from "./pages/currentReservation";
+import { AllUsers } from "./pages/allUsers";
+import { UserDashboard } from "./pages/user/dashboard";
 
 function App() {
   return (
@@ -21,6 +23,7 @@ function App() {
         <ResourceProvider>
           <Routes>
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/user-dashboard" element={<UserDashboard />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signUp" element={<SignUp />} />
             <Route path="/profile" element={<Profile />} />
@@ -30,6 +33,7 @@ function App() {
             />
             <Route path="/settings" element={<Settings />}></Route>
             <Route path="/category/:categoryName" element={<CategoryPage />} />
+            <Route path="/all-users" element={<AllUsers />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </ResourceProvider>

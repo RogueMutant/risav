@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import { useFetch } from "../hooks/useFetch";
 import { User, Resource, Category } from "../types/custom";
 import { useNavigate } from "react-router-dom";
@@ -7,8 +13,10 @@ import { BUCKET_ID_USER_IMAGE, client } from "../lib/appwrite";
 
 interface AuthContextType {
   user: User | null;
+  allUsers: User[] | null;
   userResources: Resource[];
   userCategories: Category[];
+  getAllUsers: () => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   updateUser: (
@@ -31,6 +39,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
+  const [allUsers, setAllUsers] = useState<User[] | null>(null);
   const [userResources, setUserResources] = useState<Resource[]>([]);
   const [userCategories, setUserCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -39,6 +48,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const { fetchData: fetchUserData, error: getCurrentError } = useFetch<{
     user: User;
   }>("/auth/me", false, "get");
+  const { fetchData: fetchAllUser, error: getAllUserError } = useFetch<{
+    all_users: User[];
+  }>("/auth/all-users", false, "get");
+
   const { fetchData: fetchUserResources } = useFetch<Resource[]>(
     "/api/resource/v1",
     false,
@@ -60,6 +73,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     false,
     "patch"
   );
+
+  const getAllUsers = useCallback(async (): Promise<void> => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const response = await fetchAllUser();
+      console.log("API Response:", response);
+
+      if (response?.all_users) {
+        setAllUsers(response.all_users);
+      } else {
+        console.error("Unexpected response format:", response);
+        setAllUsers([]);
+      }
+
+      console.log("Gotten all users:", response?.all_users);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      setError(
+        error instanceof Error ? error.message : "Failed to retrieve users"
+      );
+      setAllUsers([]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [fetchAllUser]);
 
   const uploadImageToAppwrite = async (imageFile: File) => {
     try {
@@ -128,8 +167,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const refreshUserData = async () => {
-    if (user?._id) {
-      await fetchCompleteUserData();
+    try {
+      setIsLoading(true);
+      setError(null);
+      if (user?._id) {
+        await fetchCompleteUserData();
+      }
+    } catch (error) {
+      setError(
+        error instanceof Error ? error.message : "Could not refresh user data"
+      );
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -263,6 +312,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   return (
     <AuthContext.Provider
       value={{
+        getAllUsers,
+        allUsers,
         user,
         userResources,
         userCategories,

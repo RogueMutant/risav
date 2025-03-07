@@ -27,7 +27,6 @@
 * {
   margin: 0;
   padding: 0;
-
   ::-webkit-scrollbar {
     width: 16px;
   }
@@ -67,33 +66,47 @@ html {
   li {
     display: flex;
     align-items: center;
-    justify-content: flex-start;
     list-style-type: none;
+    gap: 0.9em;
     margin-bottom: 0.4em;
     color: #4d4e55;
     text-align: center;
     font-size: $p-font-size;
     font-weight: 500;
     height: 50px;
-    width: 90%;
+    width: 100%;
     border-radius: 4px;
     p {
-      margin-left: 0.7em;
       font-weight: 600;
     }
     &:hover {
       cursor: pointer;
+    }
+    svg {
+      height: 20px;
+      width: 20px;
     }
   }
 }
 
 @mixin section-style {
   height: auto;
-  width: 85%;
+  width: 100%;
   padding: 1em;
   box-sizing: border-box;
   background-color: $faded-black;
   border-radius: 8px;
+}
+
+@mixin nameInitials {
+  span {
+    background-color: white;
+    padding: 0.6em 0.5em;
+    border-radius: 50%;
+    font-weight: bold;
+    min-width: 20px;
+    text-align: center;
+  }
 }
 
 @mixin progressBar {
@@ -171,12 +184,19 @@ html {
       tr {
         height: 50px;
         border-bottom: 3px solid #282833;
+        &:first-child {
+          height: 50px;
+        }
         th {
           color: $th-color;
           font-size: $header-font-size;
           font-weight: 500;
           min-width: 3em;
-          padding: 0.5em;
+          padding: 0 0.5em;
+        }
+        th,
+        td {
+          color: $on-background-color;
         }
         td {
           @include progressBar();
@@ -216,6 +236,8 @@ body {
     @include icon-style();
     width: 100%;
     height: 80px;
+    padding: 0.4em;
+    border-radius: 6px;
     position: sticky;
     top: 0;
     background-color: $bg-color;
@@ -237,13 +259,21 @@ body {
       }
     }
     .right {
+      display: flex;
+      position: relative;
+      align-items: center;
+      justify-content: space-evenly;
+      gap: 0.8em;
+      .image-wrapper {
+        padding: 0.5em 0.5em;
+        @include nameInitials();
+      }
       .dropdown-container {
         display: none;
         position: absolute;
-        transform: translate(-120px, 20px);
-        height: 160px;
-        width: 13em;
-        place-content: center;
+        transform: translate(-50px, 120px);
+        height: fit-content;
+        width: 11em;
         padding: 0.5em;
         background-color: $faded-black;
         border-radius: 6px;
@@ -254,14 +284,14 @@ body {
           li {
             color: #87888c;
             margin-bottom: 0em;
-            p {
-              margin-left: 0;
-            }
             &:hover {
               background-color: rgba(61, 59, 59, 0.423);
             }
           }
         }
+      }
+      svg {
+        margin: 0;
       }
       .dropdown-display {
         display: block;
@@ -401,7 +431,7 @@ body {
 }
 
 // Login page
-.form-container {
+.login-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -432,10 +462,13 @@ body {
       font-size: 1.1em;
       font-weight: 500;
       margin-bottom: 1em;
-    }
-    a {
-      color: $color-aqua;
-      text-decoration: none;
+      span {
+        font-weight: 600;
+        font-size: 1.2em;
+        &:hover {
+          cursor: pointer;
+        }
+      }
     }
     .form-control {
       text-align: left;
@@ -528,6 +561,18 @@ body {
     }
   }
 }
+@media (max-width: 400px) {
+  .login-container {
+    .login-form {
+      p {
+        font-size: 1em;
+        span {
+          font-size: 1em;
+        }
+      }
+    }
+  }
+}
 
 // Resrevation info page
 .resevation-info-container {
@@ -580,42 +625,9 @@ body {
   .reservation-table-container {
     width: 100%;
     height: 80vh;
-    border: 1px solid $th-color;
+    border: 1px solid $drop-on-background-color;
     .table-container {
       width: 100%;
-      padding-left: 0.5em;
-      thead th {
-        font-size: 0.9em;
-      }
-      tr {
-        text-align: left;
-        border-bottom: 2px solid #282833;
-        height: 60px;
-        box-sizing: border-box;
-        img {
-          height: 40px;
-          width: 40px;
-          margin-right: 1.5em;
-        }
-
-        td {
-          color: $th-color;
-          padding: 7.2px;
-          p {
-            font-size: 0.8em;
-          }
-        }
-        .image-td {
-          display: flex;
-          font-size: 1em;
-          align-items: center;
-          justify-content: flex-start;
-          height: inherit;
-          &:nth-child(3) {
-            font-size: 0.7em;
-          }
-        }
-      }
     }
   }
 }
@@ -684,10 +696,9 @@ body {
         overflow: hidden;
         border: 3px solid $primary-color;
         cursor: pointer;
-        display: flex; // Use flexbox for centering
+        display: flex;
         align-items: center;
-        justify-content: center; // Center content vertically and horizontally
-
+        justify-content: center;
         .user-icon {
           width: 70%;
           height: 70%;
@@ -701,9 +712,9 @@ body {
 
         .camera-icon {
           position: absolute;
-          top: 50%; // Center vertically
-          left: 50%; // Center horizontally
-          transform: translate(-50%, -50%); // Adjust for centering
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
           z-index: 1;
           background-color: rgba(0, 0, 0, 0.5);
           color: white;
@@ -735,7 +746,6 @@ body {
           color: $on-surface-color;
         }
         input {
-          // Added password input style
           width: 100%;
           padding: 0.8rem;
           border: 1px solid #424242;
@@ -780,25 +790,12 @@ body {
       }
     }
 
-    // Removed redundant div styles
     div {
-      margin-bottom: 1em; // Keep this for other divs if needed
+      margin-bottom: 1em;
     }
   }
 }
 
-// Categories && Reservertions dropdown
-
-$primary-color: #673ab7; // Deep purple
-$secondary-color: #ff9800; // Orange accent
-$background-color: #f5f5f5; // Light gray background
-$surface-color: #ffffff; // White surface for forms
-$on-background-color: #333333; // Dark text on light background
-$on-surface-color: #333333; // Dark text on white surface
-$border-color: #cccccc; // Light gray border
-$box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-// _mixins.scss (reusable styles)
 @mixin rounded-corners($radius: 8px) {
   border-radius: $radius;
 }
@@ -843,7 +840,7 @@ $box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 2rem;
     @include rounded-corners;
     box-shadow: $drop-box-shadow;
-    width: 90%; // Responsive width
+    width: 90%;
     max-width: 600px;
 
     label {
@@ -870,7 +867,7 @@ $box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     button[type="submit"] {
-      background-color: $primary-color;
+      background-color: $dropdown-primary-color;
       color: $dropdown-surface-color;
       padding: 1rem 1.5rem;
       border: none;
@@ -880,7 +877,7 @@ $box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       font-size: 1rem;
 
       &:hover {
-        background-color: darken($primary-color, 10%);
+        background-color: darken($dropdown-primary-color, 10%);
       }
 
       &:disabled {
@@ -912,11 +909,11 @@ $box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     @include form-element;
     border: 1px solid $th-color;
     margin-bottom: 1rem;
-    color: $border-color;
+    color: $drop-border-color;
   }
   button {
-    background-color: $primary-color;
-    color: $border-color;
+    background-color: $dropdown-primary-color;
+    color: $drop-border-color;
     padding: 0.7rem;
     border: none;
     @include rounded-corners;
@@ -926,7 +923,7 @@ $box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-right: 0.4em;
 
     &:hover {
-      background-color: darken($primary-color, 10%);
+      background-color: darken($dropdown-primary-color, 10%);
     }
 
     &:disabled {
@@ -936,23 +933,13 @@ $box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 }
 
-// Resource Div
-$card-width-large: calc(33.33% - 20px);
-$card-width-medium: calc(50% - 20px);
-$card-width-small: 100%;
-$border-color: #ddd;
-$box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-$box-shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.15);
-$delete-button-color: #f44336;
-$delete-button-color-hover: #d32f2f;
-
 .resource-list-container {
   width: 100%;
   box-sizing: border-box;
   display: flex;
-  flex-wrap: wrap; // Enable wrapping
+  flex-wrap: wrap;
   gap: 20px;
-  padding: 10px; // Add padding to the container
+  padding: 10px;
 
   .resource-card-container {
     display: flex;
@@ -974,13 +961,63 @@ $delete-button-color-hover: #d32f2f;
     }
 
     .resource-card-content {
+      position: relative;
       padding: 15px;
       display: flex;
       flex-direction: column;
       flex-grow: 1;
       min-height: 0;
       width: 300px;
-
+      .threeDots {
+        color: rgb(0, 0, 0);
+        height: 22px;
+        width: 22px;
+        cursor: pointer;
+      }
+      .edit {
+        border: none;
+        border-radius: 6px;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+      }
+      .edit-drop {
+        padding: 1em;
+        width: 180px;
+        position: absolute;
+        right: 10px;
+        background-color: black;
+        border-radius: 4px;
+        svg {
+          margin-right: 8px;
+        }
+        button {
+          margin-bottom: 5px;
+          height: 40px;
+          width: 100%;
+          padding-left: 0.8em;
+          border-radius: 4px;
+          border: none;
+          color: black;
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          font-size: 0.9em;
+          cursor: pointer;
+          transition: all 0.3;
+          &:hover {
+            transform: scale(1.1);
+            font-size: 1em;
+          }
+          background-color: $color-aqua;
+          &:nth-child(2) {
+            background-color: rgb(247, 212, 212);
+          }
+        }
+      }
+      .open {
+        visibility: visible;
+      }
       .image-skeleton {
         width: 100%;
         height: 200px;
@@ -1023,11 +1060,15 @@ $delete-button-color-hover: #d32f2f;
           border: 1px solid #ccc;
           border-radius: 5px;
           cursor: not-allowed;
+          font-weight: 500;
+          letter-spacing: 1px;
           width: fit-content;
-          transition: all 0.2s, color 0.2s; // Smooth transitions
+          transition: all 0.3s, color 0.2s;
           &:hover {
             background-color: darken($category-primary-color, 5%);
             transform: scale(1.1);
+            border: none;
+            color: #171821;
           }
         }
       }

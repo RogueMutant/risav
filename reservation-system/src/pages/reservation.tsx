@@ -14,7 +14,7 @@ export const Reservation = () => {
 
   return (
     <>
-      {reservationPage === "All-Reservations" && (
+      {reservationPage === "all-reservations" && (
         <div className="resevation-info-container">
           <div className="reserv-header">
             <div className="header-cont">
@@ -83,7 +83,7 @@ export const Reservation = () => {
         </div>
       )}
       {reservationPage === "Current-Reservation" && <CurrentReservation />}
-      {reservationPage !== "All-Reservations" &&
+      {reservationPage !== "all-reservations" &&
         reservationPage !== "Current-Reservation" && (
           <div>Invalid reservation page</div>
         )}

@@ -12,6 +12,7 @@ export interface Resource {
   availableDays: Array<string>;
   availableTime: [string, string][string];
   resourceCount: number;
+  location: string;
 }
 
 export interface Category {

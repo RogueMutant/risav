@@ -106,12 +106,12 @@ export const SignUp = () => {
     console.error(signUpError);
   }
   return (
-    <article className="form-container">
+    <article className="login-container">
       <h1>RISAV</h1>
       <form className="login-form" onSubmit={handleSubmit}>
         <h2>Create New Account</h2>
-        <p>
-          Have an account? <a href="#top">Log In</a>
+        <p onClick={() => navigate("/login")}>
+          Have an account? <span style={{ color: "#a0dfd8" }}>Log In</span>
         </p>
         <div className="form-control">
           <label htmlFor="name">Name</label>
@@ -172,7 +172,7 @@ export const SignUp = () => {
             </span>
           </div>
           <button type="submit" disabled={loading}>
-            {loading ? loading : "Log In"}
+            {loading ? loading : "Sign Up"}
           </button>
         </div>
         <div className="hr"></div>

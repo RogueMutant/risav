@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ResourceList } from "../components/resourcelist";
 import { CreateResource } from "../components/createResource";
@@ -16,7 +16,6 @@ export const CategoryPage = () => {
     }
     return resource.category === categoryName;
   });
-
   console.log("Resources from context:", resources);
   console.log("Filtered Resources:", filteredResources);
 
@@ -37,12 +36,9 @@ export const CategoryPage = () => {
         <ResourceList
           category={categoryName ?? null}
           resources={filteredResources}
-          onDeleteResource={() => {}} // Make sure this is defined
         />
         {showCreateResource && (
           <div className="create-resource-overlay">
-            {" "}
-            {/* Overlay for the form */}
             <CreateResource
               categories={[categoryName ?? ""]}
               onCancel={() => setShowCreateResource(false)}

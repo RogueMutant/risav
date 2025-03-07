@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import "../styles/index.css";
-import { useFetch } from "../hooks/useFetch";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../components/authContext";
 
 interface Person {
@@ -15,6 +15,7 @@ export const Login = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -43,12 +44,13 @@ export const Login = () => {
   };
 
   return (
-    <article className="form-container">
+    <article className="login-container">
       <h1>RISAV</h1>
       <form className="login-form" onSubmit={handleSubmit}>
         <h2>Log In</h2>
-        <p>
-          Don't have an account? <a href="#top">Sign up</a>
+        <p onClick={() => navigate("/signUp")}>
+          Don't have an account?{" "}
+          <span style={{ color: "#a0dfd8" }}>Sign up</span>
         </p>
         <div className="form-control">
           <label htmlFor="email">Email</label>
