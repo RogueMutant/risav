@@ -73,10 +73,10 @@ const createReservation = async (
   req: CustomRequest,
   res: Response
 ): Promise<void> => {
-  const { startDate, endDate, status, reason, resourceId } = req.body;
+  const { reservationDate, time, status, reason, resourceId } = req.body;
   const userId = req.user?.userId;
 
-  if (!startDate || !endDate) {
+  if (!reservationDate || !time) {
     res
       .status(400)
       .json({ message: "Missing required fields", status: "Failed" });
@@ -85,8 +85,8 @@ const createReservation = async (
 
   const newReservation = await Reservation.create({
     createdBy: userId,
-    startDate,
-    endDate,
+    reservationDate,
+    time,
     status,
     reason,
     resource: resourceId,

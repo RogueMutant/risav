@@ -18,6 +18,7 @@
   color: white;
   font-size: 1.5rem;
   cursor: pointer;
+  padding: 0.3em 0.3em 0 0;
 }
 @media (max-width: 768px) {
   .navbar .hamburger-icon {
@@ -43,7 +44,7 @@
   display: flex;
   align-items: center;
   flex-grow: 1;
-  margin: 0 2rem;
+  margin: 0 1.2rem;
 }
 .navbar .navbar-search input {
   width: 100%;
@@ -105,6 +106,14 @@
   background-color: #f0f0f0;
 }
 
+@media screen and (max-width: 400px) {
+  .navbar .navbar-logo {
+    display: none;
+  }
+  .navbar .navbar-search {
+    margin: 0 1rem 0 0;
+  }
+}
 .sidebar {
   width: 250px;
   background-color: #34495e;
@@ -138,6 +147,15 @@
 }
 .sidebar ul li:hover {
   background-color: #2c3e50;
+}
+.sidebar ul li:last-child {
+  position: absolute;
+  top: 75%;
+}
+.sidebar ul li:last-child svg {
+  vertical-align: middle;
+  margin-right: 0.8em;
+  padding-bottom: 0.1em;
 }
 
 .dashboard-content {

@@ -28,11 +28,11 @@
   margin-top: 1rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   gap: 10px;
 }
-.dashboard-content .welcome-section .btn-container button {
-  background-color: #3498db;
+.dashboard-content .welcome-section .btn-container > button:first-child {
+  order: -1;
+  background-color: green;
   border: none;
   padding: 0.5rem 1rem;
   border-radius: 4px;
@@ -42,25 +42,83 @@
   height: 40px;
   cursor: pointer;
 }
-.dashboard-content .welcome-section .btn-container button:hover {
+.dashboard-content .welcome-section .btn-container > button:first-child:hover {
   opacity: 0.9;
 }
-.dashboard-content .welcome-section .btn-container button:first-child {
-  background-color: green;
-}
-.dashboard-content .welcome-section .btn-container .wrapper {
+.dashboard-content .welcome-section .btn-container .status-buttons-wrapper {
   display: flex;
   align-items: center;
   justify-content: space-evenly;
   width: 100%;
+  margin-bottom: 1em;
 }
-.dashboard-content .welcome-section .btn-container .wrapper button {
-  flex: 1 1 auto;
+.dashboard-content .welcome-section .btn-container .status-buttons-wrapper button {
+  flex: 1 1 33.33%;
   background-color: #ffffff;
   color: black;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.8em;
+  cursor: pointer;
 }
-.dashboard-content .welcome-section .details {
+.dashboard-content .welcome-section .btn-container .status-buttons-wrapper button:hover {
+  opacity: 0.9;
+}
+.dashboard-content .welcome-section .btn-container .status-buttons-wrapper button.active {
+  background-color: #3498db;
+  color: white;
+}
+@media (min-width: 768px) {
+  .dashboard-content .welcome-section .btn-container .status-buttons-wrapper {
+    display: none !important;
+  }
+}
+@media (min-width: 768px) {
+  .dashboard-content .welcome-section .btn-container {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .dashboard-content .welcome-section .btn-container > button:first-child {
+    margin-right: auto;
+  }
+}
+.dashboard-content .welcome-section .reservation-status-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 100%;
+}
+.dashboard-content .welcome-section .reservation-status-wrapper .reservation-status {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  gap: 1rem;
+}
+.dashboard-content .welcome-section .reservation-status-wrapper .reservation-status > * {
+  min-height: 100px;
+  background: #ffffff;
+  padding: 1rem;
+  border-radius: 8px;
   border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+.dashboard-content .welcome-section .reservation-status-wrapper .reservation-status p {
+  display: none;
+  font-weight: 600;
+  color: #333;
+}
+@media (min-width: 768px) {
+  .dashboard-content .welcome-section .reservation-status-wrapper .reservation-status p {
+    display: block;
+  }
+}
+@media (max-width: 768px) {
+  .dashboard-content .welcome-section .reservation-status-wrapper .reservation-status {
+    grid-template-columns: 1fr;
+  }
 }
 .dashboard-content .reservations-section {
   background-color: #f5f5f5;

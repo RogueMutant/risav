@@ -10,7 +10,7 @@ export interface Resource {
   category: Category | string;
   imageUrl: File | null | string;
   availableDays: Array<string>;
-  availableTime: [string, string][string];
+  availableTime: Array<string>;
   resourceCount: number;
   location: string;
 }
@@ -32,7 +32,14 @@ export interface User {
   phoneNumber: string;
   profileImageUrl?: File | null | string;
 }
-
+export interface Reservation {
+  _id: string;
+  startDate: string;
+  endDate: string;
+  time: Array<string>;
+  status: "pending" | "approved" | "cancelled" | "confirmed";
+  reason?: string;
+}
 export interface UserSettings {
   pushNotificationsEnabled: boolean;
   emailNotificationsEnabled: boolean;

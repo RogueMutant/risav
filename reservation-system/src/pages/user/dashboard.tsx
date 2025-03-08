@@ -1,9 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense, lazy } from "react";
 import { Navbar } from "../../components/userNav";
 import "../../styles/user/userDashboard.css";
 import { useAuth } from "../../components/authContext";
 import { Category, Resource } from "../../types/custom";
 import { useNavigate } from "react-router-dom";
+import { ReservationModal } from "../../components/reservationDetails";
+
+const CategoryList = lazy(() => import("../../components/categoryListProp"));
+const ResourceList = lazy(() => import("../../components/resourceListProp"));
 
 export const UserDashboard = () => {
   const { user, userCategories, userResources } = useAuth();
@@ -11,11 +15,38 @@ export const UserDashboard = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [filteredResources, setFilteredResources] = useState<Resource[]>([]);
   const [isAsideNavOpen, setIsAsideNavOpen] = useState(true);
+  const [statusDisplay, setStatusDisplay] = useState<{
+    upcoming: boolean;
+    past: boolean;
+    cancelled: boolean;
+  }>({ upcoming: true, past: false, cancelled: false });
+  const [selectedResource, setSelectedResource] = useState<Resource | null>(
+    null
+  );
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const toggleAsideNav = () => {
     setIsAsideNavOpen(!isAsideNavOpen);
   };
+
+  const toggleStatusDisplay = (status: string) => {
+    setStatusDisplay({
+      upcoming: status === "upcoming",
+      past: status === "past",
+      cancelled: status === "cancelled",
+    });
+  };
+
+  const handleResourceClick = (resource: Resource) => {
+    setSelectedResource(resource);
+    setIsModalOpen(true);
+  };
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedResource(null);
+  };
+
   useEffect(() => {
     if (userCategories) {
       setCategories(userCategories);
@@ -68,53 +99,75 @@ export const UserDashboard = () => {
             <p>You have 2 upcoming reservations.</p>
           </div>
           <div className="btn-container">
-            <button>New Reservation</button>
-            <div className="wrapper">
-              <button>Upcoming</button>
-              <button>Past</button>
-              <button>Canceled</button>
+            <button onClick={() => navigate("#new")}>New Reservation</button>
+            <div className="status-buttons-wrapper">
+              {" "}
+              {/* Changed class name */}
+              <button
+                className={statusDisplay.upcoming ? "active" : ""}
+                onClick={() => toggleStatusDisplay("upcoming")}
+              >
+                Upcoming
+              </button>
+              <button
+                className={statusDisplay.past ? "active" : ""}
+                onClick={() => toggleStatusDisplay("past")}
+              >
+                Past
+              </button>
+              <button
+                className={statusDisplay.cancelled ? "active" : ""}
+                onClick={() => toggleStatusDisplay("cancelled")}
+              >
+                Canceled
+              </button>
             </div>
           </div>
-          <div className="details"></div>
+          <article className="reservation-status-wrapper">
+            {(statusDisplay.upcoming || window.innerWidth >= 768) && (
+              <div className="reservation-status">
+                <p>Upcoming</p>
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
+            )}
+            {(statusDisplay.past || window.innerWidth >= 768) && (
+              <div className="reservation-status">
+                <p>Past</p>
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
+            )}
+            {(statusDisplay.cancelled || window.innerWidth >= 768) && (
+              <div className="reservation-status">
+                <p>Canceled</p>
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
+            )}
+          </article>
         </section>
-        <section className="reservations-section">
+        <section className="reservations-section" id="new">
           <h2>New Reservation</h2>
-          <div className="category-list">
-            {categories.map((category) => (
-              <div
-                className={`category-card ${
-                  selectedCategory === category._id ? "active" : ""
-                }`}
-                key={category._id}
-                onClick={() => handleCategoryClick(category._id)}
-              >
-                {category.name}
-              </div>
-            ))}
-          </div>
-          <div className="resource-list">
-            {filteredResources.map((resource) => (
-              <div className="resource-card" key={resource._id}>
-                <img
-                  src={resource.imageUrl as string}
-                  alt={resource.name}
-                  className="resource-image"
-                />
-                <div className="resource-details">
-                  <h3>{resource.name}</h3>
-                  <p>{resource.description}</p>
-                  <button
-                    className="details-button"
-                    onClick={() => navigate(`/reservation/${resource._id}`)}
-                  >
-                    Details
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+          <Suspense fallback={<div>Loading...</div>}>
+            <CategoryList
+              categories={categories}
+              selectedCategory={selectedCategory}
+              onCategoryClick={handleCategoryClick}
+            />
+            <ResourceList
+              resources={filteredResources}
+              onResourceClick={handleResourceClick}
+            />
+          </Suspense>
         </section>
       </div>
+      {isModalOpen && selectedResource && (
+        <ReservationModal resource={selectedResource} onClose={closeModal} />
+      )}
     </>
   );
 };

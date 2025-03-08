@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useFetch } from "../hooks/useFetch";
 import "../styles/index.css";
-import { useAuth } from "../components/authContext";
+import { useAuth } from "./authContext";
 import { BsCamera, BsPersonFill } from "react-icons/bs";
 
 // const backendUrl = "http://localhost:9000/auth/users/me";
@@ -33,10 +33,10 @@ export const Profile = () => {
   >("");
   const [loading, setLoading] = useState(false);
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
-  const [error, setError] = useState(""); // For profile update errors
-  const [success, setSuccessMessage] = useState(""); // For profile update success
-  const [passwordError, setPasswordError] = useState(""); // For password errors
-  const [passwordSuccess, setPasswordSuccess] = useState(""); // For password success
+  const [error, setError] = useState("");
+  const [success, setSuccessMessage] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordSuccess, setPasswordSuccess] = useState("");
   const { updateUser, user, error: updateError } = useAuth();
   const [currentImage, setCurrentImage] = useState<string | undefined>(
     undefined

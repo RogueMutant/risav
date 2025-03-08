@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { BsSearch, BsBell, BsPersonCircle, BsList } from "react-icons/bs";
+import {
+  BsSearch,
+  BsBell,
+  BsPersonCircle,
+  BsList,
+  BsGearFill,
+} from "react-icons/bs";
 import "../styles/user/Navbar.css";
 
 export const Navbar: React.FC = () => {
@@ -43,7 +49,10 @@ export const Navbar: React.FC = () => {
           </button>
         </form>
         <div className="navbar-right">
-          <button className="navbar-icon">
+          <button
+            className="navbar-icon"
+            onClick={() => navigate("/notifications")}
+          >
             <BsBell />
           </button>
           <div className="navbar-profile" onClick={toggleProfileDropdown}>
@@ -51,7 +60,7 @@ export const Navbar: React.FC = () => {
             {isProfileOpen && (
               <div className="profile-dropdown">
                 <ul>
-                  <li>Profile</li>
+                  <li onClick={() => navigate("/profile")}>Profile</li>
                   <li>Settings</li>
                   <li>Logout</li>
                 </ul>
@@ -64,10 +73,13 @@ export const Navbar: React.FC = () => {
       <aside className={`sidebar ${isSidebarOpen ? "open" : ""}`}>
         <ul>
           <li>Dashboard</li>
-          <li>Reservations</li>
+          <li onClick={() => navigate("/reservations")}>Reservations</li>
           <li>Resources</li>
-          <li>Profile</li>
-          <li>Settings</li>
+          <li onClick={() => navigate("/profile")}>Profile</li>
+          <li onClick={() => navigate("/settings")}>
+            <BsGearFill />
+            Settings
+          </li>
         </ul>
       </aside>
     </>

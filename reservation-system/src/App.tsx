@@ -4,7 +4,7 @@ import { Dashboard } from "./pages/dashboard";
 import { Login } from "./pages/login";
 import { SignUp } from "./pages/signup";
 import { Reservation } from "./pages/reservation";
-import { Profile } from "./pages/profile";
+import { Profile } from "./components/profile";
 import { NotFound } from "./pages/notfound";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { ResourceList } from "./components/resourcelist";
@@ -15,6 +15,7 @@ import { Settings } from "./pages/settings";
 import { CurrentReservation } from "./pages/currentReservation";
 import { AllUsers } from "./pages/allUsers";
 import { UserDashboard } from "./pages/user/dashboard";
+import { ReservationsScreen } from "./pages/user/userReservation";
 
 function App() {
   return (
@@ -22,8 +23,9 @@ function App() {
       <AuthProvider>
         <ResourceProvider>
           <Routes>
-            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/user-dashboard" element={<UserDashboard />} />
+            <Route path="/reservations" element={<ReservationsScreen />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signUp" element={<SignUp />} />
             <Route path="/profile" element={<Profile />} />

@@ -4,7 +4,7 @@
   margin-top: 60px; // Adjust based on navbar height
 
   @media (max-width: 768px) {
-    margin-left: 0; // Remove margin on mobile
+    margin-left: 0;
   }
 
   .welcome-section {
@@ -29,11 +29,11 @@
       margin-top: 1rem;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       gap: 10px;
 
-      button {
-        background-color: #3498db;
+      > button:first-child {
+        order: -1; // Keep "New Reservation" button at the top
+        background-color: green;
         border: none;
         padding: 0.5rem 1rem;
         border-radius: 4px;
@@ -46,28 +46,91 @@
         &:hover {
           opacity: 0.9;
         }
-
-        &:first-child {
-          background-color: green;
-        }
       }
 
-      .wrapper {
+      .status-buttons-wrapper {
         display: flex;
         align-items: center;
         justify-content: space-evenly;
         width: 100%;
+        margin-bottom: 1em;
 
         button {
-          flex: 1 1 auto;
+          flex: 1 1 33.33%;
           background-color: #ffffff;
           color: black;
+          border: none;
+          padding: 0.5rem 1rem;
+          border-radius: 4px;
+          font-weight: 600;
+          font-size: 0.8em;
+          cursor: pointer;
+
+          &:hover {
+            opacity: 0.9;
+          }
+
+          &.active {
+            background-color: #3498db;
+            color: white;
+          }
+        }
+
+        @media (min-width: 768px) {
+          display: none !important; // Force hide on desktop
+        }
+      }
+
+      @media (min-width: 768px) {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+        > button:first-child {
+          margin-right: auto; // Push "New Reservation" to the left
         }
       }
     }
 
-    .details {
-      border: 1px solid #ccc;
+    .reservation-status-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      width: 100%;
+
+      .reservation-status {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr); // Horizontal spanning
+        align-items: center;
+        gap: 1rem;
+
+        > * {
+          min-height: 100px;
+          background: #ffffff;
+          padding: 1rem;
+          border-radius: 8px;
+          border: 1px solid #ccc;
+          box-sizing: border-box;
+        }
+
+        p {
+          display: none; // Hide on mobile
+          font-weight: 600;
+          color: #333;
+        }
+
+        @media (min-width: 768px) {
+          p {
+            display: block; // Show on desktop
+          }
+        }
+      }
+
+      @media (max-width: 768px) {
+        .reservation-status {
+          grid-template-columns: 1fr; // Stack vertically on mobile
+        }
+      }
     }
   }
 
