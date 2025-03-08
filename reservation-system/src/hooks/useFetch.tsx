@@ -54,7 +54,7 @@ export const useFetch = <T,>(
         setData(response.data);
         return response.data;
       } catch (err: any) {
-        console.log("Full error:", err);
+        console.error("Full error:", err);
         setError(
           err.response?.data?.message || err.message || "An error occurred"
         );

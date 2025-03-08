@@ -6,11 +6,18 @@ import {
   BsPersonCircle,
   BsList,
   BsGearFill,
+  BsHouse,
+  BsPerson,
+  BsPersonFill,
+  BsHouseFill,
+  BsCalendarFill,
 } from "react-icons/bs";
 import "../styles/user/Navbar.css";
+import { useAuth } from "./authContext";
 
 export const Navbar: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const { logout } = useAuth();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State for sidebar visibility
   const navigate = useNavigate();
@@ -27,6 +34,11 @@ export const Navbar: React.FC = () => {
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const logOut = () => {
+    logout();
+    navigate("/login");
   };
 
   return (
@@ -61,8 +73,8 @@ export const Navbar: React.FC = () => {
               <div className="profile-dropdown">
                 <ul>
                   <li onClick={() => navigate("/profile")}>Profile</li>
-                  <li>Settings</li>
-                  <li>Logout</li>
+                  <li onClick={() => navigate("/settings")}>Settings</li>
+                  <li onClick={() => logOut()}>Logout</li>
                 </ul>
               </div>
             )}
@@ -72,10 +84,16 @@ export const Navbar: React.FC = () => {
 
       <aside className={`sidebar ${isSidebarOpen ? "open" : ""}`}>
         <ul>
-          <li>Dashboard</li>
-          <li onClick={() => navigate("/reservations")}>Reservations</li>
-          <li>Resources</li>
-          <li onClick={() => navigate("/profile")}>Profile</li>
+          <li onClick={() => navigate("/user-dashboard")}>
+            {" "}
+            <BsHouseFill /> Dashboard
+          </li>
+          <li onClick={() => navigate("/reservations")}>
+            <BsCalendarFill /> Reservations
+          </li>
+          <li onClick={() => navigate("/profile")}>
+            <BsPersonFill /> Profile
+          </li>
           <li onClick={() => navigate("/settings")}>
             <BsGearFill />
             Settings

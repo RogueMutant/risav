@@ -6,7 +6,7 @@ import React, {
   useCallback,
 } from "react";
 import { useFetch } from "../hooks/useFetch";
-import { User, Resource, Category } from "../types/custom";
+import { User, Resource, Category, Reservation } from "../types/custom";
 import { useNavigate } from "react-router-dom";
 import { Storage, ID } from "appwrite";
 import { BUCKET_ID_USER_IMAGE, client } from "../lib/appwrite";
@@ -16,6 +16,7 @@ interface AuthContextType {
   allUsers: User[] | null;
   userResources: Resource[];
   userCategories: Category[];
+  reservations: Reservation[];
   getAllUsers: () => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
@@ -42,6 +43,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [allUsers, setAllUsers] = useState<User[] | null>(null);
   const [userResources, setUserResources] = useState<Resource[]>([]);
   const [userCategories, setUserCategories] = useState<Category[]>([]);
+  const [reservations, setReservation] = useState<Reservation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -72,6 +74,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     "/auth/updateProfile",
     false,
     "patch"
+  );
+
+  const { fetchData: allMyReservation } = useFetch<Reservation[]>(
+    "/api/reservations/get-my-reservations/v1",
+    false,
+    "get"
   );
 
   const getAllUsers = useCallback(async (): Promise<void> => {
@@ -123,9 +131,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       }
 
       // Fetch resources and categories in parallel
-      const [resources, categories] = await Promise.all([
+      const [resources, categories, allReservations] = await Promise.all([
         fetchUserResources(),
         fetchUserCategories(),
+        allMyReservation(),
       ]);
 
       let profileImageUrl = userData.user.profileImageUrl;
@@ -151,6 +160,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       // Update state
       if (resources) setUserResources(resources);
       if (categories) setUserCategories(categories);
+      if (allReservations) setReservation(allReservations);
       console.log("Updated user:", updatedUser);
 
       setUser(updatedUser);
@@ -312,6 +322,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   return (
     <AuthContext.Provider
       value={{
+        reservations,
         getAllUsers,
         allUsers,
         user,

@@ -34,11 +34,11 @@ export interface User {
 }
 export interface Reservation {
   _id: string;
-  startDate: string;
-  endDate: string;
+  reservationDate: string;
   time: Array<string>;
   status: "pending" | "approved" | "cancelled" | "confirmed";
   reason?: string;
+  name: string;
 }
 export interface UserSettings {
   pushNotificationsEnabled: boolean;

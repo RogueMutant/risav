@@ -2,7 +2,7 @@ import React, { useState, useEffect, Suspense, lazy } from "react";
 import { Navbar } from "../../components/userNav";
 import "../../styles/user/userDashboard.css";
 import { useAuth } from "../../components/authContext";
-import { Category, Resource } from "../../types/custom";
+import { Category, Reservation, Resource } from "../../types/custom";
 import { useNavigate } from "react-router-dom";
 import { ReservationModal } from "../../components/reservationDetails";
 
@@ -10,8 +10,9 @@ const CategoryList = lazy(() => import("../../components/categoryListProp"));
 const ResourceList = lazy(() => import("../../components/resourceListProp"));
 
 export const UserDashboard = () => {
-  const { user, userCategories, userResources } = useAuth();
+  const { user, userCategories, userResources, reservations } = useAuth();
   const [categories, setCategories] = useState<Category[]>([]);
+  const [reservationList, setReservationList] = useState<Reservation[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [filteredResources, setFilteredResources] = useState<Resource[]>([]);
   const [isAsideNavOpen, setIsAsideNavOpen] = useState(true);
@@ -51,7 +52,10 @@ export const UserDashboard = () => {
     if (userCategories) {
       setCategories(userCategories);
     }
-  }, [userCategories]);
+    if (reservations) {
+      setReservationList(reservations);
+    }
+  }, [userCategories, reservations]);
 
   useEffect(() => {
     if (selectedCategory && userResources) {
@@ -127,15 +131,25 @@ export const UserDashboard = () => {
             {(statusDisplay.upcoming || window.innerWidth >= 768) && (
               <div className="reservation-status">
                 <p>Upcoming</p>
-                <div></div>
-                <div></div>
-                <div></div>
+                {reservationList &&
+                  reservationList.map((reservation) => {
+                    return (
+                      <div key={reservation._id}>
+                        <p>{reservation.name}</p>
+                        <p>
+                          {new Date(
+                            reservation.reservationDate
+                          ).toLocaleDateString()}{" "}
+                          {reservation.time[0]} - {reservation.time[1]}
+                        </p>
+                      </div>
+                    );
+                  })}
               </div>
             )}
             {(statusDisplay.past || window.innerWidth >= 768) && (
               <div className="reservation-status">
                 <p>Past</p>
-                <div></div>
                 <div></div>
                 <div></div>
               </div>

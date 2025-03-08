@@ -9,11 +9,12 @@ const reservationSchema: Schema = new mongoose.Schema<IReservation>(
       ref: "Resource",
       required: true,
     },
+    name: { type: String, required: true },
     reservationDate: { type: Date, required: true },
     time: { type: [String], required: true },
     status: {
       type: String,
-      enum: ["pending", "approved", "cancelled", "confirmed"],
+      enum: ["pending", "cancelled", "confirmed"],
       default: "pending",
     },
     reason: { type: String },

@@ -73,6 +73,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
           reservationDate: selectedDate,
           time: [fromTime, toTime],
           reason: reason,
+          resource: resource.name,
         },
         "post"
       );
@@ -81,7 +82,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
         console.log("Reservation made successfully", result);
       }
     } catch (error) {
-      console.log("Error making reservation", reservationError);
+      console.error("Error making reservation", reservationError);
     }
   };
 
@@ -154,6 +155,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
                 rows={3}
                 value={reason}
                 onChange={handleReasonChange}
+                maxLength={200}
               />
             </div>
             <div className="detail-item">
@@ -187,12 +189,12 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
         {isReservationMade && (
           <div className="confirmation-modal">
             <div className="confirmation-content">
-              <h3>Reservation Successful!</h3>
+              <h3>Reservation Submitted Successful!</h3>
               <p>
                 Your reservation for <strong>{resource.name}</strong> on{" "}
                 <strong>{selectedDate?.toLocaleDateString()}</strong> from{" "}
                 <strong>{fromTime}</strong> to <strong>{toTime}</strong> has
-                been confirmed.
+                been successfully submitted. Please wait for confirmation.
               </p>
               <button
                 className="confirm-button"
