@@ -64,11 +64,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     false,
     "get"
   );
-  const { fetchData: loginRequest } = useFetch<{ user: User }>(
-    "/auth/login",
-    false,
-    "post"
-  );
+  const { fetchData: loginRequest, error: loginError } = useFetch<{
+    user: User;
+  }>("/auth/login", false, "post");
   const { fetchData: logoutRequest } = useFetch("/auth/logout", false, "post");
   const { fetchData: updateRequest } = useFetch(
     "/auth/updateProfile",
@@ -221,6 +219,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const login = async (email: string, password: string) => {
     try {
+      setError("");
       setIsLoading(true);
       setError(null);
 
@@ -229,6 +228,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         password,
       });
 
+      if (!response) {
+        throw new Error("No network");
+      }
       if (!response?.user || !response.user?._id) {
         throw new Error("Invalid login response: User data is missing");
       }
@@ -240,7 +242,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       navigate("/dashboard");
     } catch (err) {
       console.error("Login error:", err);
-      setError(err instanceof Error ? err.message : "Login failed");
+      setError(err instanceof Error ? loginError : "Login failed");
       throw err;
     } finally {
       setIsLoading(false);
