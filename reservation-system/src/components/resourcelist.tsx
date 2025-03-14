@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/index.css";
 import { Resource } from "../types/custom";
 import { useResource } from "../hooks/useResource";
@@ -28,6 +28,11 @@ export const ResourceList: React.FC<ResourceListProps> = ({
     setResourceToEdit(resource);
     setShowCreateResource(true);
   };
+  useEffect(() => {
+    if (resources) {
+      setImageLoading(false);
+    }
+  }, [resources]);
 
   return (
     <div className="resource-list-container">
@@ -42,8 +47,6 @@ export const ResourceList: React.FC<ResourceListProps> = ({
                   src={resource.imageUrl as string}
                   alt={resource.name}
                   className="resource-image"
-                  onLoad={() => setImageLoading(false)}
-                  onError={() => setImageLoading(false)}
                 />
               )}
               <div className="resource-text">
@@ -59,6 +62,23 @@ export const ResourceList: React.FC<ResourceListProps> = ({
                         );
                       })
                     : "No date available"}
+                </div>
+                <div className="status-badge">
+                  <p
+                    className={
+                      resource.status && resource.status.includes("available")
+                        ? "available"
+                        : resource.status &&
+                          resource.status.includes("reserved")
+                        ? "reserved"
+                        : resource.status &&
+                          resource.status.includes("maintenance")
+                        ? "maintenance"
+                        : ""
+                    }
+                  >
+                    {resource.status || "Unknown Status"}{" "}
+                  </p>
                 </div>
                 <p>{`From ${resource.availableTime[0]} to ${resource.availableTime[1]}`}</p>
               </div>

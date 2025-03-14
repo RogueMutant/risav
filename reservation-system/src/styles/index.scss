@@ -45,7 +45,6 @@ html {
   scroll-behavior: smooth;
 }
 
-// _mixins.scss (for reusable styles)
 @mixin elevation($level: 2) {
   @if $level == 1 {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
@@ -145,6 +144,9 @@ html {
         }
       }
     }
+    @media (min-width: 768px) {
+      width: 100%;
+    }
     .dropdown-list {
       transform: translateX(30px);
       width: 100%;
@@ -181,6 +183,7 @@ html {
     table {
       width: 100%;
       border-collapse: collapse;
+
       tr {
         height: 50px;
         border-bottom: 3px solid #282833;
@@ -350,6 +353,12 @@ body {
           }
         }
       }
+      @media (min-width: 768px) {
+        max-width: calc(100vw - 75%);
+        .ul-list-container {
+          width: 70%;
+        }
+      }
     }
   }
 
@@ -364,6 +373,8 @@ body {
       h2 {
         margin-bottom: 30px;
         color: $color-white;
+        font-weight: 600;
+        font-size: 1.4em;
       }
 
       .inner-sales-cont {
@@ -377,14 +388,54 @@ body {
         align-items: flex-start;
         justify-content: space-evenly;
         border-radius: 8px;
+        font-size: 1.1em;
         @include icon-style();
 
         h3 {
           color: $color-white;
+          font-weight: 600;
+          font-size: 1em;
         }
         p {
           color: rgb(222, 220, 220);
         }
+      }
+    }
+
+    section .chart-container {
+      background-color: $faded-black;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      width: 95%;
+      max-width: 1000px;
+      margin-left: auto;
+      margin-right: auto;
+      height: 400px;
+    }
+
+    .chart-container h2 {
+      color: #e0e0e0;
+      margin-bottom: 20px;
+      font-size: 1.4rem;
+      text-align: center;
+    }
+
+    .chart-container p {
+      color: #e0e0e0;
+      text-align: center;
+      padding: 40px 0;
+    }
+
+    @media (max-width: 768px) {
+      section .chart-container {
+        width: 95%;
+        padding: 15px;
+        height: 350px;
+      }
+
+      .chart-container h2 {
+        font-size: 1.2rem;
       }
     }
 
@@ -393,6 +444,10 @@ body {
       @include table();
       color: $color-white;
       text-align: left;
+      h2 {
+        font-size: 1.4em;
+        font-weight: 600;
+      }
     }
 
     .trending-section {
@@ -427,6 +482,28 @@ body {
   .slide-out {
     transform: translateX(0);
     width: 100%;
+  }
+  @media (min-width: 768px) {
+    .slide-out {
+      width: 100%;
+    }
+    .section-div-container {
+      grid-template: auto auto/ 1fr 1fr;
+      gap: 1em;
+      :first-child {
+        height: fit-content;
+      }
+      .total-sales-container {
+        display: grid;
+        grid-row: 1 / 1;
+        grid-template: 50px auto / 0.5fr 0.5fr 0.5fr;
+        gap: 1em;
+        height: fit-content;
+        :first-child {
+          grid-column: 1 / span 3;
+        }
+      }
+    }
   }
 }
 
@@ -575,11 +652,12 @@ body {
 }
 
 // Resrevation info page
-.resevation-info-container {
+.reservation-info-container {
   @include table();
   @include icon-style();
   width: 100%;
   height: 100vh;
+  padding: 2em;
   h2 {
     color: $color-orange;
     margin-bottom: 0.5em;
@@ -969,7 +1047,7 @@ body {
       min-height: 0;
       width: 300px;
       .threeDots {
-        color: rgb(0, 0, 0);
+        color: rgb(248, 248, 248);
         height: 22px;
         width: 22px;
         cursor: pointer;
@@ -1075,7 +1153,33 @@ body {
       p {
         flex-wrap: wrap;
         margin-bottom: 5px;
-        color: $background-color;
+        color: white;
+      }
+      .status-badge {
+        P {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          padding: 4px 8px;
+          border-radius: 12px;
+          font-size: 0.95rem;
+          font-weight: 600;
+          margin: 10px 0;
+          &.available {
+            background: #dcfce7; // Light green background
+            color: #16a34a; // Dark green text
+          }
+
+          &.reserved {
+            background: #dbeafe; // Light blue background
+            color: #2563eb; // Dark blue text
+          }
+
+          &.maintenance {
+            background: #ffedd5; // Light orange background
+            color: #ea580c; // Dark orange text
+          }
+        }
       }
     }
   }

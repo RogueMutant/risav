@@ -5,6 +5,7 @@ import { useAuth } from "../../components/authContext";
 import { Category, Reservation, Resource } from "../../types/custom";
 import { useNavigate } from "react-router-dom";
 import { ReservationModal } from "../../components/reservationDetails";
+import { FaSpinner } from "react-icons/fa";
 
 const CategoryList = lazy(() => import("../../components/categoryListProp"));
 const ResourceList = lazy(() => import("../../components/resourceListProp"));
@@ -15,34 +16,18 @@ export const UserDashboard = () => {
   const [reservationList, setReservationList] = useState<Reservation[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [filteredResources, setFilteredResources] = useState<Resource[]>([]);
-  const [isAsideNavOpen, setIsAsideNavOpen] = useState(true);
-  const [statusDisplay, setStatusDisplay] = useState<{
-    upcoming: boolean;
-    past: boolean;
-    cancelled: boolean;
-  }>({ upcoming: true, past: false, cancelled: false });
   const [selectedResource, setSelectedResource] = useState<Resource | null>(
     null
   );
+  const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
-
-  const toggleAsideNav = () => {
-    setIsAsideNavOpen(!isAsideNavOpen);
-  };
-
-  const toggleStatusDisplay = (status: string) => {
-    setStatusDisplay({
-      upcoming: status === "upcoming",
-      past: status === "past",
-      cancelled: status === "cancelled",
-    });
-  };
 
   const handleResourceClick = (resource: Resource) => {
     setSelectedResource(resource);
     setIsModalOpen(true);
   };
+
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedResource(null);
@@ -76,97 +61,156 @@ export const UserDashboard = () => {
     setSelectedCategory(categoryId);
   };
 
+  const groupedReservations = {
+    upcoming: reservationList.filter(
+      (reservation) => new Date(reservation.reservationDate) > new Date()
+    ),
+    past: reservationList.filter(
+      (reservation) => reservation.status === "confirmed"
+    ),
+    cancelled: reservationList.filter(
+      (reservation) => reservation.status === "cancelled"
+    ),
+  };
+
   return (
     <>
-      <Navbar />
-      <button
-        className="toggle-aside-nav"
-        onClick={() => setIsAsideNavOpen(!isAsideNavOpen)}
-      >
-        {isAsideNavOpen ? "Hide Nav" : "Show Nav"}
-      </button>
-      {isAsideNavOpen && (
-        <aside className="sidebar">
-          <ul>
-            <li>Dashboard</li>
-            <li>Reservations</li>
-            <li>Resources</li>
-            <li>Profile</li>
-            <li>Settings</li>
-          </ul>
-        </aside>
-      )}
       <div className="dashboard-content">
+        <Navbar />
         <section className="welcome-section">
           <div>
             <h1>Welcome back, {user?.name || "User"}!</h1>
-            <p>You have 2 upcoming reservations.</p>
+            <p>
+              You have {groupedReservations.upcoming.length} upcoming
+              reservations.
+            </p>
           </div>
           <div className="btn-container">
-            <button onClick={() => navigate("#new")}>New Reservation</button>
-            <div className="status-buttons-wrapper">
-              {" "}
-              {/* Changed class name */}
-              <button
-                className={statusDisplay.upcoming ? "active" : ""}
-                onClick={() => toggleStatusDisplay("upcoming")}
-              >
-                Upcoming
-              </button>
-              <button
-                className={statusDisplay.past ? "active" : ""}
-                onClick={() => toggleStatusDisplay("past")}
-              >
-                Past
-              </button>
-              <button
-                className={statusDisplay.cancelled ? "active" : ""}
-                onClick={() => toggleStatusDisplay("cancelled")}
-              >
-                Canceled
-              </button>
-            </div>
+            <button
+              onClick={() => {
+                const newSection = document.getElementById("new");
+                if (newSection) {
+                  newSection.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
+            >
+              New Reservation
+            </button>
           </div>
-          <article className="reservation-status-wrapper">
-            {(statusDisplay.upcoming || window.innerWidth >= 768) && (
-              <div className="reservation-status">
-                <p>Upcoming</p>
-                {reservationList &&
-                  reservationList.map((reservation) => {
-                    return (
-                      <div key={reservation._id}>
-                        <p>{reservation.name}</p>
-                        <p>
-                          {new Date(
-                            reservation.reservationDate
-                          ).toLocaleDateString()}{" "}
-                          {reservation.time[0]} - {reservation.time[1]}
-                        </p>
-                      </div>
-                    );
-                  })}
-              </div>
-            )}
-            {(statusDisplay.past || window.innerWidth >= 768) && (
-              <div className="reservation-status">
-                <p>Past</p>
-                <div></div>
-                <div></div>
-              </div>
-            )}
-            {(statusDisplay.cancelled || window.innerWidth >= 768) && (
-              <div className="reservation-status">
-                <p>Canceled</p>
-                <div></div>
-                <div></div>
-                <div></div>
-              </div>
-            )}
-          </article>
         </section>
+
+        {/* Reservation Status Sections */}
+        <section className="reservation-status-sections">
+          <div className="reservation-status">
+            <h2>Upcoming</h2>
+            {groupedReservations.past.length > 0 ? (
+              groupedReservations.upcoming.map((reservation) => (
+                <div key={reservation._id} className="reservation-card">
+                  <p>{reservation.name}</p>
+                  <p>
+                    {new Date(reservation.reservationDate).toLocaleDateString()}
+                    {reservation.time[0]} - {reservation.time[1]}
+                  </p>
+                  <p
+                    className={
+                      reservation.status === "pending"
+                        ? "pending"
+                        : reservation.status === "confirmed"
+                        ? "confirmed"
+                        : reservation.status === "cancelled"
+                        ? "cancelled"
+                        : ""
+                    }
+                  >
+                    {reservation.status}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p>Nothing here for now.</p>
+            )}
+          </div>
+
+          <div className="reservation-status">
+            <h2>Past</h2>
+            {isLoading ? (
+              <span>
+                <FaSpinner />
+              </span>
+            ) : groupedReservations.past.length > 0 ? (
+              groupedReservations.past.map((reservation) => (
+                <div key={reservation._id} className="reservation-card">
+                  <p>{reservation.name}</p>
+                  <p>
+                    {new Date(reservation.reservationDate).toLocaleDateString()}{" "}
+                    {reservation.time[0]} - {reservation.time[1]}
+                  </p>
+                  <p
+                    className={
+                      reservation.status === "pending"
+                        ? "pending"
+                        : reservation.status === "confirmed"
+                        ? "confirmed"
+                        : reservation.status === "cancelled"
+                        ? "cancelled"
+                        : ""
+                    }
+                  >
+                    {reservation.status}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p>Nothing here for now.</p>
+            )}
+          </div>
+
+          <div className="reservation-status">
+            <h2>Cancelled</h2>
+            {isLoading ? (
+              <span>
+                <FaSpinner />
+              </span>
+            ) : groupedReservations.cancelled.length > 0 ? (
+              groupedReservations.cancelled.map((reservation) => (
+                <div key={reservation._id} className="reservation-card">
+                  <p>{reservation.name}</p>
+                  <p>
+                    {new Date(reservation.reservationDate).toLocaleDateString()}{" "}
+                    {reservation.time[0]} - {reservation.time[1]}
+                  </p>
+                  <p
+                    className={
+                      reservation.status === "pending"
+                        ? "pending"
+                        : reservation.status === "confirmed"
+                        ? "confirmed"
+                        : reservation.status === "cancelled"
+                        ? "cancelled"
+                        : ""
+                    }
+                  >
+                    {reservation.status}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p> Nothing here for now.</p>
+            )}
+          </div>
+        </section>
+
+        {/* New Reservation Section */}
         <section className="reservations-section" id="new">
           <h2>New Reservation</h2>
-          <Suspense fallback={<div>Loading...</div>}>
+          <Suspense
+            fallback={
+              <div className="loading-container" style={{ margin: "0 auto" }}>
+                <FaSpinner className="loading-spinner" />
+                Loading...
+              </div>
+            }
+          >
             <CategoryList
               categories={categories}
               selectedCategory={selectedCategory}
@@ -179,6 +223,8 @@ export const UserDashboard = () => {
           </Suspense>
         </section>
       </div>
+
+      {/* Reservation Modal */}
       {isModalOpen && selectedResource && (
         <ReservationModal resource={selectedResource} onClose={closeModal} />
       )}

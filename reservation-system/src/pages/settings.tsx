@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../styles/settings.css";
 import { UserSettings } from "../types/custom";
+import Back from "../components/back";
 
 export const Settings: React.FC = () => {
   const [settings, setSettings] = useState<UserSettings>({
@@ -27,6 +28,7 @@ export const Settings: React.FC = () => {
 
   return (
     <div className="settings-container">
+      <Back position="absolute" />
       <form onSubmit={handleSubmit}>
         <div className="settings-group">
           <h2>Push Notifications</h2>
@@ -44,7 +46,7 @@ export const Settings: React.FC = () => {
           </div>
         </div>
 
-        <div className="settings-group">
+        {/* <div className="settings-group">
           <h2>Email Notifications</h2>
           <div className="setting-item">
             <label htmlFor="emailNotificationsEnabled">
@@ -58,7 +60,7 @@ export const Settings: React.FC = () => {
               onChange={handleChange}
             />
           </div>
-        </div>
+        </div> */}
 
         <button type="submit" className="save-button">
           Save Changes

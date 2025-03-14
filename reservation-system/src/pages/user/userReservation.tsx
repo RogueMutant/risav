@@ -39,7 +39,19 @@ export const ReservationsScreen: React.FC = () => {
                 </p>
               </div>
               <div className="reservation-status">
-                <span>{reservation.status}</span>
+                <span
+                  className={
+                    reservation.status === "pending"
+                      ? "pending"
+                      : reservation.status === "confirmed"
+                      ? "confirmed"
+                      : reservation.status === "cancelled"
+                      ? "cancelled"
+                      : ""
+                  }
+                >
+                  {reservation.status}
+                </span>
               </div>
             </div>
           ))}

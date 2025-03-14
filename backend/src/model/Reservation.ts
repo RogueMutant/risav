@@ -10,6 +10,8 @@ const reservationSchema: Schema = new mongoose.Schema<IReservation>(
       required: true,
     },
     name: { type: String, required: true },
+    userName: { type: String },
+    userEmail: { type: String },
     reservationDate: { type: Date, required: true },
     time: { type: [String], required: true },
     status: {

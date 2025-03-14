@@ -14,7 +14,7 @@ export const Login = () => {
   const [person, setPerson] = useState<Person>({ email: "", password: "" });
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, error: loginError } = useAuth();
   const navigate = useNavigate();
 
   const togglePasswordVisibility = () => {
@@ -37,7 +37,7 @@ export const Login = () => {
       await login(person.email, person.password);
       setPerson({ email: "", password: "" });
     } catch (err) {
-      console.error("Login error details:", err);
+      console.error("Login error details:", loginError);
     } finally {
       setLoading(false);
     }
@@ -71,6 +71,7 @@ export const Login = () => {
               id="password"
               value={person.password}
               onChange={handleChange}
+              required
             />
             <span onClick={togglePasswordVisibility} className="eye">
               {passwordVisible ? <BsEyeSlash /> : <BsEye />}
@@ -78,25 +79,26 @@ export const Login = () => {
           </div>
         </div>
         <div className="form-control">
-          <input
+          {/* <input
             type="checkbox"
             style={{ height: "15px" }}
             name="checkbox"
             id="checkbox"
             className="check"
-          />
-          <label htmlFor="checkbox">Keep me signed in</label>
+          /> */}
+          {/* <label htmlFor="checkbox">Keep me signed in</label> */}
+          {loginError && <p style={{ color: "red" }}>{loginError}</p>}
           <button type="submit" disabled={loading}>
-            {loading ? "Loading" : "Log In"}
+            {loading ? "Loading..." : "Log In"}
           </button>
         </div>
-        <div className="hr"></div>
+        {/* <div className="hr"></div>
         <span className="span-sign-in">Or sign in using:</span>
         <div className="form-control">
           <button className="oauth">
             <FcGoogle /> <span>Google</span>
           </button>
-        </div>
+        </div> */}
       </form>
     </article>
   );

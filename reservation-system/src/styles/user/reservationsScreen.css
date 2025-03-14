@@ -48,7 +48,7 @@
 .reservations-screen .reservation-card .reservation-status span {
   padding: 5px 10px;
   border-radius: 12px;
-  font-size: 14px;
+  font-size: 10px;
   font-weight: bold;
   text-transform: uppercase;
 }

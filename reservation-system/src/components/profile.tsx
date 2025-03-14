@@ -3,8 +3,7 @@ import { useFetch } from "../hooks/useFetch";
 import "../styles/index.css";
 import { useAuth } from "./authContext";
 import { BsCamera, BsPersonFill } from "react-icons/bs";
-
-// const backendUrl = "http://localhost:9000/auth/users/me";
+import Back from "./back";
 
 interface ProfileData {
   name: string;
@@ -114,7 +113,7 @@ export const Profile = () => {
   return (
     <div className="profile-container">
       <h1>Manage Profile</h1>
-
+      <Back position="absolute" />
       <div className="profile-card">
         <div className="profile-picture">
           <label htmlFor="profilePictureInput">

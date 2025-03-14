@@ -23,6 +23,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../components/authContext";
 import { useFetch } from "../hooks/useFetch";
 import { nameInitials } from "../helper/helper";
+import ReservationChart from "../components/lineChart";
 
 const url = "/api/categories";
 
@@ -184,7 +185,7 @@ export const Dashboard = () => {
                     <li
                       onClick={(e) => {
                         e.stopPropagation();
-                        navigate("/reservation/All-Reservations");
+                        navigate("/reservation/all-reservations");
                         console.log("All Reservations clicked");
                       }}
                     >
@@ -304,20 +305,23 @@ export const Dashboard = () => {
         <section className="total-sales-container">
           <h2>Reservation's Summary</h2>
           <div className="inner-sales-cont">
-            <BsBarChartFill style={{ color: "#fab659" }} className="icon" />
-            <h3>$5k</h3>
-            <p>Income From Reservations</p>
-          </div>
-          <div className="inner-sales-cont">
             <FaTasks style={{ color: "#a0dfd8" }} className="icon" />
             <h3>500</h3>
             <p>Total Applications</p>
+          </div>
+          <div className="inner-sales-cont">
+            <BsBarChartFill style={{ color: "#fab659" }} className="icon" />
+            <h3>10</h3>
+            <p>Pending Reservations</p>
           </div>
           <div className="inner-sales-cont">
             <FaCartPlus style={{ color: "#e4c8ed" }} className="icon" />
             <h3>9</h3>
             <p>Total Reservations</p>
           </div>
+        </section>
+        <section>
+          <ReservationChart />
         </section>
         <section className="top-reservations-container">
           <div className="table-container">

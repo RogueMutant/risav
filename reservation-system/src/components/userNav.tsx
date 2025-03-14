@@ -19,13 +19,12 @@ export const Navbar: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const { logout } = useAuth();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State for sidebar visibility
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Searching for:", searchQuery);
-    // Add your search logic here
   };
 
   const toggleProfileDropdown = () => {
@@ -52,7 +51,7 @@ export const Navbar: React.FC = () => {
         <form className="navbar-search" onSubmit={handleSearch}>
           <input
             type="text"
-            placeholder="Search resources, reservations, etc."
+            placeholder="Search categories, resources etc."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -88,7 +87,7 @@ export const Navbar: React.FC = () => {
             {" "}
             <BsHouseFill /> Dashboard
           </li>
-          <li onClick={() => navigate("/reservations")}>
+          <li onClick={() => navigate("/user-reservations")}>
             <BsCalendarFill /> Reservations
           </li>
           <li onClick={() => navigate("/profile")}>

@@ -3,6 +3,7 @@ import Reservation from "../model/Reservation";
 import Resource from "../model/Resource";
 import { Response } from "express";
 import mongoose from "mongoose";
+import User from "../model/User";
 
 const getAllMyReservations = async (
   req: CustomRequest,
@@ -76,6 +77,25 @@ const createReservation = async (
       .json({ message: "Missing required fields", status: "Failed" });
     return;
   }
+
+  const user = await User.findById(userId);
+  if (!user) {
+    res.status(404).json({ message: "User not found", status: "Failed" });
+    return;
+  }
+  const userEmail = user.email;
+  const userName = user.name;
+
+  // Check if the resource exists and has available items
+  const resource = await Resource.findById(resourceId);
+  if (!resource || resource.itemCount < 1) {
+    res.status(400).json({
+      message: "Resource unavailable or insufficient items",
+      status: "Failed",
+    });
+    return;
+  }
+
   const matchingResource = await Reservation.findOne({
     resource: resourceId,
     reservationDate,
@@ -114,6 +134,8 @@ const createReservation = async (
     status: "pending",
     reason,
     name,
+    userName,
+    userEmail,
     resource: resourceId,
   });
 
@@ -170,8 +192,7 @@ const updateReservationStatus = async (
   req: CustomRequest,
   res: Response
 ): Promise<void> => {
-  const { reservationId } = req.params;
-  const { status } = req.body;
+  const { status, reservationId } = req.body;
   const isAdmin = req.user?.role;
 
   if (isAdmin !== "admin" && isAdmin !== "super_admin") {

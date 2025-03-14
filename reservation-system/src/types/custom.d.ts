@@ -13,6 +13,7 @@ export interface Resource {
   availableTime: Array<string>;
   resourceCount: number;
   location: string;
+  status: string;
 }
 
 export interface Category {
@@ -39,6 +40,8 @@ export interface Reservation {
   status: "pending" | "approved" | "cancelled" | "confirmed";
   reason?: string;
   name: string;
+  userEmail: string;
+  userName: string;
 }
 export interface UserSettings {
   pushNotificationsEnabled: boolean;

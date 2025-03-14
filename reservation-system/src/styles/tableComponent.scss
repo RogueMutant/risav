@@ -1,175 +1,188 @@
-@import "../styles/variables";
+// Table Component Styling (Dark Theme)
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 8px;
+  background-color: #21222d; // Slightly lighter than the primary background
+  margin-top: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #21222d;
+
+    thead {
+      background-color: #2a2b36; // Darker shade for the header
+      border-bottom: 2px solid #343541; // Subtle border for separation
+
+      th {
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+        color: #e0e0e0; // Light text for contrast
+        text-transform: uppercase;
+        font-size: 0.875rem;
+      }
+    }
+
+    tbody {
+      tr {
+        border-bottom: 1px solid #343541; // Subtle border for separation
+        transition: background-color 0.2s ease;
+
+        &:hover {
+          background-color: #2a2b36; // Slightly lighter on hover
+        }
+
+        td {
+          padding: 1rem;
+          color: #e0e0e0; // Light text for contrast
+          font-size: 0.875rem;
+
+          &.image-td {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+
+            img {
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+              object-fit: cover;
+            }
+
+            span {
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+              background-color: #343541; // Dark background for initials
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-weight: 600;
+              color: #e0e0e0; // Light text for contrast
+            }
+
+            div {
+              p {
+                margin: 0;
+
+                &:first-child {
+                  font-weight: 600;
+                  color: #ffffff; // White for emphasis
+                }
+
+                &:last-child {
+                  color: #a0a0a0; // Lighter gray for less emphasis
+                  font-size: 0.75rem;
+                }
+              }
+            }
+          }
+
+          .status-color {
+            color: #4caf50; // Green for "Active" status
+            font-weight: 600;
+          }
+
+          .dropdown {
+            position: relative;
+
+            .icon {
+              color: #a0a0a0; // Light gray for icons
+              cursor: pointer;
+              transition: color 0.2s ease;
+
+              &:hover {
+                color: #ffffff; // White on hover
+              }
+            }
+
+            .dropdown-content {
+              position: absolute;
+              right: 0;
+              top: 100%;
+              background-color: #2a2b36; // Dark background for dropdown
+              border: 1px solid #343541; // Subtle border
+              border-radius: 4px;
+              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+              z-index: 10;
+              min-width: 120px;
+
+              button {
+                display: block;
+                width: 100%;
+                padding: 0.5rem 1rem;
+                text-align: left;
+                background: none;
+                border: none;
+                color: #e0e0e0; // Light text for contrast
+                font-size: 0.875rem;
+                cursor: pointer;
+                transition: background-color 0.2s ease;
+
+                &:hover {
+                  background-color: #343541; // Slightly lighter on hover
+                }
+
+                &:active {
+                  background-color: #3a3b46; // Even lighter on active
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Search Container Styling (Dark Theme)
 .search-container {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  height: 70px;
-  background-color: $faded-black;
-  border-bottom: 1px solid $drop-on-background-color;
-  .icon {
-    cursor: pointer;
-    transition: opacity 0.3s ease;
-
-    &:hover {
-      opacity: 0.7;
-    }
-  }
+  gap: 1rem;
+  margin-bottom: 1rem;
 
   .search-bar {
-    opacity: 0;
-    width: 0;
-    margin-right: 10px;
-    overflow: hidden;
-    transition: opacity 0.3s ease, width 0.5s ease;
+    display: flex;
+    align-items: center;
+    transition: width 0.3s ease;
+    width: 200px;
 
     &.open {
-      opacity: 1;
-      width: 200px;
-
-      @media (max-width: 768px) {
-        width: 400px;
-      }
-
-      @media (max-width: 480px) {
-        width: 82%;
-      }
+      width: 300px;
     }
 
     input {
       width: 100%;
-      height: 25px;
-      padding: 8px;
+      padding: 0.5rem 1rem;
+      border: 1px solid #343541; // Subtle border
       border-radius: 4px;
+      font-size: 0.875rem;
+      color: #e0e0e0; // Light text for contrast
+      background-color: #2a2b36; // Dark background for input
       outline: none;
-      transition: border-color 0.3s ease;
-      background-color: darken($light-background, 2%);
+      transition: border-color 0.2s ease;
+
+      &:focus {
+        border-color: #007bff; // Blue border on focus
+      }
+
+      &::placeholder {
+        color: #a0a0a0; // Light gray placeholder
+      }
     }
   }
 
-  .filter-icon {
-    margin-left: auto;
+  .icon {
+    color: #a0a0a0; // Light gray for icons
     cursor: pointer;
-    transition: opacity 0.3s ease;
+    transition: color 0.2s ease;
 
     &:hover {
-      opacity: 0.7;
-    }
-  }
-}
-
-.dropdown {
-  position: relative;
-  display: inline-block;
-
-  .dropdown-content {
-    position: absolute;
-    right: 0;
-    background-color: #f9f9f9;
-    min-width: 120px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 1;
-    border-radius: 4px;
-    overflow: hidden;
-
-    button {
-      display: block;
-      width: 100%;
-      padding: 8px;
-      text-align: left;
-      border: none;
-      background: none;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-
-      &:hover {
-        background-color: #ddd;
-      }
-    }
-  }
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: $faded-black;
-
-  th,
-  td {
-    padding: 12px;
-    text-align: left;
-    color: $th-color;
-    font-size: 0.8em;
-  }
-  .image-td {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-    img {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-
-    span {
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #ccc;
-      border-radius: 50%;
-      font-size: 14px;
-    }
-  }
-
-  @media (max-width: 768px) {
-    th,
-    td {
-      padding: 8px;
-    }
-    tr {
-      &:first-child {
-        font-size: 0.9em;
-      }
-    }
-
-    .image-td {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 5px;
-
-      img,
-      span {
-        width: 30px;
-        height: 30px;
-        font-size: 12px;
-      }
-    }
-  }
-
-  @media (max-width: 480px) {
-    th,
-    td {
-      padding: 6px;
-    }
-    tr {
-      &:first-child {
-        font-size: 0.8em;
-      }
-    }
-    .image-td {
-      img,
-      span {
-        width: 25px;
-        height: 25px;
-        font-size: 10px;
-      }
-    }
-
-    .dropdown-content {
-      min-width: 100px;
+      color: #ffffff; // White on hover
     }
   }
 }

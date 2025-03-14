@@ -1,0 +1,240 @@
+.reservation-dashboard {
+  background: #21222d; // Slightly lighter than the primary background
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+
+  .header {
+    margin-top: 10px;
+    padding: 20px;
+    border-bottom: 1px solid #343541; // Subtle border for separation
+
+    h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #e0e0e0; // Light text for contrast
+    }
+
+    p {
+      font-size: 0.875rem;
+      color: #a0a0a0; // Lighter gray for less emphasis
+    }
+  }
+
+  .filters {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px;
+    border-bottom: 1px solid #343541; // Subtle border for separation
+    background: #2a2b36; // Darker shade for filters
+
+    .search-box {
+      position: relative;
+      width: 100%;
+      max-width: 300px;
+
+      .search-icon {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #a0a0a0; // Light gray for icons
+      }
+
+      input {
+        width: 100%;
+        padding: 8px 12px 8px 36px;
+        border: 1px solid #343541; // Subtle border
+        border-radius: 6px;
+        font-size: 0.875rem;
+        color: #e0e0e0; // Light text for contrast
+        background-color: #2a2b36; // Dark background for input
+        outline: none;
+        transition: border-color 0.2s ease;
+
+        &:focus {
+          border-color: #007bff; // Blue border on focus
+          box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+        }
+
+        &::placeholder {
+          color: #a0a0a0; // Light gray placeholder
+        }
+      }
+    }
+
+    .filter-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      button {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border: 1px solid #343541; // Subtle border
+        border-radius: 6px;
+        background: #2a2b36; // Dark background for buttons
+        font-size: 0.875rem;
+        color: #e0e0e0; // Light text for contrast
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+
+        &:hover {
+          background: #343541; // Slightly lighter on hover
+        }
+      }
+
+      select {
+        padding: 8px 12px;
+        border: 1px solid #343541; // Subtle border
+        border-radius: 6px;
+        font-size: 0.875rem;
+        color: #e0e0e0; // Light text for contrast
+        background-color: #2a2b36; // Dark background for select
+        cursor: pointer;
+        transition: border-color 0.2s ease;
+
+        &:focus {
+          outline: none;
+          border-color: #007bff; // Blue border on focus
+          box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+        }
+      }
+    }
+  }
+
+  .reservation-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th,
+    td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #343541;
+    }
+
+    th {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #e0e0e0;
+      cursor: pointer;
+
+      .icon {
+        margin-right: 8px;
+        margin-left: 4px;
+        color: #a0a0a0;
+        vertical-align: sub;
+      }
+    }
+
+    td {
+      font-size: 0.875rem;
+      color: #e0e0e0; // Light text for contrast
+
+      .user-info,
+      .resource-info {
+        .name {
+          font-weight: 500;
+          color: #ffffff; // White for emphasis
+        }
+
+        .email,
+        .reason {
+          color: #a0a0a0; // Lighter gray for less emphasis
+        }
+      }
+
+      .actions {
+        display: flex;
+        gap: 8px;
+
+        button {
+          padding: 4px 8px;
+          border-radius: 4px;
+          font-size: 0.75rem;
+          cursor: pointer;
+          transition: background-color 0.2s ease;
+
+          &.confirm {
+            background: #10b981; // Green for confirm
+            color: white;
+
+            &:hover {
+              background: #059669; // Darker green on hover
+            }
+          }
+
+          &.cancel {
+            background: #ef4444; // Red for cancel
+            color: white;
+
+            &:hover {
+              background: #dc2626; // Darker red on hover
+            }
+          }
+
+          &.view {
+            background: #3b82f6; // Blue for view
+            color: white;
+
+            &:hover {
+              background: #2563eb; // Darker blue on hover
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+
+    &.confirmed {
+      background: #dcfce7; // Light green background
+      color: #16a34a; // Dark green text
+    }
+
+    &.pending {
+      background: #fef3c7; // Light yellow background
+      color: #d97706; // Dark yellow text
+    }
+
+    &.cancelled {
+      background: #fee2e2; // Light red background
+      color: #dc2626; // Dark red text
+    }
+
+    &.default {
+      background: #343541; // Dark background for default
+      color: #a0a0a0; // Light gray text
+    }
+
+    .icon {
+      width: 12px;
+      height: 12px;
+    }
+  }
+
+  .loading-spinner,
+  .error-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    font-size: 1rem;
+    color: #a0a0a0; // Light gray for loading/error text
+  }
+
+  .error-message {
+    color: #ef4444; // Red for error messages
+  }
+}

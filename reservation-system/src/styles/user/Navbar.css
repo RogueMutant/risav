@@ -12,29 +12,12 @@
   z-index: 1000;
 }
 .navbar .hamburger-icon {
-  display: none;
   background: none;
   border: none;
   color: white;
   font-size: 1.5rem;
   cursor: pointer;
   padding: 0.3em 0.3em 0 0;
-}
-@media (max-width: 768px) {
-  .navbar .hamburger-icon {
-    display: block;
-  }
-}
-.navbar .toggle-aside-nav {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1rem;
-  cursor: pointer;
-  margin-right: 1rem;
-}
-.navbar .toggle-aside-nav:hover {
-  opacity: 0.8;
 }
 .navbar .navbar-logo {
   font-size: 1.5rem;
@@ -124,6 +107,7 @@
   top: 60px;
   left: 0;
   z-index: 999;
+  transform: translate(-100%);
   transition: transform 0.3s ease-in-out;
 }
 @media (max-width: 768px) {
@@ -156,19 +140,4 @@
   vertical-align: middle;
   margin-right: 0.8em;
   padding-bottom: 0.1em;
-}
-
-.dashboard-content {
-  margin-left: 250px;
-  padding: 2rem;
-  margin-top: 60px;
-  transition: margin-left 0.3s ease-in-out;
-}
-@media (max-width: 768px) {
-  .dashboard-content {
-    margin-left: 0;
-  }
-}
-.dashboard-content.sidebar-hidden {
-  margin-left: 0;
 }/*# sourceMappingURL=Navbar.css.map */

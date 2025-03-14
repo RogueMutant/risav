@@ -59,6 +59,9 @@ export const CreateCategory: React.FC<categoryProps> = ({
           onChange={(e) => setCategoryName(e.target.value)}
           required
         />
+        <p style={{ color: "red", marginBottom: "10px" }}>
+          {fetchError ? fetchError + " !" : ""}
+        </p>
         <button type="submit">Create Category</button>
         <button type="button" onClick={onCancel}>
           Cancel

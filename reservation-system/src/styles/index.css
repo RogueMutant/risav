@@ -207,6 +207,11 @@ body {
   width: 80%;
   margin: 0;
 }
+@media (min-width: 768px) {
+  .dashboard-container .aside-nav .side-nav .ul-list-container .ul-content .dropdown {
+    width: 100%;
+  }
+}
 .dashboard-container .aside-nav .side-nav .ul-list-container .ul-content .dropdown .dropdown-list {
   transform: translateX(30px);
   width: 100%;
@@ -258,6 +263,14 @@ body {
 .dashboard-container .aside-nav .side-nav .ul-list-container .ul-content .settings {
   transform: translateY(150px);
 }
+@media (min-width: 768px) {
+  .dashboard-container .aside-nav .side-nav {
+    max-width: calc(100vw - 75%);
+  }
+  .dashboard-container .aside-nav .side-nav .ul-list-container {
+    width: 70%;
+  }
+}
 .dashboard-container .section-div-container {
   display: grid;
   row-gap: 30px;
@@ -275,6 +288,8 @@ body {
 .dashboard-container .section-div-container .total-sales-container h2 {
   margin-bottom: 30px;
   color: white;
+  font-weight: 600;
+  font-size: 1.4em;
 }
 .dashboard-container .section-div-container .total-sales-container .inner-sales-cont {
   height: 180px;
@@ -287,6 +302,7 @@ body {
   align-items: flex-start;
   justify-content: space-evenly;
   border-radius: 8px;
+  font-size: 1.1em;
 }
 .dashboard-container .section-div-container .total-sales-container .inner-sales-cont .icon {
   height: 20px;
@@ -296,9 +312,43 @@ body {
 }
 .dashboard-container .section-div-container .total-sales-container .inner-sales-cont h3 {
   color: white;
+  font-weight: 600;
+  font-size: 1em;
 }
 .dashboard-container .section-div-container .total-sales-container .inner-sales-cont p {
   color: rgb(222, 220, 220);
+}
+.dashboard-container .section-div-container section .chart-container {
+  background-color: #21222d;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  width: 95%;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+  height: 400px;
+}
+.dashboard-container .section-div-container .chart-container h2 {
+  color: #e0e0e0;
+  margin-bottom: 20px;
+  font-size: 1.4rem;
+  text-align: center;
+}
+.dashboard-container .section-div-container .chart-container p {
+  color: #e0e0e0;
+  text-align: center;
+  padding: 40px 0;
+}
+@media (max-width: 768px) {
+  .dashboard-container .section-div-container section .chart-container {
+    width: 95%;
+    padding: 15px;
+    height: 350px;
+  }
+  .dashboard-container .section-div-container .chart-container h2 {
+    font-size: 1.2rem;
+  }
 }
 .dashboard-container .section-div-container .top-reservations-container {
   height: auto;
@@ -331,7 +381,7 @@ body {
 }
 .dashboard-container .section-div-container .top-reservations-container .table-container table tr th {
   color: #69868c;
-  font-size: 1.3em;
+  font-size: 1.1em;
   font-weight: 500;
   min-width: 3em;
   padding: 0 0.5em;
@@ -359,6 +409,10 @@ body {
   place-content: center;
   text-align: center;
   color: #fab659;
+}
+.dashboard-container .section-div-container .top-reservations-container h2 {
+  font-size: 1.4em;
+  font-weight: 600;
 }
 .dashboard-container .section-div-container .trending-section {
   height: auto;
@@ -396,6 +450,30 @@ body {
 .dashboard-container .slide-out {
   transform: translateX(0);
   width: 100%;
+}
+@media (min-width: 768px) {
+  .dashboard-container .slide-out {
+    width: 100%;
+  }
+  .dashboard-container .section-div-container {
+    grid-template: auto auto/1fr 1fr;
+    gap: 1em;
+  }
+  .dashboard-container .section-div-container :first-child {
+    height: -moz-fit-content;
+    height: fit-content;
+  }
+  .dashboard-container .section-div-container .total-sales-container {
+    display: grid;
+    grid-row: 1/1;
+    grid-template: 50px auto/0.5fr 0.5fr 0.5fr;
+    gap: 1em;
+    height: -moz-fit-content;
+    height: fit-content;
+  }
+  .dashboard-container .section-div-container .total-sales-container :first-child {
+    grid-column: 1/span 3;
+  }
 }
 
 .login-container {
@@ -469,7 +547,7 @@ body {
   width: 100%;
   height: 2.5em;
   text-align: center;
-  font-size: 1.3em;
+  font-size: 1.1em;
   color: #171821;
   background-color: #a0dfd8;
   border-radius: 6px;
@@ -536,51 +614,52 @@ body {
     font-size: 1em;
   }
 }
-.resevation-info-container {
+.reservation-info-container {
   width: 100%;
   height: 100vh;
+  padding: 2em;
 }
-.resevation-info-container .table-container {
+.reservation-info-container .table-container {
   box-sizing: border-box;
   overflow-x: auto;
   scrollbar-track-color: transparent;
 }
-.resevation-info-container .table-container h2 {
+.reservation-info-container .table-container h2 {
   margin-bottom: 1em;
 }
-.resevation-info-container .table-container table {
+.reservation-info-container .table-container table {
   width: 100%;
   border-collapse: collapse;
 }
-.resevation-info-container .table-container table tr {
+.reservation-info-container .table-container table tr {
   height: 50px;
   border-bottom: 3px solid #282833;
 }
-.resevation-info-container .table-container table tr:first-child {
+.reservation-info-container .table-container table tr:first-child {
   height: 50px;
 }
-.resevation-info-container .table-container table tr th {
+.reservation-info-container .table-container table tr th {
   color: #69868c;
-  font-size: 1.3em;
+  font-size: 1.1em;
   font-weight: 500;
   min-width: 3em;
   padding: 0 0.5em;
 }
-.resevation-info-container .table-container table tr th,
-.resevation-info-container .table-container table tr td {
+.reservation-info-container .table-container table tr th,
+.reservation-info-container .table-container table tr td {
   color: #e0e0e0;
 }
-.resevation-info-container .table-container table tr td {
+.reservation-info-container .table-container table tr td {
   text-wrap: nowrap;
   padding: 0.5em;
 }
-.resevation-info-container .table-container table tr td .progress-bar {
+.reservation-info-container .table-container table tr td .progress-bar {
   width: 100%;
   height: 5px;
   background-color: #e4c8ed;
   border-radius: 6px;
 }
-.resevation-info-container .table-container table tr td .sales-percentage {
+.reservation-info-container .table-container table tr td .sales-percentage {
   width: 6em;
   height: 3em;
   background-color: rgba(250, 183, 89, 0.2);
@@ -590,17 +669,17 @@ body {
   text-align: center;
   color: #fab659;
 }
-.resevation-info-container .icon {
+.reservation-info-container .icon {
   height: 20px;
   width: 20px;
   color: white;
   margin-right: 1.5em;
 }
-.resevation-info-container h2 {
+.reservation-info-container h2 {
   color: #fab659;
   margin-bottom: 0.5em;
 }
-.resevation-info-container .reserv-header {
+.reservation-info-container .reserv-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -611,38 +690,38 @@ body {
   box-sizing: border-box;
   margin-bottom: 0.8em;
 }
-.resevation-info-container .reserv-header span {
+.reservation-info-container .reserv-header span {
   padding: 0.5em;
   border: 2px solid #21222d;
   border-radius: 3px;
   cursor: pointer;
 }
-.resevation-info-container .reserv-header span svg {
+.reservation-info-container .reserv-header span svg {
   vertical-align: middle;
 }
-.resevation-info-container .reserv-header span:hover {
+.reservation-info-container .reserv-header span:hover {
   background-color: #5e787d;
 }
-.resevation-info-container .reserv-header p {
+.reservation-info-container .reserv-header p {
   font-weight: 600;
 }
-.resevation-info-container .reserv-header .icon {
+.reservation-info-container .reserv-header .icon {
   height: 30px;
   width: 30px;
   padding: 0.5em;
   cursor: pointer;
   border-radius: 50%;
 }
-.resevation-info-container .reserv-header .icon:hover {
+.reservation-info-container .reserv-header .icon:hover {
   background-color: rgba(49, 92, 94, 0.175);
   transition: all 400ms ease-in;
 }
-.resevation-info-container .reservation-table-container {
+.reservation-info-container .reservation-table-container {
   width: 100%;
   height: 80vh;
   border: 1px solid #333333;
 }
-.resevation-info-container .reservation-table-container .table-container {
+.reservation-info-container .reservation-table-container .table-container {
   width: 100%;
 }
 
@@ -968,7 +1047,7 @@ body {
   width: 300px;
 }
 .resource-list-container .resource-card-container .resource-card-content .threeDots {
-  color: rgb(0, 0, 0);
+  color: rgb(248, 248, 248);
   height: 22px;
   width: 22px;
   cursor: pointer;
@@ -1072,7 +1151,29 @@ body {
 .resource-list-container .resource-card-container .resource-text p {
   flex-wrap: wrap;
   margin-bottom: 5px;
-  color: #121212;
+  color: white;
+}
+.resource-list-container .resource-card-container .resource-text .status-badge P {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 10px 0;
+}
+.resource-list-container .resource-card-container .resource-text .status-badge P.available {
+  background: #dcfce7;
+  color: #16a34a;
+}
+.resource-list-container .resource-card-container .resource-text .status-badge P.reserved {
+  background: #dbeafe;
+  color: #2563eb;
+}
+.resource-list-container .resource-card-container .resource-text .status-badge P.maintenance {
+  background: #ffedd5;
+  color: #ea580c;
 }
 .resource-list-container .no-resources-message {
   text-align: center;

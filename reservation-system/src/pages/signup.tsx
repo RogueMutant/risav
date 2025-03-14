@@ -25,6 +25,7 @@ export const SignUp = () => {
     confirmPassword: "",
   });
   const [shouldFetch, setShouldFetch] = useState(false);
+  const [error, setError] = useState("");
   const {
     data,
     error: signUpError,
@@ -59,12 +60,14 @@ export const SignUp = () => {
 
   const handleSubmit = async (e: SubmitEvent) => {
     e.preventDefault();
+    setError("");
     if (!person.name || !person.email || !person.password) {
       console.log("Fields cannot be empty");
       return;
     }
     if (person.password !== person.confirmPassword) {
       console.log("Passwords do not match");
+      setError("Passwords do not match!");
       return;
     }
     try {
@@ -171,17 +174,19 @@ export const SignUp = () => {
               {PasswordVisibility.confirmPassword ? <BsEyeSlash /> : <BsEye />}
             </span>
           </div>
+          {signUpError && <p style={{ color: "red" }}>{signUpError}</p>}
+          {error && <p style={{ color: "red" }}>{error}</p>}
           <button type="submit" disabled={loading}>
-            {loading ? loading : "Sign Up"}
+            {loading ? "signing in..." : "Sign Up"}
           </button>
         </div>
-        <div className="hr"></div>
+        {/* <div className="hr"></div>
         <span>Or sign in using:</span>
         <div className="form-control">
           <button className="oauth">
             <FcGoogle /> <span>Google</span>
           </button>
-        </div>
+        </div> */}
       </form>
     </article>
   );

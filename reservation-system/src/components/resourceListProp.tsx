@@ -25,6 +25,21 @@ const ResourceList: React.FC<ResourceListProps> = ({
         <div className="resource-details">
           <h3>{resource.name}</h3>
           <p>{resource.description}</p>
+          <div className="status-badge">
+            <p
+              className={
+                resource.status && resource.status.includes("available")
+                  ? "available"
+                  : resource.status && resource.status.includes("reserved")
+                  ? "reserved"
+                  : resource.status && resource.status.includes("maintenance")
+                  ? "maintenance"
+                  : ""
+              }
+            >
+              {resource.status || "Unknown Status"}{" "}
+            </p>
+          </div>
           <button className="details-button">Details</button>
         </div>
       </div>

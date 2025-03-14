@@ -35,6 +35,7 @@ export const CreateResource: React.FC<CreateResourceProps> = ({
   const [selectedDays, setSelectedDays] = useState<string[]>(
     initialData?.availableDays || []
   );
+  const [stats, setStats] = useState<string>(initialData?.status || "");
   const [resourceData, setResourceData] = useState<Resource>(
     isEditing && initialData
       ? initialData
@@ -47,6 +48,7 @@ export const CreateResource: React.FC<CreateResourceProps> = ({
           availableTime: ["", ""],
           resourceCount: 1,
           location: "",
+          status: "",
         }
   );
   const [previewURL, setPreviewURL] = useState<string | null>(null);
@@ -65,6 +67,13 @@ export const CreateResource: React.FC<CreateResourceProps> = ({
       setSelectedDays([...selectedDays, day]);
     }
     setResourceData((prev) => ({ ...prev, availableDays: selectedDays }));
+  };
+
+  const handleStatusSelect = (stats: string) => {
+    if (stats.includes(stats)) {
+      setStats(stats);
+    }
+    setResourceData((prev) => ({ ...prev, resourceStatus: stats }));
   };
 
   const handleStart = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -112,6 +121,7 @@ export const CreateResource: React.FC<CreateResourceProps> = ({
     const updatedResourceData = {
       ...resourceData,
       availableDays: selectedDays,
+      status: stats,
     };
 
     try {
@@ -132,6 +142,7 @@ export const CreateResource: React.FC<CreateResourceProps> = ({
         availableTime: ["", ""],
         resourceCount: 1,
         location: "",
+        status: "",
       });
       setSelectedDays([]);
       if (previewURL) {
@@ -237,6 +248,22 @@ export const CreateResource: React.FC<CreateResourceProps> = ({
               {day}
             </div>
           ))}
+        </div>
+
+        <label htmlFor="resourceStatus">Status</label>
+        <div
+          className="days-of-week-container"
+          style={{ maxWidth: "fit-content" }}
+        >
+          <select
+            value={stats}
+            onChange={(e) => setStats(e.target.value)}
+            style={{ color: "white" }}
+          >
+            <option value="available">Available</option>
+            <option value="reserved">Reserved</option>
+            <option value="maintenance">Maintenance</option>
+          </select>
         </div>
 
         <div className="time-picker-container">

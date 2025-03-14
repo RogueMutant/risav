@@ -13,30 +13,12 @@
   z-index: 1000;
 
   .hamburger-icon {
-    display: none; // Hide by default
     background: none;
     border: none;
     color: white;
     font-size: 1.5rem;
     cursor: pointer;
     padding: 0.3em 0.3em 0 0;
-
-    @media (max-width: 768px) {
-      display: block; // Show on mobile
-    }
-  }
-
-  .toggle-aside-nav {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1rem;
-    cursor: pointer;
-    margin-right: 1rem;
-
-    &:hover {
-      opacity: 0.8;
-    }
   }
 
   .navbar-logo {
@@ -143,6 +125,7 @@
   top: 60px; // Adjust based on navbar height
   left: 0;
   z-index: 999;
+  transform: translate(-100%);
   transition: transform 0.3s ease-in-out;
 
   // Hide sidebar by default on mobile
@@ -179,22 +162,5 @@
         }
       }
     }
-  }
-}
-
-// Dashboard Content Styles
-.dashboard-content {
-  margin-left: 250px; // Adjust based on sidebar width
-  padding: 2rem;
-  margin-top: 60px; // Adjust based on navbar height
-  transition: margin-left 0.3s ease-in-out;
-
-  @media (max-width: 768px) {
-    margin-left: 0; // Remove margin on mobile
-  }
-
-  // Adjust margin when sidebar is hidden
-  &.sidebar-hidden {
-    margin-left: 0;
   }
 }
