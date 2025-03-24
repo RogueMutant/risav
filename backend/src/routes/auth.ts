@@ -9,11 +9,13 @@ import {
   getCurrentUser,
   updateProfile,
   getAllUsers,
+  createAdmin,
 } from "../controllers/auth";
 
 const userAuth: Router = express.Router();
 userAuth.get("/all-users", getAllUsers);
 userAuth.get("/me", getCurrentUser);
+userAuth.post("/create-admin", createAdmin);
 userAuth.route("/register").post(createUser);
 userAuth.route("/login").post(login);
 userAuth.route("/updateProfile").patch(updateProfile);

@@ -3,14 +3,20 @@ import mongoose from "mongoose";
 import Category from "../model/Category";
 import Resource from "../model/Resource";
 import { CustomRequest, IResource } from "../types/custom";
+import User from "../model/User";
 
 const getAllResources = async (
   req: CustomRequest,
   res: Response
 ): Promise<void> => {
+  const user = await User.findOne({ role: "super_admin" });
+  if (!user) {
+    console.log("User not found");
+    return;
+  }
   const createdBy = req.user?.userId;
 
-  const resources = await Resource.find({ createdBy: createdBy }).populate(
+  const resources = await Resource.find({ createdBy: user.id }).populate(
     "category",
     "name"
   ); // Populate only the category name

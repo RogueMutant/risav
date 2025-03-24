@@ -1,0 +1,122 @@
+// CreateAdmin.scss - Dark Theme
+
+// Variables
+$primary-color: #6c8eff;
+$error-color: #ff5252;
+$success-color: #4caf50;
+$border-color: #444444;
+$background-color: #121212;
+$card-background: #1e1e1e;
+$text-color: #e0e0e0;
+$input-background: #2a2a2a;
+$shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+
+.create-admin-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 1rem;
+  background-color: $background-color;
+
+  .admin-form-card {
+    width: 100%;
+    max-width: 800px;
+    background-color: $card-background;
+    border-radius: 8px;
+    box-shadow: $shadow;
+    padding: 2rem;
+
+    h1 {
+      color: $text-color;
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 1.8rem;
+    }
+
+    .success-message {
+      background-color: rgba($success-color, 0.15);
+      color: lighten($success-color, 15%);
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+
+      @media (max-width: 768px) {
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .form-group {
+        flex: 1;
+      }
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: $text-color;
+      }
+
+      input,
+      select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid $border-color;
+        border-radius: 4px;
+        font-size: 1rem;
+        transition: border-color 0.3s, background-color 0.3s;
+        background-color: $input-background;
+        color: $text-color;
+
+        &:focus {
+          outline: none;
+          border-color: $primary-color;
+        }
+
+        &.error {
+          border-color: $error-color;
+        }
+      }
+
+      .error-text {
+        display: block;
+        color: $error-color;
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+      }
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 1rem;
+
+      .create-button {
+        background-color: $primary-color;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 0.75rem 2rem;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background-color: darken($primary-color, 10%);
+        }
+      }
+    }
+  }
+}

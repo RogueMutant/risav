@@ -15,6 +15,8 @@ import { AllUsers } from "./pages/allUsers";
 import { UserDashboard } from "./pages/user/dashboard";
 import { ReservationsScreen } from "./pages/user/userReservation";
 import ReportsPage from "./pages/report";
+import Notifications from "./pages/notify";
+import CreateAdmin from "./pages/createadmin";
 
 function App() {
   return (
@@ -33,6 +35,8 @@ function App() {
               path="/reservation/:reservationPage"
               element={<ReservationDashboard />}
             />
+            <Route path="/create-admin" element={<CreateAdmin />} />
+            <Route path="/notification" element={<Notifications />} />
             <Route path="/settings" element={<Settings />}></Route>
             <Route path="/category/:categoryName" element={<CategoryPage />} />
             <Route path="/all-users" element={<AllUsers />} />

@@ -62,7 +62,7 @@ export const Navbar: React.FC = () => {
         <div className="navbar-right">
           <button
             className="navbar-icon"
-            onClick={() => navigate("/notifications")}
+            onClick={() => navigate("/notification")}
           >
             <BsBell />
           </button>

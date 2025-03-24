@@ -195,7 +195,7 @@ export const Dashboard = () => {
               </li>
               <li>
                 <BsFillBellFill className="icon" />
-                <p>Notifications</p>
+                <p onClick={() => navigate("/notification")}>Notifications</p>
               </li>
               <li>
                 <BsBoxArrowRight style={{ color: "red" }} className="icon" />

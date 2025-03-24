@@ -3,6 +3,7 @@ import { BsSearch, BsThreeDots } from "react-icons/bs";
 import { nameInitials } from "../helper/helper";
 import { User } from "../types/custom";
 import "../styles/tableComponent.css";
+import { useNavigate } from "react-router-dom";
 
 interface TableProps {
   userData: Array<User>;
@@ -12,6 +13,7 @@ export const Table: React.FC<TableProps> = ({ userData }) => {
   const [searchBtn, setSearchBtn] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
 
+  const navigate = useNavigate();
   const toggleSearchBtn = () => {
     setSearchBtn(!searchBtn);
   };
@@ -22,12 +24,9 @@ export const Table: React.FC<TableProps> = ({ userData }) => {
 
   return (
     <>
-      <div className="search-container">
-        <div className={`search-bar ${searchBtn ? "open" : ""}`}>
-          <input type="text" placeholder="Search by name or email" />
-        </div>
-        <BsSearch className="icon" onClick={toggleSearchBtn} />
-      </div>
+      <button className="btn" onClick={() => navigate("/create-admin")}>
+        Create new admin
+      </button>
 
       {userData && (
         <div className="table-container">

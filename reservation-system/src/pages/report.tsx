@@ -45,10 +45,11 @@ const ReportsPage: React.FC = () => {
     const endDate = formData.get("endDate") as string;
 
     const response = await fetchData({ reportType, startDate, endDate });
+    console.log(response);
 
-    if (response) {
-      setReportData(response);
-    }
+    // if (response) {
+    //   setReportData(response);
+    // }
   };
 
   return (
