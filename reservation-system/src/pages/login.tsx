@@ -4,6 +4,7 @@ import { BsEye, BsEyeSlash } from "react-icons/bs";
 import "../styles/index.css";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../components/authContext";
+import { FaSpinner } from "react-icons/fa";
 
 interface Person {
   email: string;
@@ -79,26 +80,13 @@ export const Login = () => {
           </div>
         </div>
         <div className="form-control">
-          {/* <input
-            type="checkbox"
-            style={{ height: "15px" }}
-            name="checkbox"
-            id="checkbox"
-            className="check"
-          /> */}
-          {/* <label htmlFor="checkbox">Keep me signed in</label> */}
-          {loginError && <p style={{ color: "red" }}>{loginError}</p>}
+          {loginError && (
+            <p style={{ color: "red", margin: "0px" }}>{loginError}</p>
+          )}
           <button type="submit" disabled={loading}>
-            {loading ? "Loading..." : "Log In"}
+            {loading ? <FaSpinner /> : "Log In"}
           </button>
         </div>
-        {/* <div className="hr"></div>
-        <span className="span-sign-in">Or sign in using:</span>
-        <div className="form-control">
-          <button className="oauth">
-            <FcGoogle /> <span>Google</span>
-          </button>
-        </div> */}
       </form>
     </article>
   );

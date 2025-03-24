@@ -4,7 +4,7 @@ import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { useFetch } from "../hooks/useFetch";
 import "../styles/index.css";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../components/authContext";
+import { FaSpinner } from "react-icons/fa";
 
 interface Person {
   name: string;
@@ -38,10 +38,6 @@ export const SignUp = () => {
     confirmPassword: false,
   });
   const navigate = useNavigate();
-
-  const navigateToDashboard = useCallback(() => {
-    navigate("/dashboard");
-  }, [navigate]);
 
   const togglePasswordVisibility = (
     fieldName: "password" | "confirmPassword"
@@ -101,9 +97,9 @@ export const SignUp = () => {
       console.log(data);
       setPerson({ name: "", email: "", password: "", confirmPassword: "" });
       setShouldFetch(false);
-      navigateToDashboard();
+      navigate("/user-dashboard");
     }
-  }, [data, navigateToDashboard]);
+  }, [data, navigate]);
 
   if (signUpError) {
     console.error(signUpError);
@@ -177,16 +173,9 @@ export const SignUp = () => {
           {signUpError && <p style={{ color: "red" }}>{signUpError}</p>}
           {error && <p style={{ color: "red" }}>{error}</p>}
           <button type="submit" disabled={loading}>
-            {loading ? "signing in..." : "Sign Up"}
+            {loading ? <FaSpinner /> : "Sign Up"}
           </button>
         </div>
-        {/* <div className="hr"></div>
-        <span>Or sign in using:</span>
-        <div className="form-control">
-          <button className="oauth">
-            <FcGoogle /> <span>Google</span>
-          </button>
-        </div> */}
       </form>
     </article>
   );

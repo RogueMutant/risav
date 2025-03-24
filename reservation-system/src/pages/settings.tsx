@@ -6,7 +6,6 @@ import Back from "../components/back";
 export const Settings: React.FC = () => {
   const [settings, setSettings] = useState<UserSettings>({
     pushNotificationsEnabled: true, // Default enabled
-    emailNotificationsEnabled: false, // Default disabled
   });
 
   const handleChange = (
@@ -45,23 +44,6 @@ export const Settings: React.FC = () => {
             />
           </div>
         </div>
-
-        {/* <div className="settings-group">
-          <h2>Email Notifications</h2>
-          <div className="setting-item">
-            <label htmlFor="emailNotificationsEnabled">
-              Enable Email Notifications:
-            </label>
-            <input
-              type="checkbox"
-              id="emailNotificationsEnabled"
-              name="emailNotificationsEnabled"
-              checked={settings.emailNotificationsEnabled}
-              onChange={handleChange}
-            />
-          </div>
-        </div> */}
-
         <button type="submit" className="save-button">
           Save Changes
         </button>

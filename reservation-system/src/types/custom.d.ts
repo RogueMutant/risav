@@ -11,7 +11,8 @@ export interface Resource {
   imageUrl: File | null | string;
   availableDays: Array<string>;
   availableTime: Array<string>;
-  resourceCount: number;
+  itemCount: number;
+  reservationCount: number;
   location: string;
   status: string;
 }
@@ -45,5 +46,4 @@ export interface Reservation {
 }
 export interface UserSettings {
   pushNotificationsEnabled: boolean;
-  emailNotificationsEnabled: boolean;
 }

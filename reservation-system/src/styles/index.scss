@@ -90,11 +90,14 @@ html {
 
 @mixin section-style {
   height: auto;
-  width: 100%;
   padding: 1em;
+  margin-top: 10px;
   box-sizing: border-box;
   background-color: $faded-black;
   border-radius: 8px;
+  @media (min-width: 768px) {
+    box-sizing: border-box;
+  }
 }
 
 @mixin nameInitials {
@@ -217,6 +220,12 @@ html {
           }
         }
       }
+      @media (min-width: 768px) {
+        tr th {
+          font-size: 0.8em;
+          font-weight: bold;
+        }
+      }
     }
   }
 }
@@ -231,15 +240,13 @@ body {
   width: 100%;
   display: flex;
   flex-direction: column;
-  padding: 0.9em;
   box-sizing: border-box;
 
   //top nav
   .top-nav {
     @include icon-style();
-    width: 100%;
-    height: 80px;
-    padding: 0.4em;
+    padding: 1em;
+    box-sizing: border-box;
     border-radius: 6px;
     position: sticky;
     top: 0;
@@ -310,6 +317,7 @@ body {
     backdrop-filter: blur(5px);
     transform: translateX(-300px);
     transition: width 300ms linear;
+    padding-left: 10px;
     h2 {
       color: $color-orange;
     }
@@ -354,18 +362,21 @@ body {
         }
       }
       @media (min-width: 768px) {
-        max-width: calc(100vw - 75%);
+        width: 35%;
         .ul-list-container {
-          width: 70%;
+          width: 90%;
+          .ul-content {
+            width: 90%;
+          }
         }
       }
     }
   }
 
   .section-div-container {
-    display: grid;
-    row-gap: 30px;
-    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0px 10px;
 
     .total-sales-container {
       @include section-style();
@@ -401,41 +412,44 @@ body {
         }
       }
     }
+    .chart-wrapper {
+      @include section-style();
 
-    section .chart-container {
-      background-color: $faded-black;
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-      width: 95%;
-      max-width: 1000px;
-      margin-left: auto;
-      margin-right: auto;
-      height: 400px;
-    }
-
-    .chart-container h2 {
-      color: #e0e0e0;
-      margin-bottom: 20px;
-      font-size: 1.4rem;
-      text-align: center;
-    }
-
-    .chart-container p {
-      color: #e0e0e0;
-      text-align: center;
-      padding: 40px 0;
-    }
-
-    @media (max-width: 768px) {
-      section .chart-container {
-        width: 95%;
-        padding: 15px;
-        height: 350px;
+      .chart-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background-color: $faded-black;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        margin-left: auto;
+        margin-right: auto;
+        height: 400px;
       }
 
       .chart-container h2 {
-        font-size: 1.2rem;
+        color: #e0e0e0;
+        margin-bottom: 20px;
+        font-size: 1.4rem;
+        text-align: center;
+      }
+
+      .chart-container p {
+        color: #e0e0e0;
+        text-align: center;
+        padding: 40px 0;
+      }
+
+      @media (max-width: 768px) {
+        .chart-container {
+          padding: 15px;
+          height: 300px;
+        }
+
+        .chart-container h2 {
+          font-size: 1.2rem;
+        }
       }
     }
 
@@ -483,24 +497,35 @@ body {
     transform: translateX(0);
     width: 100%;
   }
-  @media (min-width: 768px) {
+  @media (min-width: 700px) {
     .slide-out {
       width: 100%;
     }
     .section-div-container {
-      grid-template: auto auto/ 1fr 1fr;
-      gap: 1em;
-      :first-child {
-        height: fit-content;
-      }
+      display: grid;
+      grid-template: auto auto / 1fr 1fr;
+      column-gap: 10px;
       .total-sales-container {
-        display: grid;
-        grid-row: 1 / 1;
-        grid-template: 50px auto / 0.5fr 0.5fr 0.5fr;
-        gap: 1em;
         height: fit-content;
+
+        .inner-sales-cont {
+          font-size: 0.8em;
+          font-weight: bold;
+          padding: 10px;
+          box-sizing: border-box;
+          height: 120px;
+        }
         :first-child {
           grid-column: 1 / span 3;
+        }
+      }
+      .chart-wrapper {
+        width: 100%;
+      }
+      .trending-container,
+      .top-reservations-container {
+        h2 {
+          font-size: 1.2em;
         }
       }
     }
@@ -966,47 +991,83 @@ body {
   }
 }
 
-.create-category-form {
-  @include form-element();
-  position: relative;
-  z-index: 999;
-  width: 90%;
-  margin: 0 auto;
-  transform: translateY(60%);
-  transition: transform 0.3s ease;
-  background-color: $faded-black;
-  border: 1px solid $th-color;
+.create-modal {
+  // Modal Container
+  .modal {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 90%;
+    width: 100%;
+    position: absolute;
+    z-index: 999;
+    top: 0;
+    max-height: 90vh;
+    overflow-y: auto;
 
-  label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: #4d4e55;
-    font-weight: 600;
-  }
-  input[type="text"] {
-    @include form-element;
-    border: 1px solid $th-color;
-    margin-bottom: 1rem;
-    color: $drop-border-color;
-  }
-  button {
-    background-color: $dropdown-primary-color;
-    color: $drop-border-color;
-    padding: 0.7rem;
-    border: none;
-    @include rounded-corners;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    font-size: 1rem;
-    margin-right: 0.4em;
-
-    &:hover {
-      background-color: darken($dropdown-primary-color, 10%);
+    @media (min-width: 768px) {
+      max-width: 700px; // Desktop width
     }
+  }
 
-    &:disabled {
-      background-color: #cccccc;
-      cursor: not-allowed;
+  // Modal Header
+  .modal-header {
+    padding: 1rem;
+    border-bottom: 1px solid #e1e4e8;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    h2 {
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: #333;
+    }
+    transition: all 500ms linear;
+  }
+  .create-category-form {
+    @include form-element();
+    position: relative;
+    z-index: 999;
+    width: 90%;
+    max-width: 500px;
+    margin: 0 auto;
+    transform: translateY(60%);
+    transition: transform 0.3s ease;
+    background-color: $faded-black;
+    border: 1px solid $th-color;
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #4d4e55;
+      font-weight: 600;
+    }
+    input[type="text"] {
+      @include form-element;
+      border: 1px solid $th-color;
+      margin-bottom: 1rem;
+      color: $drop-border-color;
+    }
+    button {
+      background-color: $dropdown-primary-color;
+      color: $drop-border-color;
+      padding: 0.7rem;
+      border: none;
+      @include rounded-corners;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      font-size: 1rem;
+      margin-right: 0.4em;
+
+      &:hover {
+        background-color: darken($dropdown-primary-color, 10%);
+      }
+
+      &:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+      }
     }
   }
 }

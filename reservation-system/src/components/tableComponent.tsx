@@ -69,24 +69,14 @@ export const Table: React.FC<TableProps> = ({ userData }) => {
                       {dropdownOpen === userDetails._id && (
                         <div className="dropdown-content">
                           <button
-                            onClick={() => alert(`Edit ${userDetails.name}`)}
-                          >
-                            Edit
-                          </button>
-                          <button
                             onClick={() => alert(`Delete ${userDetails.name}`)}
                           >
-                            Delete
+                            Deactivate
                           </button>
                           <button
                             onClick={() => alert(`View ${userDetails.name}`)}
                           >
                             View
-                          </button>
-                          <button
-                            onClick={() => alert(`Message ${userDetails.name}`)}
-                          >
-                            Message
                           </button>
                         </div>
                       )}

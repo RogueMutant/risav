@@ -25,7 +25,6 @@ export const ResourceProvider: React.FC<ResourceProviderProps> = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  // Use useFetch for GET and POST operations
   const { fetchData: fetchGetData } = useFetch<Resource[]>(
     API_URL,
     false,

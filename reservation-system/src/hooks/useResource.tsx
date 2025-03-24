@@ -15,18 +15,19 @@ export const useResource = () => {
   const { onCreate } = useResources();
   const { user } = useAuth();
 
+  const API_URL = "/api/resource/v1";
   const { fetchData: createResourceRequest } = useFetch<Resource>(
-    "/api/resource/v1",
+    API_URL,
     false,
     "post"
   );
   const { fetchData: updateResourceRequest } = useFetch<Resource>(
-    "/api/resource/v1/:id",
+    API_URL,
     false,
     "patch"
   );
   const { fetchData: deleteResourceRequest } = useFetch<{ success: boolean }>(
-    `/api/resource/v1/:id`,
+    API_URL,
     false,
     "delete"
   );

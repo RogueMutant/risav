@@ -4,6 +4,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Resource } from "../types/custom";
 import "../styles/user/reservationDetails.css";
 import { useFetch } from "../hooks/useFetch";
+import { useAuth } from "./authContext";
+import { FaSpinner } from "react-icons/fa";
 
 interface ReservationModalProps {
   resource: Resource;
@@ -20,11 +22,13 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
   const [fromTime, setFromTime] = useState<string>("");
   const [toTime, setToTime] = useState<string>("");
   const [reason, setReason] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
   const {
     loading,
     fetchData,
     error: reservationError,
   } = useFetch(url, false, "post");
+  const { refreshUserData } = useAuth();
 
   // Filter out unavailable days
   const isDayAvailable = (date: Date) => {
@@ -67,6 +71,7 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
   // Handle reservation submission
   const handleMakeReservation = async () => {
     try {
+      setIsLoading(true);
       const result = await fetchData(
         {
           resourceId: resource._id,
@@ -79,10 +84,13 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
       );
       if (result) {
         setIsReservationMade(true);
+        refreshUserData();
         console.log("Reservation made successfully", result);
       }
     } catch (error) {
       console.error("Error making reservation", reservationError);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -175,7 +183,13 @@ export const ReservationModal: React.FC<ReservationModalProps> = ({
             onClick={() => handleMakeReservation()}
             disabled={!selectedDate || !fromTime || !toTime}
           >
-            Make Reservation
+            {isLoading ? (
+              <span>
+                <FaSpinner />
+              </span>
+            ) : (
+              "Make Reservation"
+            )}
           </button>
           <button className="cancel" onClick={() => setIsCancelOpen(true)}>
             Cancel

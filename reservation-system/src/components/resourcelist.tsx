@@ -4,6 +4,7 @@ import { Resource } from "../types/custom";
 import { useResource } from "../hooks/useResource";
 import { CreateResource } from "./createResource";
 import { BsThreeDotsVertical, BsTrash, BsPen } from "react-icons/bs";
+import { FaSpinner } from "react-icons/fa";
 
 interface ResourceListProps {
   category: string | null;
@@ -40,6 +41,15 @@ export const ResourceList: React.FC<ResourceListProps> = ({
         resources.map((resource, index) => (
           <div key={index} className="resource-card-container">
             <div className="resource-card-content">
+              {isLoading && (
+                <FaSpinner
+                  style={{
+                    position: "absolute",
+                    zIndex: "1",
+                    placeContent: "center",
+                  }}
+                />
+              )}
               {imageLoading ? (
                 <div className="image-skeleton"></div>
               ) : (

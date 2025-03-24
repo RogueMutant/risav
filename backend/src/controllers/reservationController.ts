@@ -150,7 +150,7 @@ const cancelReservation = async (
   req: CustomRequest,
   res: Response
 ): Promise<void> => {
-  const { reservationId } = req.params;
+  const { reservationId } = req.body;
   const userId = req.user?.userId;
 
   if (!mongoose.Types.ObjectId.isValid(reservationId)) {
@@ -172,14 +172,20 @@ const cancelReservation = async (
     });
     return;
   }
-
+  if (reservation.status === "cancelled") {
+    res.status(403).json({
+      message: "Reservation already cancelled!",
+      status: "Failed",
+    });
+    return;
+  }
   if (reservation.status === "confirmed" || reservation.status === "pending") {
     await Resource.findByIdAndUpdate(reservation.resource, {
       $inc: { reservationCount: -1 },
     });
   }
 
-  await Reservation.findOneAndUpdate({ status: "cancelled" });
+  await Reservation.findByIdAndUpdate(reservationId, { status: "cancelled" });
 
   res.status(200).json({
     message: "You have successfully cancelled your reservation",

@@ -63,7 +63,7 @@ export const useFetch = <T,>(
         setLoading(false);
       }
     },
-    [url]
+    [url, defaultMethod]
   );
 
   useEffect(() => {

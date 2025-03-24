@@ -12,7 +12,6 @@ import {
 import { useAuth } from "./authContext";
 import { Line } from "react-chartjs-2";
 
-// Register required Chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -23,7 +22,6 @@ ChartJS.register(
   Legend
 );
 
-// Remove the React.FC type annotation and let TypeScript infer the return type
 const ReservationChart = () => {
   const [chartData, setChartData] = useState<any>(null);
   const { reservations } = useAuth();

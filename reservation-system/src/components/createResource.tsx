@@ -46,7 +46,8 @@ export const CreateResource: React.FC<CreateResourceProps> = ({
           imageUrl: null as File | null,
           availableDays: [],
           availableTime: ["", ""],
-          resourceCount: 1,
+          itemCount: 1,
+          reservationCount: 0,
           location: "",
           status: "",
         }
@@ -69,11 +70,11 @@ export const CreateResource: React.FC<CreateResourceProps> = ({
     setResourceData((prev) => ({ ...prev, availableDays: selectedDays }));
   };
 
-  const handleStatusSelect = (stats: string) => {
-    if (stats.includes(stats)) {
-      setStats(stats);
-    }
-    setResourceData((prev) => ({ ...prev, resourceStatus: stats }));
+  const handleStatusSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    setStats(value);
+    setResourceData((prev) => ({ ...prev, resourceStatus: value }));
+    console.log(stats);
   };
 
   const handleStart = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -108,6 +109,7 @@ export const CreateResource: React.FC<CreateResourceProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log(stats);
 
     if (!selectedDays.length) {
       alert("Please select at least 1 available day!");
@@ -121,7 +123,6 @@ export const CreateResource: React.FC<CreateResourceProps> = ({
     const updatedResourceData = {
       ...resourceData,
       availableDays: selectedDays,
-      status: stats,
     };
 
     try {
@@ -140,7 +141,8 @@ export const CreateResource: React.FC<CreateResourceProps> = ({
         imageUrl: null,
         availableDays: [],
         availableTime: ["", ""],
-        resourceCount: 1,
+        itemCount: 1,
+        reservationCount: 0,
         location: "",
         status: "",
       });
@@ -257,7 +259,7 @@ export const CreateResource: React.FC<CreateResourceProps> = ({
         >
           <select
             value={stats}
-            onChange={(e) => setStats(e.target.value)}
+            onChange={handleStatusSelect}
             style={{ color: "white" }}
           >
             <option value="available">Available</option>
@@ -294,10 +296,10 @@ export const CreateResource: React.FC<CreateResourceProps> = ({
           onChange={(e) =>
             setResourceData({
               ...resourceData,
-              resourceCount: parseInt(e.target.value),
+              itemCount: parseInt(e.target.value),
             })
           }
-          value={resourceData.resourceCount}
+          value={resourceData.itemCount}
         />
 
         <div className="form-actions">

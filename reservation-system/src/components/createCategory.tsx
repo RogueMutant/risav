@@ -3,13 +3,14 @@ import { useFetch } from "../hooks/useFetch";
 import { useAuth } from "./authContext";
 import "../styles/index.css";
 import { firstLetterToUpperCase } from "../helper/helper";
+import { ModalView } from "./modal";
 
-interface categoryProps {
+interface CategoryProps {
   onCreated: (categoryName: string) => void;
   onCancel: () => void;
 }
 
-export const CreateCategory: React.FC<categoryProps> = ({
+export const CreateCategory: React.FC<CategoryProps> = ({
   onCreated,
   onCancel,
 }) => {
@@ -20,6 +21,8 @@ export const CreateCategory: React.FC<categoryProps> = ({
   );
   const [categoryName, setCategoryName] = useState<string>("");
   const { refreshUserData } = useAuth();
+  const [showModal, setShowModal] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -29,10 +32,9 @@ export const CreateCategory: React.FC<categoryProps> = ({
     }
 
     try {
-      setCategoryName(firstLetterToUpperCase(categoryName));
-      const result = await fetchData({
-        name: categoryName.trim(),
-      });
+      setCategoryName(firstLetterToUpperCase(categoryName.trim()));
+      setShowModal(true);
+      const result = await fetchData({ name: categoryName }, "post");
 
       if (result) {
         console.log("Category created:", result);
@@ -47,26 +49,30 @@ export const CreateCategory: React.FC<categoryProps> = ({
       }
     }
   };
+
   return (
-    <div>
-      <form onSubmit={handleSubmit} className="create-category-form ">
-        <label htmlFor="category-name">Category Name:</label>
-        <input
-          type="text"
-          id="category-name"
-          name="category-name"
-          value={categoryName}
-          onChange={(e) => setCategoryName(e.target.value)}
-          required
-        />
-        <p style={{ color: "red", marginBottom: "10px" }}>
-          {fetchError ? fetchError + " !" : ""}
-        </p>
-        <button type="submit">Create Category</button>
-        <button type="button" onClick={onCancel}>
-          Cancel
-        </button>{" "}
-      </form>
-    </div>
+    <>
+      <div className="create-modal">
+        <form onSubmit={handleSubmit} className="create-category-form">
+          <label htmlFor="category-name">Category Name:</label>
+          <input
+            type="text"
+            id="category-name"
+            name="category-name"
+            value={categoryName}
+            onChange={(e) => setCategoryName(e.target.value)}
+            required
+          />
+          <p style={{ color: "red", marginBottom: "10px" }}>
+            {fetchError ? fetchError + " !" : ""}
+          </p>
+          <button type="submit">Create Category</button>
+          <button type="button" onClick={onCancel}>
+            Cancel
+          </button>
+        </form>
+        {showModal && <ModalView str="Successfully created a category" />}
+      </div>
+    </>
   );
 };

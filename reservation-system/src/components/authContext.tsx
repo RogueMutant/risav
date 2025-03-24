@@ -122,13 +122,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       setIsLoading(true);
       setError(null);
 
-      // Fetch the latest user data
       const userData = await fetchUserData();
       if (!userData?.user) {
         throw new Error("User data not found");
       }
 
-      // Fetch resources and categories in parallel
       const [resources, categories, allReservations] = await Promise.all([
         fetchUserResources(),
         fetchUserCategories(),
@@ -137,7 +135,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       let profileImageUrl = userData.user.profileImageUrl;
 
-      // Ensure profileImageUrl is a string before using getFileView
       if (typeof profileImageUrl === "string") {
         try {
           profileImageUrl = storage
@@ -148,7 +145,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         }
       }
 
-      // Ensure `_id` is mapped to `id`
       const updatedUser: User = {
         ...userData.user,
         _id: userData.user._id,
@@ -231,6 +227,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       if (!response) {
         throw new Error("No network");
       }
+
       if (!response?.user || !response.user?._id) {
         throw new Error("Invalid login response: User data is missing");
       }
@@ -239,7 +236,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const fullUserData = await fetchCompleteUserData();
 
       setUser(fullUserData);
-      navigate("/dashboard");
+      if (user?.role === "super_admin" && "admin") {
+        navigate("/dashboard");
+      } else {
+        navigate("/user-dashboard");
+      }
     } catch (err) {
       console.error("Login error:", err);
       setError(err instanceof Error ? loginError : "Login failed");
@@ -311,7 +312,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const updatedUser = response;
       console.log("Updated user from profile update request: ", updatedUser);
 
-      // Update AuthContext with the new user data
       setUser((prev) => (prev ? { ...prev, ...updatedUser } : null));
     } catch (err) {
       console.error("Error updating user:", err);

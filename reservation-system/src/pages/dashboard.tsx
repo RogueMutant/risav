@@ -15,17 +15,20 @@ import {
   BsGearFill,
   BsPersonAdd,
   BsPersonFill,
+  BsTrash,
 } from "react-icons/bs";
+import { FaSpinner } from "react-icons/fa";
 import "../styles/index.css";
 import toggleNav from "../components/buttons";
 import { CreateCategory } from "../components/createCategory";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../components/authContext";
 import { useFetch } from "../hooks/useFetch";
 import { nameInitials } from "../helper/helper";
 import ReservationChart from "../components/lineChart";
+import { Reservation, Resource } from "../types/custom";
 
-const url = "/api/categories";
+const url = "/api/categories/v1";
 
 export const Dashboard = () => {
   const [dropdownsOpen, setDropdownsOpen] = useState<{
@@ -37,14 +40,19 @@ export const Dashboard = () => {
     categories: false,
     Report: false,
   });
-  const { fetchData, loading, error } = useFetch(url, false, "get");
+  const {
+    fetchData: deleteCategory,
+    loading,
+    error: deleteError,
+  } = useFetch(url, false, "get");
   const [categories, setCategories] = useState<string[]>([]);
   const [searchBtn, setSearchBtn] = useState(false);
-
+  const [userReservations, setUserReservations] = useState<Reservation[]>([]);
   const [showCreateCategory, setShowCreateCategory] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-
-  const { user, userCategories, logout } = useAuth();
+  const [sortedResources, setSortedResources] = useState<Resource[]>([]);
+  const { user, userCategories, reservations, userResources, logout } =
+    useAuth();
   const navigate = useNavigate();
 
   const toggleSearchBtn = () => {
@@ -83,10 +91,50 @@ export const Dashboard = () => {
     setShowCreateCategory(false);
   };
 
+  const handleDeleteCategory = async (categoryName: string) => {
+    try {
+      const res = await deleteCategory({ categoryName }, "delete");
+      if (res) {
+        setCategories((prevCategories) =>
+          prevCategories.filter((category) => category !== categoryName)
+        );
+      }
+      return;
+    } catch (error) {
+      console.error(deleteError);
+    }
+  };
+
+  const totalSum = () => {
+    const totalSum = userResources.reduce(
+      (total, { status }) => {
+        total.pendingStat += status === "pending" ? 1 : 0;
+        total.confirmedStat += status === "confirmed" ? 1 : 0;
+        return total;
+      },
+      {
+        pendingStat: 0,
+        confirmedStat: 0,
+      }
+    );
+    return totalSum;
+  };
+
   const handleLogOut = async (): Promise<void> => {
-    await logout();
+    logout();
     navigate("/login");
   };
+
+  // sums the total resservationCCount off all resources
+  const trending = (): number => {
+    return sortedResources.reduce(
+      (total, { reservationCount }) => total + reservationCount,
+      0
+    );
+  };
+
+  const totalReservations = trending();
+
   useEffect(() => {
     if (userCategories) {
       const newCategories: string[] = [];
@@ -95,7 +143,16 @@ export const Dashboard = () => {
       });
       setCategories(newCategories);
     }
-  }, [userCategories]);
+    if (reservations) {
+      setUserReservations(reservations);
+    }
+    if (userResources) {
+      const sorted = [...userResources].sort(
+        (a, b) => b.reservationCount - a.reservationCount
+      );
+      setSortedResources(sorted);
+    }
+  }, [userCategories, reservations, userResources]);
   return (
     <div className="dashboard-container">
       <nav className="top-nav">
@@ -122,7 +179,7 @@ export const Dashboard = () => {
             {userImg ? (
               <img src={userImg as string} alt="user" />
             ) : (
-              <span>{formattedInitials || "-"}</span>
+              <span style={{ color: "#ccc" }}>{formattedInitials || "-"}</span>
             )}
           </div>
           <BsChevronDown
@@ -222,22 +279,34 @@ export const Dashboard = () => {
                       dropdownsOpen.categories ? "open" : ""
                     }`}
                   >
-                    {loading
-                      ? "Loading..."
-                      : categories.map((categoryName, index) => {
-                          return (
-                            <li
+                    {loading ? (
+                      <FaSpinner style={{ marginLeft: "-60px" }} />
+                    ) : (
+                      categories.map((categoryName, index) => {
+                        return (
+                          <li
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedCategory(categoryName);
+                              navigate(`/category/${categoryName}`);
+                            }}
+                            key={index}
+                          >
+                            {categoryName}{" "}
+                            <BsTrash
+                              style={{
+                                marginRight: "3px",
+                                marginLeft: "3px",
+                              }}
                               onClick={(e) => {
                                 e.stopPropagation();
-                                setSelectedCategory(categoryName);
-                                navigate(`/category/${categoryName}`);
+                                handleDeleteCategory(categoryName);
                               }}
-                              key={index}
-                            >
-                              {categoryName}
-                            </li>
-                          );
-                        })}
+                            />
+                          </li>
+                        );
+                      })
+                    )}
                     <li
                       onClick={(e) => {
                         e.stopPropagation();
@@ -271,6 +340,7 @@ export const Dashboard = () => {
                     <li
                       onClick={(e) => {
                         e.stopPropagation();
+                        navigate("/reports");
                       }}
                     >
                       Rervations Report
@@ -306,21 +376,21 @@ export const Dashboard = () => {
           <h2>Reservation's Summary</h2>
           <div className="inner-sales-cont">
             <FaTasks style={{ color: "#a0dfd8" }} className="icon" />
-            <h3>500</h3>
+            <h3>{userReservations.length}</h3>
             <p>Total Applications</p>
           </div>
           <div className="inner-sales-cont">
             <BsBarChartFill style={{ color: "#fab659" }} className="icon" />
-            <h3>10</h3>
+            <h3>{totalSum().pendingStat}</h3>
             <p>Pending Reservations</p>
           </div>
           <div className="inner-sales-cont">
             <FaCartPlus style={{ color: "#e4c8ed" }} className="icon" />
-            <h3>9</h3>
+            <h3>{totalSum().confirmedStat}</h3>
             <p>Total Reservations</p>
           </div>
         </section>
-        <section>
+        <section className="chart-wrapper">
           <ReservationChart />
         </section>
         <section className="top-reservations-container">
@@ -329,37 +399,36 @@ export const Dashboard = () => {
             <table>
               <thead>
                 <tr>
-                  <th>#</th>
+                  <th>Sn</th>
                   <th>Name</th>
                   <th>Popularity</th>
-                  <th>Sales</th>
+                  <th>Reservations</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>01</td>
-                  <td>Kitchen Convention</td>
-                  <td>
-                    <div className="progress-bar"></div>
-                  </td>
-                  <td>
-                    <div className="sales-percentage">
-                      <p>78%</p>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>02</td>
-                  <td>Sports Track</td>
-                  <td>
-                    <div className="progress-bar"></div>
-                  </td>
-                  <td>
-                    <div className="sales-percentage">
-                      <p>62%</p>
-                    </div>
-                  </td>
-                </tr>
+                {sortedResources.map((sorted, index) => {
+                  const percentage = totalReservations
+                    ? (sorted.reservationCount / totalReservations) * 100
+                    : 0; // Prevent division by zero
+
+                  return (
+                    <tr key={sorted._id}>
+                      <td>{index + 1}</td>
+                      <td>{sorted.name}</td>
+                      <td>
+                        <div
+                          className="progress-bar"
+                          style={{ width: `${percentage}%` }}
+                        ></div>
+                      </td>
+                      <td>
+                        <div className="sales-percentage">
+                          <p>{`${percentage.toFixed(2)}%`}</p>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

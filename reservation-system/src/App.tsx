@@ -7,15 +7,14 @@ import { ReservationDashboard } from "./pages/reservation";
 import { Profile } from "./components/profile";
 import { NotFound } from "./pages/notfound";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { ResourceList } from "./components/resourcelist";
 import { CategoryPage } from "./pages/categories";
 import { ResourceProvider } from "./components/resourceContext";
 import { AuthProvider } from "./components/authContext";
 import { Settings } from "./pages/settings";
-import { CurrentReservation } from "./components/currentReservation";
 import { AllUsers } from "./pages/allUsers";
 import { UserDashboard } from "./pages/user/dashboard";
 import { ReservationsScreen } from "./pages/user/userReservation";
+import ReportsPage from "./pages/report";
 
 function App() {
   return (
@@ -29,6 +28,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signUp" element={<SignUp />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/reports" element={<ReportsPage />} />
             <Route
               path="/reservation/:reservationPage"
               element={<ReservationDashboard />}

@@ -18,10 +18,12 @@ import { NotFound } from "./notfound";
 import Back from "../components/back";
 import { Reservation } from "../types/custom";
 import { useAuth } from "../components/authContext";
+import { useFetch } from "../hooks/useFetch";
+import { FaSpinner } from "react-icons/fa";
 
 export const ReservationDashboard: React.FC = () => {
   const { reservationPage } = useParams<{ reservationPage: string }>();
-  const { reservations: userReservations } = useAuth();
+  const { reservations: userReservations, refreshUserData } = useAuth();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -29,6 +31,16 @@ export const ReservationDashboard: React.FC = () => {
   const [sortField, setSortField] = useState("reservationDate");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const { fetchData: rejectReservation, error: rejectError } = useFetch(
+    `/api/reservations/v1/cancel`,
+    false,
+    "patch"
+  );
+  const { fetchData: confirmReservation, error: confirmError } = useFetch(
+    `/api/reservations/v1/update`,
+    false,
+    "patch"
+  );
 
   // Handle sorting
   const handleSort = (field: string) => {
@@ -114,13 +126,45 @@ export const ReservationDashboard: React.FC = () => {
     });
   };
 
-  if (loading) {
-    return <div className="loading-spinner">Loading...</div>;
-  }
-
   if (error) {
     return <div className="error-message">{error}</div>;
   }
+
+  const handleClick = async (id: string, reqType: string) => {
+    try {
+      setLoading(true);
+
+      // reject
+      if (reqType === "reject") {
+        const res = await rejectReservation({ reservationId: id });
+        if (res) {
+          setTimeout(() => {
+            refreshUserData();
+          }, 3000);
+          console.log("successfully rejected the request");
+          console.log(res);
+        }
+      }
+      // confirm
+      if (reqType === "confirm") {
+        const res = await confirmReservation({
+          status: "confirmed",
+          reservationId: id,
+        });
+        if (res) {
+          setTimeout(() => {
+            refreshUserData();
+          }, 3000);
+          console.log("successfully accepted the request");
+          console.log(res);
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -241,12 +285,36 @@ export const ReservationDashboard: React.FC = () => {
                       <div className="actions">
                         {reservation.status === "pending" && (
                           <>
-                            <button className="confirm">Confirm</button>
-                            <button className="cancel">Cancel</button>
+                            <button
+                              className="confirm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleClick(reservation._id, "confirm");
+                              }}
+                            >
+                              {loading ? <FaSpinner /> : "confirm"}
+                            </button>
+                            <button
+                              className="cancel"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleClick(reservation._id, "reject");
+                              }}
+                            >
+                              {loading ? <FaSpinner /> : "Reject"}
+                            </button>
                           </>
                         )}
                         {reservation.status === "confirmed" && (
-                          <button className="cancel">Cancel</button>
+                          <button
+                            className="cancel"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleClick(reservation._id, "reject");
+                            }}
+                          >
+                            {loading ? <FaSpinner /> : "Reject"}
+                          </button>
                         )}
                         <button className="view">View</button>
                       </div>
